@@ -44,7 +44,9 @@ export class ChatService {
       catchError((err) => {
         if (!silent) this.loading.set(false);
         if (isDevMode()) {
-          console.warn('API getConversations call failed. Triggering dev-mode fallback.', err);
+          if (!silent) {
+            console.warn('API getConversations call failed. Triggering dev-mode fallback.', err);
+          }
           const devConvs = this.getStoredDevConversations();
           this.conversations.set(devConvs);
           this.recalculateUnreadCount(devConvs);
@@ -78,7 +80,9 @@ export class ChatService {
       catchError((err) => {
         if (!silent) this.loading.set(false);
         if (isDevMode()) {
-          console.warn('API getMessages call failed. Triggering dev-mode fallback.', err);
+          if (!silent) {
+            console.warn('API getMessages call failed. Triggering dev-mode fallback.', err);
+          }
           const devMsgs = this.getStoredDevMessages(otherUserId);
           this.activeMessages.set(devMsgs);
           this.markConversationAsReadLocal(otherUserId);
