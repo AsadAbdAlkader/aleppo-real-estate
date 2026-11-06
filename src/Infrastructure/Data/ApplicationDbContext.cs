@@ -19,6 +19,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<AgentProfile> AgentProfiles => Set<AgentProfile>();
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
+    public DbSet<PropertyTourBooking> PropertyTourBookings => Set<PropertyTourBooking>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

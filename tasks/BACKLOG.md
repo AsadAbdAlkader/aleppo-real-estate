@@ -51,6 +51,9 @@
 | BE-015 | Implement Enterprise RBAC, MediatR Pipeline Behaviors, Dynamic Policies & Agency Scope | ASP.NET Core Senior | DONE | INT-013 | `src/Application`, `src/Infrastructure`, `src/Web` |
 | FE-015 | Implement Frontend Permission Signals Store, *appHasPermission Directive & Route Guards | Angular Senior | DONE | BE-015 | `src/Web/ClientApp` |
 | INT-014 | End-to-End Integration Verification, Security Audit & Permissions Test Coverage | Main Agent | DONE | BE-015, FE-015 | `src/Web`, `src/Web/ClientApp`, `tests` |
+| BE-016 | Implement Property Geo-Coordinates, Realistic Aleppo Neighborhood Seeds & Tour Booking CQRS | ASP.NET Core Senior | DONE | INT-014 | `src/Domain`, `src/Application`, `src/Infrastructure`, `src/Web` |
+| FE-016 | Implement Leaflet Interactive Map, Investment ROI Calculator & Tour Booking Modal | Angular Senior | DONE | BE-016 | `src/Web/ClientApp` |
+| INT-015 | End-to-End Integration Verification & Testing for Map, ROI & Tour Booking Features | Main Agent | DONE | BE-016, FE-016 | `src/Web`, `src/Web/ClientApp`, `tests` |
 | BE-015 | Implement Real-Time Direct Property Chat Subsystem, EF Core Table & Endpoints | ASP.NET Core Senior | DONE | BE-014 | `src/Domain`, `src/Application`, `src/Infrastructure`, `src/Web` |
 | FE-015 | Implement Standalone Direct Property Chat UI (/messages), Signal State & Header Badge | Angular Senior | DONE | FE-014 | `src/Web/ClientApp` |
 | INT-014 | Historical Quality Gate Audit & Architecture Baseline | Main Agent | DONE | BE-015, FE-015 | Entire Solution |
@@ -194,3 +197,20 @@
 - **Description:** Verify full integration of Enterprise RBAC across Backend and Frontend: test valid and forbidden requests (401/403 responses), test Agency scope isolation, test Angular DOM gating via `*appHasPermission`, verify Route Guards redirect to `/forbidden` or `/auth/login`, run backend tests (`dotnet test`) and frontend tests (`npm test`), and verify production build.
 - **Assigned Sub-Agent:** Main Agent
 - **Dependencies:** BE-015, FE-015
+
+### BE-016: Implement Property Geo-Coordinates, Realistic Aleppo Neighborhood Seeds & Tour Booking CQRS
+- **Description:** Add `Latitude` and `Longitude` to `Property.cs` and `PropertyDto`. Seed realistic geographic coordinates for Aleppo neighborhoods (الفرقان، الشهباء، حلب الجديدة، الموكامبو، السريان). Add `PropertyTourBooking` entity and `BookPropertyTourCommand` with validation, atomic notification creation, and query endpoints.
+- **Assigned Sub-Agent:** ASP.NET Core Senior (`aspnet_core_senior`)
+- **Dependencies:** INT-014
+- **Files/Areas Affected:** `src/Domain`, `src/Application`, `src/Infrastructure`, `src/Web`
+
+### FE-016: Implement Leaflet Interactive Map, Investment ROI Calculator & Tour Booking Modal
+- **Description:** Implement interactive map view in `PropertyListComponent` using Leaflet with custom price badges, popup preview card, and neighborhood quick-filter. Implement `PropertyRoiCalculatorComponent` in property details for gross/net rental yield, cap rate, and payback period. Implement `PropertyTourBookingComponent` modal for in-person and video call inspections.
+- **Assigned Sub-Agent:** Angular Senior (`angular_senior`)
+- **Dependencies:** BE-016
+- **Files/Areas Affected:** `src/Web/ClientApp/src/app/features/properties`, `src/Web/ClientApp/src/app/core/services`
+
+### INT-015: End-to-End Integration Verification & Testing for Map, ROI & Tour Booking Features
+- **Description:** Verify interactive map rendering, marker price conversion via CurrencyService, ROI calculation formulas, and tour booking pipeline. Execute all unit tests (`dotnet test`, `npm test`) and production build verification.
+- **Assigned Sub-Agent:** Main Agent
+- **Dependencies:** BE-016, FE-016

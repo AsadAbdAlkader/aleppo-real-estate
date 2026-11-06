@@ -15,22 +15,60 @@
     <!-- Search Filter Panel -->
     <app-search-filter-panel></app-search-filter-panel>
 
-    <!-- Results Counter -->
-    <div class="flex items-center justify-between mb-6">
+    <!-- Results Counter & View Mode Switcher -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
       <div class="text-sm font-medium text-slate-600">
         إجمالي العقارات المطابقة:
         <span class="font-latin text-lg font-semibold text-slate-900">{{ totalCount() }}</span>
       </div>
-      @if (isLoading()) {
-        <div class="flex items-center gap-2 text-xs font-bold text-amber-700">
-          <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          <span>جاري جلب العقارات...</span>
+
+      <div class="flex items-center gap-3">
+        <!-- View Mode Switcher -->
+        <div class="bg-slate-200/80 p-1 rounded-2xl flex items-center gap-1 shadow-inner">
+          <button
+            type="button"
+            (click)="toggleViewMode('grid')"
+            class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+            [class.bg-white]="viewMode() === 'grid'"
+            [class.text-ink-950]="viewMode() === 'grid'"
+            [class.shadow-sm]="viewMode() === 'grid'"
+            [class.text-slate-600]="viewMode() !== 'grid'"
+          >
+            <span>🏢</span>
+            <span>شبكة</span>
+          </button>
+          <button
+            type="button"
+            (click)="toggleViewMode('map')"
+            class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+            [class.bg-ink-950]="viewMode() === 'map'"
+            [class.text-amber-300]="viewMode() === 'map'"
+            [class.shadow-sm]="viewMode() === 'map'"
+            [class.text-slate-600]="viewMode() !== 'map'"
+          >
+            <span>🗺️</span>
+            <span>الخريطة</span>
+          </button>
         </div>
-      }
+
+        @if (isLoading()) {
+          <div class="flex items-center gap-2 text-xs font-bold text-amber-700">
+            <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>جاري الجلب...</span>
+          </div>
+        }
+      </div>
     </div>
+
+    <!-- Interactive Map Display (When viewMode === 'map') -->
+    @if (viewMode() === 'map') {
+      <div class="mb-8">
+        <app-property-map [properties]="properties()"></app-property-map>
+      </div>
+    }
 
     <!-- Error Banner -->
     @if (errorMessage()) {

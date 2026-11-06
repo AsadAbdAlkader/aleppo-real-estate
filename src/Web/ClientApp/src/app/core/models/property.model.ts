@@ -22,6 +22,8 @@ export interface Property {
   imageUrls: string[];
   status: PropertyStatus | string;
   isFeatured: boolean;
+  latitude?: number | null;
+  longitude?: number | null;
   createdAt: string;
 }
 

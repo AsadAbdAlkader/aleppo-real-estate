@@ -143,6 +143,8 @@ public class GetPropertiesQueryHandler : IRequestHandler<GetPropertiesQuery, Pag
             ImageUrls = p.ImageUrls,
             Status = p.Status,
             IsFeatured = p.IsFeatured,
+            Latitude = p.Latitude,
+            Longitude = p.Longitude,
             CreatedAt = p.CreatedAt,
             UpdatedAt = p.UpdatedAt
         });

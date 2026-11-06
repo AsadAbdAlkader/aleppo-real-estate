@@ -379,6 +379,14 @@
               ></app-mortgage-calculator>
             </div>
 
+            <!-- FEATURE: EMBEDDED ROI & RENTAL YIELD CALCULATOR -->
+            <app-roi-calculator
+              [propertyPrice]="prop.price"
+              [propertyTitle]="prop.title"
+              [purpose]="prop.purpose || 'Sale'"
+              class="block"
+            ></app-roi-calculator>
+
           </div>
 
           <!-- Sidebar (1 col) -->
@@ -446,6 +454,16 @@
                   <span>إرسال استفسار عبر النموذج</span>
                 </button>
 
+                <!-- Property Tour Booking Button -->
+                <button
+                  (click)="openTourModal()"
+                  type="button"
+                  class="w-full py-2.5 px-4 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
+                >
+                  <span>📅</span>
+                  <span>طلب حجز معاينة (ميدانية / فيديو)</span>
+                </button>
+
                 <!-- Quick Compare Toggle in Sidebar -->
                 <button
                   (click)="onToggleCompare()"
@@ -486,4 +504,14 @@
     [isOpen]="true"
     (close)="closeMortgageCalculator()"
   ></app-mortgage-calculator>
+}
+
+<!-- PROPERTY TOUR BOOKING MODAL -->
+@if (isTourModalOpen() && property()) {
+  <app-property-tour-modal
+    [propertyId]="property()!.id"
+    [propertyTitle]="property()!.title"
+    [isOpen]="isTourModalOpen()"
+    (close)="closeTourModal()"
+  ></app-property-tour-modal>
 }

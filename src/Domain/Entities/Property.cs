@@ -26,4 +26,7 @@ public class Property : BaseEntity
     public List<string> ImageUrls { get; set; } = new();
     public string Status { get; set; } = "Available";
     public bool IsFeatured { get; set; }
+
+    public double? Latitude { get; set; }
+    public double? Longitude { get; set; }
 }

@@ -104,6 +104,7 @@ app.MapAgencyEndpoints();
 app.MapNotificationEndpoints();
 app.MapUserEndpoints();
 app.MapChatEndpoints();
+app.MapTourEndpoints();
 
 app.MapFallbackToFile("index.html");
 

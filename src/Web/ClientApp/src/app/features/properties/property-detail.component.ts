@@ -10,6 +10,8 @@ import { ComparisonService } from '../../core/services/comparison.service';
 import { Property } from '../../core/models/property.model';
 import { InquiryModalComponent } from '../inquiries/inquiry-modal.component';
 import { MortgageCalculatorComponent } from './mortgage-calculator/mortgage-calculator.component';
+import { PropertyRoiCalculatorComponent } from './roi-calculator/roi-calculator.component';
+import { PropertyTourModalComponent } from './tour-modal/tour-modal.component';
 
 export interface NeighborhoodInfo {
   vibe: string;
@@ -20,7 +22,14 @@ export interface NeighborhoodInfo {
 @Component({
   selector: 'app-property-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, InquiryModalComponent, MortgageCalculatorComponent],
+  imports: [
+    CommonModule,
+    RouterLink,
+    InquiryModalComponent,
+    MortgageCalculatorComponent,
+    PropertyRoiCalculatorComponent,
+    PropertyTourModalComponent
+  ],
   templateUrl: './property-detail.component.html',
   styleUrls: []
 })
@@ -46,7 +55,16 @@ export class PropertyDetailComponent implements OnInit {
   readonly compareToast = signal<string | null>(null);
   readonly isInquiryModalOpen = signal<boolean>(false);
   readonly isMortgageModalOpen = signal<boolean>(false);
+  readonly isTourModalOpen = signal<boolean>(false);
   readonly isTogglingFavorite = signal<boolean>(false);
+
+  openTourModal(): void {
+    this.isTourModalOpen.set(true);
+  }
+
+  closeTourModal(): void {
+    this.isTourModalOpen.set(false);
+  }
 
   readonly defaultImage = 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop';
 

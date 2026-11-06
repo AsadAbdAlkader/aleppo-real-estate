@@ -23,6 +23,8 @@ public record UpdatePropertyCommand : IRequest<UpdatePropertyResult>
     public List<string> ImageUrls { get; init; } = new();
     public string Status { get; init; } = "Available";
     public bool? IsFeatured { get; init; }
+    public double? Latitude { get; init; }
+    public double? Longitude { get; init; }
 
     public string CurrentUserId { get; init; } = string.Empty;
     public bool IsAdmin { get; init; }
@@ -85,6 +87,14 @@ public class UpdatePropertyCommandHandler : IRequestHandler<UpdatePropertyComman
         {
             property.IsFeatured = request.IsFeatured.Value;
         }
+        if (request.Latitude.HasValue)
+        {
+            property.Latitude = request.Latitude.Value;
+        }
+        if (request.Longitude.HasValue)
+        {
+            property.Longitude = request.Longitude.Value;
+        }
         property.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
@@ -115,6 +125,8 @@ public class UpdatePropertyCommandHandler : IRequestHandler<UpdatePropertyComman
             ImageUrls = property.ImageUrls,
             Status = property.Status,
             IsFeatured = property.IsFeatured,
+            Latitude = property.Latitude,
+            Longitude = property.Longitude,
             CreatedAt = property.CreatedAt,
             UpdatedAt = property.UpdatedAt
         };

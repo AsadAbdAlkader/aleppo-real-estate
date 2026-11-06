@@ -185,6 +185,8 @@ public class ApplicationDbContextInitialiser
                 },
                 Status = "Available",
                 IsFeatured = true,
+                Latitude = 36.2230,
+                Longitude = 37.1320,
                 CreatedAt = DateTime.UtcNow.AddDays(-10)
             },
             new Property
@@ -208,6 +210,8 @@ public class ApplicationDbContextInitialiser
                 },
                 Status = "Available",
                 IsFeatured = true,
+                Latitude = 36.2085,
+                Longitude = 37.1180,
                 CreatedAt = DateTime.UtcNow.AddDays(-8)
             },
             new Property
@@ -231,6 +235,8 @@ public class ApplicationDbContextInitialiser
                 },
                 Status = "Available",
                 IsFeatured = false,
+                Latitude = 36.2135,
+                Longitude = 37.1510,
                 CreatedAt = DateTime.UtcNow.AddDays(-5)
             },
             new Property
@@ -254,6 +260,8 @@ public class ApplicationDbContextInitialiser
                 },
                 Status = "Available",
                 IsFeatured = false,
+                Latitude = 36.2200,
+                Longitude = 37.1380,
                 CreatedAt = DateTime.UtcNow.AddDays(-3)
             },
             new Property
@@ -277,6 +285,8 @@ public class ApplicationDbContextInitialiser
                 },
                 Status = "Available",
                 IsFeatured = true,
+                Latitude = 36.2055,
+                Longitude = 37.1340,
                 CreatedAt = DateTime.UtcNow.AddDays(-1)
             },
             new Property

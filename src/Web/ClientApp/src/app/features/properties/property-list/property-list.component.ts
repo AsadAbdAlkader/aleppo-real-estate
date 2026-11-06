@@ -7,11 +7,18 @@ import { Property, PropertyFilterParams } from '../../../core/models/property.mo
 import { PropertyCardComponent } from '../property-card/property-card.component';
 import { SearchFilterPanelComponent } from '../search-filter-panel/search-filter-panel.component';
 import { InquiryModalComponent } from '../../inquiries/inquiry-modal.component';
+import { PropertyMapComponent } from '../property-map/property-map.component';
 
 @Component({
   selector: 'app-property-list',
   standalone: true,
-  imports: [CommonModule, PropertyCardComponent, SearchFilterPanelComponent, InquiryModalComponent],
+  imports: [
+    CommonModule,
+    PropertyCardComponent,
+    SearchFilterPanelComponent,
+    InquiryModalComponent,
+    PropertyMapComponent
+  ],
   templateUrl: './property-list.component.html',
   styleUrls: []
 })
@@ -20,6 +27,9 @@ export class PropertyListComponent implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private queryParamsSub?: Subscription;
+
+  // View Mode: 'grid' vs 'map'
+  readonly viewMode = signal<'grid' | 'map'>('grid');
 
   // Data & Async State Signals
   properties = signal<Property[]>([]);
@@ -43,6 +53,10 @@ export class PropertyListComponent implements OnInit, OnDestroy {
     }
     return pages;
   });
+
+  toggleViewMode(mode: 'grid' | 'map'): void {
+    this.viewMode.set(mode);
+  }
 
   ngOnInit(): void {
     // Listen to query parameter changes to update state & reload properties

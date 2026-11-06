@@ -13,5 +13,6 @@ public interface IApplicationDbContext
     DbSet<AgentProfile> AgentProfiles { get; }
     DbSet<Notification> Notifications { get; }
     DbSet<ChatMessage> ChatMessages { get; }
+    DbSet<PropertyTourBooking> PropertyTourBookings { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

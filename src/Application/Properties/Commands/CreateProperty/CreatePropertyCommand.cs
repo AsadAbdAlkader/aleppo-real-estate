@@ -19,6 +19,8 @@ public record CreatePropertyCommand : IRequest<PropertyDto>
     public int Bathrooms { get; init; }
     public double AreaSquareMeters { get; init; }
     public List<string> ImageUrls { get; init; } = new();
+    public double? Latitude { get; init; }
+    public double? Longitude { get; init; }
     public string? OwnerId { get; set; }
 }
 
@@ -51,6 +53,8 @@ public class CreatePropertyCommandHandler : IRequestHandler<CreatePropertyComman
             ImageUrls = request.ImageUrls ?? new List<string>(),
             Status = "Available",
             IsFeatured = false,
+            Latitude = request.Latitude,
+            Longitude = request.Longitude,
             CreatedAt = DateTime.UtcNow
         };
 
@@ -88,6 +92,8 @@ public class CreatePropertyCommandHandler : IRequestHandler<CreatePropertyComman
             ImageUrls = property.ImageUrls,
             Status = property.Status,
             IsFeatured = property.IsFeatured,
+            Latitude = property.Latitude,
+            Longitude = property.Longitude,
             CreatedAt = property.CreatedAt,
             UpdatedAt = property.UpdatedAt
         };
