@@ -7,6 +7,7 @@ import { NotificationService } from '../../services/notification.service';
 import { ChatService } from '../../services/chat.service';
 import { CurrencyService, CurrencyCode } from '../../services/currency.service';
 import { ComparisonService } from '../../services/comparison.service';
+import { ThemeService } from '../../services/theme.service';
 import { Notification } from '../../models/notification.model';
 import { MortgageCalculatorComponent } from '../../../features/properties/mortgage-calculator/mortgage-calculator.component';
 import { HasPermissionDirective } from '../../directives/has-permission.directive';
@@ -21,6 +22,7 @@ import { Permissions } from '../../auth/permissions';
 })
 export class HeaderComponent {
   readonly permissions = Permissions;
+  readonly themeService = inject(ThemeService);
   readonly authService = inject(AuthService);
   readonly favoriteService = inject(FavoriteService);
   readonly notificationService = inject(NotificationService);
@@ -54,12 +56,17 @@ export class HeaderComponent {
   }
 
   toggleCurrencyDropdown(): void {
-    this.isCurrencyDropdownOpen.update(v => !v);
+    const current = this.isCurrencyDropdownOpen();
+    this.isCurrencyDropdownOpen.set(!current);
+  }
+
+  closeCurrencyDropdown(): void {
+    this.isCurrencyDropdownOpen.set(false);
   }
 
   selectCurrency(code: CurrencyCode): void {
     this.currencyService.setCurrency(code);
-    this.isCurrencyDropdownOpen.set(false);
+    this.closeCurrencyDropdown();
   }
 
   openMortgageCalculator(): void {
@@ -70,28 +77,11 @@ export class HeaderComponent {
     this.isMortgageCalculatorOpen.set(false);
   }
 
-  markAllAsRead(): void {
-    this.notificationService.markAllAsRead().subscribe({ error: () => {} });
-  }
-
-  onNotificationClick(notification: Notification): void {
-    this.notificationService.markAsRead(notification.id).subscribe({ error: () => {} });
-    this.closeDropdown();
-
-    if (notification.type === 'InquiryReceived') {
-      this.router.navigate(['/my-property-inquiries']);
-    } else if (notification.type === 'InquiryStatusUpdated') {
-      this.router.navigate(['/inquiries']);
-    }
-  }
-
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    if (this.isDropdownOpen() && !this.elementRef.nativeElement.contains(event.target)) {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
       this.closeDropdown();
-    }
-    if (this.isCurrencyDropdownOpen() && !this.elementRef.nativeElement.contains(event.target)) {
-      this.isCurrencyDropdownOpen.set(false);
+      this.closeCurrencyDropdown();
     }
   }
 
@@ -100,19 +90,38 @@ export class HeaderComponent {
   }
 
   formatTime(dateStr: string): string {
-    if (!dateStr) return '';
     const date = new Date(dateStr);
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / (1000 * 60));
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
 
     if (diffMins < 1) return 'الآن';
     if (diffMins < 60) return `منذ ${diffMins} دقيقة`;
     if (diffHours < 24) return `منذ ${diffHours} ساعة`;
     if (diffDays === 1) return 'أمس';
-    if (diffDays < 7) return `منذ ${diffDays} أيام`;
-    return date.toLocaleDateString('ar-SY', { month: 'short', day: 'numeric' });
+    return `منذ ${diffDays} يوم`;
+  }
+
+  markAllAsRead(): void {
+    this.notificationService.markAllAsRead().subscribe({ error: () => {} });
+  }
+
+  onNotificationClick(notification: Notification): void {
+    if (!notification.isRead) {
+      this.notificationService.markAsRead(notification.id).subscribe({ error: () => {} });
+    }
+    this.closeDropdown();
+
+    if (notification.type === 'Inquiry' || notification.type === 'NewInquiry' || notification.type === 'InquiryReceived') {
+      this.router.navigate(['/my-property-inquiries']);
+    } else if (notification.type === 'TourBooking') {
+      this.router.navigate(['/my-property-inquiries']);
+    } else if (notification.type === 'ChatMessage' && notification.referenceId) {
+      this.router.navigate(['/messages'], { queryParams: { conversationId: notification.referenceId } });
+    } else {
+      this.router.navigate(['/inquiries']);
+    }
   }
 }

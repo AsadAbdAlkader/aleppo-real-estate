@@ -54,6 +54,8 @@
 | BE-016 | Implement Property Geo-Coordinates, Realistic Aleppo Neighborhood Seeds & Tour Booking CQRS | ASP.NET Core Senior | DONE | INT-014 | `src/Domain`, `src/Application`, `src/Infrastructure`, `src/Web` |
 | FE-016 | Implement Leaflet Interactive Map, Investment ROI Calculator & Tour Booking Modal | Angular Senior | DONE | BE-016 | `src/Web/ClientApp` |
 | INT-015 | End-to-End Integration Verification & Testing for Map, ROI & Tour Booking Features | Main Agent | DONE | BE-016, FE-016 | `src/Web`, `src/Web/ClientApp`, `tests` |
+| FE-017 | Implement Luxury Obsidian Dark Mode Architecture, ThemeService & Responsive Theme Switcher | Angular Senior | DONE | INT-015 | `src/Web/ClientApp` |
+| INT-016 | End-to-End Integration Verification & Quality Gate Audit for Dark Mode UI & Theme State | Main Agent | DONE | FE-017 | `src/Web/ClientApp` |
 | BE-015 | Implement Real-Time Direct Property Chat Subsystem, EF Core Table & Endpoints | ASP.NET Core Senior | DONE | BE-014 | `src/Domain`, `src/Application`, `src/Infrastructure`, `src/Web` |
 | FE-015 | Implement Standalone Direct Property Chat UI (/messages), Signal State & Header Badge | Angular Senior | DONE | FE-014 | `src/Web/ClientApp` |
 | INT-014 | Historical Quality Gate Audit & Architecture Baseline | Main Agent | DONE | BE-015, FE-015 | Entire Solution |
