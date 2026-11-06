@@ -1,0 +1,304 @@
+<div class="min-h-screen bg-stone-50 py-8 px-4 sm:px-6 lg:px-8" dir="rtl">
+  <div class="max-w-7xl mx-auto space-y-8">
+    
+    <!-- Hero Header Banner -->
+    <div class="bg-gradient-to-l from-slate-900 via-slate-950 to-slate-900 rounded-3xl p-8 sm:p-10 text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border border-slate-800">
+      <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="relative z-10 max-w-3xl">
+        <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold mb-4 border border-amber-400/20">
+          🏛️ دليل العقارات والوكلاء المعتمدين بحلب
+        </span>
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
+          دليل الوكلاء والمكاتب العقارية
+        </h1>
+        <p class="mt-3 text-slate-300 text-sm sm:text-base leading-relaxed">
+          تصفح قائمة المكاتب والوكلاء العقاريين المعتمدين في جميع أحياء مدينة حلب، واكتشف العقارات المعروضة وتواصل معهم عبر المحادثة المباشرة (الشات).
+        </p>
+      </div>
+
+      @if (authService.userRole() === 'Agent' || authService.userRole() === 'Admin') {
+        <div class="relative z-10 shrink-0">
+          <button
+            type="button"
+            (click)="openAgencyModal(null)"
+            class="btn-primary"
+          >
+            <span>🏢 إضافة مكتب عقاري</span>
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- Search & Filter Controls Panel -->
+    <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200/80 space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+        
+        <!-- Search Term Input -->
+        <div class="md:col-span-6 relative">
+          <label for="agent-search" class="block text-xs font-bold text-slate-700 mb-1.5">البحث باسم الوكيل أو المكتب</label>
+          <div class="relative">
+            <input
+              id="agent-search"
+              type="text"
+              [ngModel]="searchTerm()"
+              (ngModelChange)="onSearchChange($event)"
+              placeholder="ابحث باسم الوكيل، اسم المكتب، أو المنطقة..."
+              class="w-full pl-4 pr-10 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all text-slate-800 placeholder-slate-400"
+            />
+            <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400">
+              🔍
+            </div>
+          </div>
+        </div>
+
+        <!-- Neighborhood Selector Filter -->
+        <div class="md:col-span-4">
+          <label for="city-area-select" class="block text-xs font-bold text-slate-700 mb-1.5">تصفية حسب الحي</label>
+          <select
+            id="city-area-select"
+            [ngModel]="selectedCityArea()"
+            (ngModelChange)="onCityAreaChange($event)"
+            class="w-full px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all text-slate-800 font-medium"
+          >
+            @for (area of cityAreas; track area.value) {
+              <option [value]="area.value">{{ area.label }}</option>
+            }
+          </select>
+        </div>
+
+        <!-- Reset Filters Button -->
+        <div class="md:col-span-2 flex items-end">
+          <button
+            type="button"
+            (click)="clearFilters()"
+            class="btn-outline w-full h-[42px]"
+          >
+            <span>🔄 إعادة ضبط</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Result Count Info -->
+      @if (!isLoading() && !errorMessage()) {
+        <div class="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
+          <span>تم العثور على <strong class="text-slate-800 font-bold">{{ totalCount() }}</strong> وكيل ومكتب عقاري</span>
+          @if (searchTerm() || selectedCityArea() !== 'all') {
+            <span class="text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md font-semibold border border-amber-200">فلتر نشط</span>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Error State -->
+    @if (errorMessage()) {
+      <div class="bg-rose-50 border border-rose-200 rounded-2xl p-8 text-center space-y-4">
+        <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">
+          ⚠️
+        </div>
+        <div class="space-y-1">
+          <h3 class="text-lg font-bold text-rose-900">حدث خطأ</h3>
+          <p class="text-sm text-rose-700 max-w-md mx-auto">{{ errorMessage() }}</p>
+        </div>
+        <button
+          (click)="retry()"
+          class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-md transition-all inline-flex items-center gap-2"
+        >
+          <span>إعادة المحاولة</span>
+        </button>
+      </div>
+    }
+
+    <!-- Loading Skeleton Grid -->
+    @if (isLoading()) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (item of [1, 2, 3, 4, 5, 6]; track item) {
+          <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 animate-pulse space-y-4">
+            <div class="flex items-center space-x-4 space-x-reverse">
+              <div class="w-16 h-16 bg-slate-200 rounded-2xl"></div>
+              <div class="space-y-2 flex-1">
+                <div class="h-4 bg-slate-200 rounded w-3/4"></div>
+                <div class="h-3 bg-slate-200 rounded w-1/2"></div>
+              </div>
+            </div>
+            <div class="space-y-2 pt-2">
+              <div class="h-3 bg-slate-200 rounded w-full"></div>
+              <div class="h-3 bg-slate-200 rounded w-2/3"></div>
+            </div>
+            <div class="flex gap-2 pt-4">
+              <div class="h-9 bg-slate-200 rounded-xl flex-1"></div>
+              <div class="h-9 bg-slate-200 rounded-xl flex-1"></div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Agents Grid -->
+    @if (!isLoading() && !errorMessage() && agents().length > 0) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (agent of agents(); track agent.id) {
+          <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md border border-slate-200/80 transition-all flex flex-col justify-between group">
+            
+            <div class="space-y-4">
+              <!-- Top Agent Header -->
+              <div class="flex items-start gap-4">
+                <div class="w-16 h-16 rounded-2xl bg-amber-50 border border-amber-200 overflow-hidden shrink-0 flex items-center justify-center text-2xl group-hover:scale-105 transition-transform">
+                  @if (agent.logoUrl) {
+                    <img [src]="agent.logoUrl" [alt]="agent.name" class="w-full h-full object-cover" />
+                  } @else {
+                    <span class="text-amber-700 font-bold">👤</span>
+                  }
+                </div>
+                
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between gap-2">
+                    <h3 class="text-lg font-bold text-slate-900 truncate group-hover:text-amber-600 transition-colors">
+                      {{ agent.name }}
+                    </h3>
+                  </div>
+
+                  @if (agent.agencyName && agent.agencyName !== 'مستقل') {
+                    <div class="text-xs font-semibold text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-md inline-block mt-1 border border-amber-200">
+                      🏢 {{ agent.agencyName }}
+                    </div>
+                  } @else {
+                    <div class="text-xs font-semibold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-md inline-block mt-1">
+                      👤 وكيل مستقل
+                    </div>
+                  }
+
+                  @if (agent.cityArea) {
+                    <p class="text-xs text-slate-500 mt-1 flex items-center gap-1">
+                      <span>📍</span>
+                      <span>حلب - {{ agent.cityArea }}</span>
+                    </p>
+                  }
+                </div>
+              </div>
+
+              <!-- Bio snippet -->
+              @if (agent.bio) {
+                <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                  {{ agent.bio }}
+                </p>
+              }
+
+              <!-- Badges Info -->
+              <div class="flex flex-wrap items-center gap-2 text-xs">
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-teal-50 text-teal-800 font-bold border border-teal-100">
+                  🏠 {{ agent.activePropertiesCount }} عقارات نشطة
+                </span>
+
+                @if (agent.licenseNumber) {
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-50 text-amber-800 font-medium border border-amber-200">
+                    📜 ترخيص: {{ agent.licenseNumber }}
+                  </span>
+                }
+              </div>
+            </div>
+
+            <!-- Card Bottom Actions: Direct Chat & Call & Profile -->
+            <div class="pt-5 mt-4 border-t border-slate-100 grid grid-cols-3 gap-2">
+              <a
+                [routerLink]="['/messages']"
+                [queryParams]="{ userId: agent.id }"
+                class="btn-primary btn-sm flex items-center justify-center gap-1"
+                title="بدء محادثة شات مباشرة مع الوكيل"
+              >
+                <span>💬</span>
+                <span>شات</span>
+              </a>
+
+              @if (agent.publicPhone) {
+                <a
+                  [href]="'tel:' + agent.publicPhone"
+                  class="btn-secondary btn-sm flex items-center justify-center gap-1"
+                  title="اتصل بالوكيل"
+                >
+                  <span>📞</span>
+                  <span>اتصال</span>
+                </a>
+              } @else {
+                <button
+                  disabled
+                  class="btn-outline btn-sm opacity-40 cursor-not-allowed text-center"
+                >
+                  غير متوفر
+                </button>
+              }
+
+              <a
+                [routerLink]="['/agents', agent.id]"
+                class="btn-outline btn-sm flex items-center justify-center gap-1 text-center"
+              >
+                <span>الملف</span>
+              </a>
+            </div>
+
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Empty State -->
+    @if (!isLoading() && !errorMessage() && agents().length === 0) {
+      <div class="bg-white rounded-2xl p-12 text-center space-y-4 border border-slate-200/80 shadow-sm max-w-xl mx-auto">
+        <div class="w-20 h-20 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto text-3xl">
+          🔍
+        </div>
+        <div class="space-y-1">
+          <h3 class="text-xl font-bold text-slate-800">لا يوجد وكلاء مطبقون للمحددات</h3>
+          <p class="text-sm text-slate-500">لم نجد أي نتائج تطابق البحث الخاص بك. جرب تغيير كلمة البحث أو تغيير الحي المختارات.</p>
+        </div>
+        <button
+          (click)="clearFilters()"
+          class="btn-primary"
+        >
+          <span>إلغاء الفلاتر</span>
+        </button>
+      </div>
+    }
+
+    <!-- Pagination -->
+    @if (!isLoading() && !errorMessage() && totalPages() > 1) {
+      <div class="flex items-center justify-center gap-2 pt-6">
+        <button
+          (click)="goToPage(pageNumber() - 1)"
+          [disabled]="pageNumber() === 1"
+          class="px-3.5 py-2 text-xs font-bold rounded-xl border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-slate-700"
+        >
+          السابق
+        </button>
+
+        @for (p of pagesArray(); track p) {
+          <button
+            (click)="goToPage(p)"
+            [class]="p === pageNumber() ? 'bg-amber-500 text-slate-950 border-amber-500 font-extrabold shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50 font-medium'"
+            class="w-9 h-9 text-xs rounded-xl border transition-colors flex items-center justify-center"
+          >
+            {{ p }}
+          </button>
+        }
+
+        <button
+          (click)="goToPage(pageNumber() + 1)"
+          [disabled]="pageNumber() === totalPages()"
+          class="px-3.5 py-2 text-xs font-bold rounded-xl border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-slate-700"
+        >
+          التالي
+        </button>
+      </div>
+    }
+
+  </div>
+</div>
+
+<!-- Agency Form Modal -->
+@if (isAgencyModalOpen()) {
+  <app-agency-form-modal
+    [agency]="selectedAgencyForEdit()"
+    (closed)="isAgencyModalOpen.set(false)"
+    (saved)="onAgencySaved($event)"
+  ></app-agency-form-modal>
+}

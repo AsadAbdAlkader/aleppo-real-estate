@@ -1,0 +1,489 @@
+<div class="min-h-screen bg-stone-50 py-8 px-4 sm:px-6 lg:px-8 dir-rtl text-right">
+  <div class="max-w-6xl mx-auto space-y-6">
+
+    <!-- Top Action Bar -->
+    <div class="flex flex-wrap items-center justify-between gap-4 bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/70 shadow-soft print:hidden">
+      <button
+        (click)="goBack()"
+        type="button"
+        class="inline-flex items-center gap-2 text-slate-600 hover:text-amber-700 font-bold text-sm transition-colors cursor-pointer"
+      >
+        <svg class="w-5 h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
+        </svg>
+        <span>العودة إلى قائمة العقارات</span>
+      </button>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap items-center gap-2.5">
+        <!-- Toast Feedback -->
+        @if (copiedToast()) {
+          <div class="bg-teal-700 text-white text-xs font-bold px-4 py-2 rounded-full shadow-soft animate-fade-in flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+            </svg>
+            <span>تم نسخ رابط العقار بنجاح!</span>
+          </div>
+        }
+
+        @if (compareToast()) {
+          <div class="bg-slate-900 text-amber-300 border border-amber-400/40 text-xs font-bold px-4 py-2 rounded-full shadow-soft animate-fade-in flex items-center gap-1.5">
+            <span>⚖️</span>
+            <span>{{ compareToast() }}</span>
+          </div>
+        }
+
+        <!-- Compare Button -->
+        @if (property()) {
+          <button
+            (click)="onToggleCompare()"
+            type="button"
+            class="btn-outline btn-sm flex items-center gap-1.5"
+            [class.border-amber-500]="isCompared()"
+            [class.text-amber-800]="isCompared()"
+            [class.bg-amber-50]="isCompared()"
+            [title]="isCompared() ? 'العقار مضاف إلى المقارنة' : 'إضافة إلى المقارنة'"
+          >
+            <span>⚖️</span>
+            <span>{{ isCompared() ? 'في المقارنة' : 'مقارنة' }}</span>
+          </button>
+        }
+
+        <!-- Mortgage Calculator Quick Trigger -->
+        <button
+          (click)="openMortgageCalculator()"
+          type="button"
+          class="btn-outline btn-sm flex items-center gap-1.5"
+          title="حاسبة التمويل والأقساط"
+        >
+          <span>🧮</span>
+          <span>حاسبة الأقساط</span>
+        </button>
+
+        <!-- Print Luxury Brochure -->
+        <button
+          (click)="printBrochure()"
+          type="button"
+          class="btn-outline btn-sm flex items-center gap-1.5"
+          title="طباعة بروشور ومواصفات العقار"
+        >
+          <span>🖨️</span>
+          <span>طباعة بروشور</span>
+        </button>
+
+        <!-- Share Button -->
+        <button
+          (click)="shareLink()"
+          type="button"
+          class="btn-outline btn-sm"
+          title="مشاركة رابط العقار"
+        >
+          <svg class="w-4 h-4 fill-none stroke-current" viewBox="0 0 24 24" stroke-width="1.7">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z"/>
+          </svg>
+          <span>مشاركة</span>
+        </button>
+
+        <!-- Favorite Button -->
+        @if (property()) {
+          <button
+            (click)="onToggleFavorite()"
+            [disabled]="isTogglingFavorite()"
+            type="button"
+            class="btn-danger btn-sm"
+            [title]="isFavorite() ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'"
+          >
+            @if (isFavorite()) {
+              <svg class="w-4 h-4 text-rose-600 fill-rose-600" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+              <span>في المفضلة</span>
+            } @else {
+              <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+              <span>إضافة للمفضلة</span>
+            }
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- PRINT ONLY HEADER (Luxury Property Sheet) -->
+    <div class="hidden print:block bg-slate-950 text-white p-6 rounded-2xl mb-6">
+      <div class="flex items-center justify-between border-b border-amber-500/30 pb-4 mb-4">
+        <div>
+          <h2 class="text-2xl font-black text-amber-400">عقارات حلب الفاخرة — Aleppo Real Estate</h2>
+          <p class="text-xs text-slate-300 mt-1">بطاقة مواصفات العقار المعتمدة رسمياً</p>
+        </div>
+        <div class="text-left text-xs text-slate-300">
+          <div>تاريخ الطباعة: {{ property()?.createdAt | date:'yyyy/MM/dd' }}</div>
+          <div class="text-amber-400 font-bold mt-1">www.aleppo-realestate.sy</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOADING STATE -->
+    @if (loading()) {
+      <div class="space-y-6 animate-pulse">
+        <div class="h-80 sm:h-96 bg-slate-200 rounded-[28px] w-full"></div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 space-y-4">
+            <div class="h-8 bg-slate-200 rounded-xl w-3/4"></div>
+            <div class="h-5 bg-slate-200 rounded-lg w-1/2"></div>
+          </div>
+          <div class="h-80 bg-slate-200 rounded-[28px]"></div>
+        </div>
+      </div>
+    }
+
+    <!-- 404 NOT FOUND -->
+    @if (!loading() && notFound()) {
+      <div class="bg-white rounded-3xl border border-slate-200 p-8 sm:p-12 text-center max-w-xl mx-auto my-12 shadow-soft space-y-5">
+        <div class="w-20 h-20 bg-amber-50 text-amber-700 rounded-full flex items-center justify-center mx-auto text-4xl border border-amber-200/60 shadow-inner">
+          🏛️
+        </div>
+        <h2 class="text-2xl font-black text-slate-900">العقار غير موجود</h2>
+        <p class="text-slate-600 text-sm leading-relaxed">
+          عذراً، العقار الذي تبحث عنه غير موجود أو قد يكون تم حذفه من قبل المالك أو تغيير حالته.
+        </p>
+        <button [routerLink]="['/properties']" type="button" class="btn-primary">
+          <span>تصفح كل العقارات المتاحة</span>
+        </button>
+      </div>
+    }
+
+    <!-- ERROR STATE -->
+    @if (!loading() && !notFound() && errorMessage()) {
+      <div class="bg-rose-50 border border-rose-200 text-rose-800 p-6 rounded-2xl text-center space-y-4 max-w-lg mx-auto my-8">
+        <p class="font-bold text-sm">{{ errorMessage() }}</p>
+        <button
+          (click)="ngOnInit()"
+          type="button"
+          class="btn-danger btn-sm"
+        >
+          إعادة المحاولة
+        </button>
+      </div>
+    }
+
+    <!-- PROPERTY MAIN CONTENT -->
+    @if (!loading() && !notFound() && property(); as prop) {
+      <div class="space-y-7">
+
+        <!-- Image Gallery Showcase -->
+        <div class="bg-white p-4 sm:p-6 rounded-[32px] border border-slate-200/70 shadow-soft space-y-4">
+          <div class="relative h-72 sm:h-96 md:h-[460px] bg-slate-950 rounded-3xl overflow-hidden shadow-inner flex items-center justify-center">
+            <img
+              [src]="currentImageUrl()"
+              [alt]="prop.title"
+              (error)="onImageError()"
+              class="w-full h-full object-cover transition-all duration-300"
+            />
+
+            @if (selectedImageIndex() === 0) {
+              <span class="absolute top-4 right-4 bg-amber-400 text-ink-950 text-xs font-black px-3.5 py-1.5 rounded-full shadow-gold-sm flex items-center gap-1.5 z-10">
+                <span>⭐</span>
+                <span>الصورة الرئيسية</span>
+              </span>
+            }
+
+            <span [class]="getStatusBadgeClass(prop.status)" class="absolute top-4 left-4 text-xs font-bold px-3.5 py-1.5 rounded-full backdrop-blur-md shadow-soft z-10">
+              {{ getStatusLabel(prop.status) }}
+            </span>
+
+            <span class="absolute bottom-4 right-4 bg-slate-950/85 text-white text-xs font-bold px-3.5 py-1.5 rounded-2xl backdrop-blur-md flex items-center gap-1.5 z-10 border border-white/10">
+              <span>{{ getCategoryIcon(prop.category) }}</span>
+              <span>{{ getCategoryLabel(prop.category) }}</span>
+            </span>
+          </div>
+
+          <!-- Thumbnails Strip -->
+          @if (imageUrls().length > 1) {
+            <div class="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-thin">
+              @for (imgUrl of imageUrls(); track $index) {
+                <button
+                  (click)="selectImage($index)"
+                  type="button"
+                  class="relative flex-shrink-0 w-20 h-16 sm:w-24 sm:h-20 rounded-2xl overflow-hidden border-2 transition-all cursor-pointer focus:outline-none"
+                  [ngClass]="selectedImageIndex() === $index ? 'border-amber-400 ring-2 ring-amber-300/50 scale-105' : 'border-slate-200 opacity-70 hover:opacity-100'"
+                >
+                  <img [src]="imgUrl" [alt]="'صورة ' + ($index + 1)" class="w-full h-full object-cover" />
+                  @if ($index === 0) {
+                    <span class="absolute bottom-0 inset-x-0 bg-amber-400 text-ink-950 text-[9px] text-center font-black py-0.5">غلاف</span>
+                  }
+                </button>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- 2 Columns Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-7">
+
+          <!-- Main Column (2 cols) -->
+          <div class="lg:col-span-2 space-y-7">
+
+            <!-- Title & Location Card -->
+            <div class="bg-white p-6 sm:p-7 rounded-[28px] border border-slate-200/70 shadow-soft space-y-3.5">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="text-xs font-bold text-amber-900 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
+                  {{ getPurposeLabel(prop.purpose) }}
+                </span>
+                <span class="text-xs text-slate-400 font-medium">
+                  تاريخ النشر: <span class="font-latin">{{ prop.createdAt | date:'yyyy-MM-dd' }}</span>
+                </span>
+              </div>
+
+              <h1 class="text-2xl sm:text-[32px] font-bold text-slate-900 leading-[1.4]">
+                {{ prop.title }}
+              </h1>
+
+              <div class="hairline-gold"></div>
+
+              <div class="flex items-start text-slate-600 text-sm gap-2 pt-1">
+                <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
+                </svg>
+                <span class="font-bold text-slate-800 text-base">
+                  حلب — حي {{ prop.cityArea }}
+                  @if (prop.address) {
+                    <span class="text-slate-500 font-normal text-sm">({{ prop.address }})</span>
+                  }
+                </span>
+              </div>
+            </div>
+
+            <!-- Specs Grid -->
+            <div class="bg-white p-6 sm:p-7 rounded-[28px] border border-slate-200/70 shadow-soft space-y-4">
+              <h3 class="text-lg font-bold text-slate-900 pb-3 border-b border-slate-100 flex items-center gap-2.5">
+                <span class="w-8 h-8 rounded-full bg-amber-50 border border-amber-200/60 flex items-center justify-center">
+                  📋
+                </span>
+                <span>المواصفات والتفاصيل الأساسية</span>
+              </h3>
+
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <!-- Price Box -->
+                <div class="bg-ivory-50 p-4 rounded-2xl border border-slate-200/70 space-y-1">
+                  <span class="text-[11px] font-bold text-slate-400 block">السعر المطلوب</span>
+                  <span class="font-latin text-xl sm:text-2xl font-black text-amber-700 block leading-tight">
+                    {{ formattedPrice() }}
+                  </span>
+                  <span class="text-[10px] text-slate-500 font-medium block">
+                    سعر المتر: {{ pricePerM2() }}
+                  </span>
+                </div>
+
+                <!-- Purpose Box -->
+                <div class="bg-ivory-50 p-4 rounded-2xl border border-slate-200/70 space-y-1">
+                  <span class="text-[11px] font-bold text-slate-400 block">غرض العقار</span>
+                  <span class="text-[15px] font-bold text-slate-800 block">{{ getPurposeLabel(prop.purpose) }}</span>
+                </div>
+
+                <!-- Category Box -->
+                <div class="bg-ivory-50 p-4 rounded-2xl border border-slate-200/70 space-y-1">
+                  <span class="text-[11px] font-bold text-slate-400 block">نوع العقار</span>
+                  <span class="text-[15px] font-bold text-slate-800 block">{{ getCategoryLabel(prop.category) }}</span>
+                </div>
+
+                <!-- Bedrooms -->
+                @if (prop.bedrooms > 0) {
+                  <div class="bg-ivory-50 p-4 rounded-2xl border border-slate-200/70 space-y-1">
+                    <span class="text-[11px] font-bold text-slate-400 block">غرف النوم</span>
+                    <span class="text-[15px] font-bold text-slate-800 block flex items-center gap-1.5">
+                      <span>🛏️</span>
+                      <span>{{ prop.bedrooms }} غرف</span>
+                    </span>
+                  </div>
+                }
+
+                <!-- Bathrooms -->
+                @if (prop.bathrooms > 0) {
+                  <div class="bg-ivory-50 p-4 rounded-2xl border border-slate-200/70 space-y-1">
+                    <span class="text-[11px] font-bold text-slate-400 block">الحمامات</span>
+                    <span class="text-[15px] font-bold text-slate-800 block flex items-center gap-1.5">
+                      <span>🚿</span>
+                      <span>{{ prop.bathrooms }} حمام</span>
+                    </span>
+                  </div>
+                }
+
+                <!-- Total Area -->
+                <div class="bg-ivory-50 p-4 rounded-2xl border border-slate-200/70 space-y-1">
+                  <span class="text-[11px] font-bold text-slate-400 block">المساحة الإجمالية</span>
+                  <span class="text-[15px] font-bold text-slate-800 block flex items-center gap-1.5">
+                    <span>📐</span>
+                    <span class="font-latin">{{ prop.areaSquareMeters }}</span>
+                    <span>م²</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div class="bg-white p-6 sm:p-7 rounded-[28px] border border-slate-200/70 shadow-soft space-y-3.5">
+              <h3 class="text-lg font-bold text-slate-900 pb-3 border-b border-slate-100 flex items-center gap-2.5">
+                <span class="w-8 h-8 rounded-full bg-amber-50 border border-amber-200/60 flex items-center justify-center">
+                  📝
+                </span>
+                <span>وصف العقار والمزايا</span>
+              </h3>
+              <p class="text-slate-700 text-sm sm:text-base leading-loose whitespace-pre-line">
+                {{ prop.description }}
+              </p>
+            </div>
+
+            <!-- FEATURE: ALEPPO NEIGHBORHOOD GUIDE & NEARBY AMENITIES -->
+            <div class="bg-white p-6 sm:p-7 rounded-[28px] border border-slate-200/70 shadow-soft space-y-5">
+              <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2.5">
+                  <span class="w-8 h-8 rounded-full bg-teal-50 border border-teal-200/60 flex items-center justify-center">
+                    📍
+                  </span>
+                  <span>دليل الحي والخدمات المحيطة — حلب ({{ prop.cityArea }})</span>
+                </h3>
+                <span class="bg-amber-50 text-amber-800 border border-amber-200 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                  <span>⭐</span>
+                  <span>{{ neighborhoodGuide().rating }} / 5</span>
+                </span>
+              </div>
+
+              <!-- Neighborhood Vibe Insight -->
+              <p class="text-xs sm:text-sm text-slate-600 bg-teal-50/60 p-4 rounded-2xl border border-teal-100 leading-relaxed">
+                ℹ️ {{ neighborhoodGuide().vibe }}
+              </p>
+
+              <!-- Nearby Amenities Grid -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+                @for (amenity of neighborhoodGuide().amenities; track amenity.name) {
+                  <div class="flex items-center justify-between p-3.5 bg-slate-50 hover:bg-slate-100/80 rounded-2xl border border-slate-200/70 transition-colors">
+                    <div class="flex items-center gap-2.5">
+                      <span class="text-lg">{{ amenity.icon }}</span>
+                      <span class="text-xs font-bold text-slate-800">{{ amenity.name }}</span>
+                    </div>
+                    <span class="text-[11px] font-semibold text-teal-700 bg-white px-2.5 py-1 rounded-lg border border-slate-200">
+                      {{ amenity.dist }}
+                    </span>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- FEATURE: EMBEDDED MORTGAGE CALCULATOR -->
+            <div class="bg-white rounded-[28px] border border-slate-200/70 shadow-soft overflow-hidden">
+              <app-mortgage-calculator
+                [initialPrice]="prop.price"
+                [isModal]="false"
+              ></app-mortgage-calculator>
+            </div>
+
+          </div>
+
+          <!-- Sidebar (1 col) -->
+          <div class="space-y-6">
+            <div class="bg-white p-6 rounded-[28px] border border-slate-200/70 shadow-soft space-y-5 lg:sticky lg:top-6">
+
+              <!-- Price Panel -->
+              <div class="bg-slate-950 rounded-3xl p-5 text-center space-y-1.5 relative overflow-hidden border border-slate-900 shadow-xl">
+                <div class="absolute -top-10 right-1/2 translate-x-1/2 w-40 h-40 bg-amber-500/20 blur-[50px] rounded-full"></div>
+                <span class="text-[11px] text-amber-300/90 font-bold block relative">القيمة المطلوبة</span>
+                <span class="font-latin text-3xl sm:text-[34px] font-black text-amber-400 block relative leading-tight">
+                  {{ formattedPrice() }}
+                </span>
+                <span class="text-[11px] text-slate-400 block relative font-medium">
+                  سعر المتر: {{ pricePerM2() }}
+                </span>
+                <div class="hairline-gold relative opacity-70 pt-1"></div>
+                <span class="text-[10px] text-slate-400 block relative">السعر قابل للتفاوض المباشر مع المعلن</span>
+              </div>
+
+              <!-- Owner / Agent Info Card -->
+              <div class="border-t border-slate-100 pt-4 space-y-4">
+                <h4 class="text-[11px] font-black text-slate-400 uppercase tracking-wider">
+                  المعلن / صاحب العقار
+                </h4>
+
+                <div class="flex items-center gap-3">
+                  <span class="w-12 h-12 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 text-ink-950 font-black text-xl flex items-center justify-center shadow-gold-sm flex-shrink-0">
+                    {{ ownerName().charAt(0) }}
+                  </span>
+
+                  <div class="overflow-hidden">
+                    <div class="flex items-center gap-1.5">
+                      <h5 class="font-bold text-slate-900 text-[15px] truncate">
+                        {{ ownerName() }}
+                      </h5>
+                      <span class="text-amber-500" title="معلن موثوق">✓</span>
+                    </div>
+                    <span class="inline-flex items-center gap-1.5 text-xs text-teal-700 font-bold mt-1">
+                      <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+                      <span>معلن موثوق ومعتمد</span>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="bg-ivory-50 p-3.5 rounded-2xl border border-slate-200/70 text-[11.5px] text-slate-500 leading-relaxed flex gap-2.5">
+                  <span>🛡️</span>
+                  <span>التواصل عبر المحادثة المباشرة (الشات) يضمن سرعة الرد وحفظ سجل الاتفاقيات بأمان.</span>
+                </div>
+              </div>
+
+              <!-- Direct Actions -->
+              <div class="space-y-3 pt-1 print:hidden">
+                <button (click)="onDirectContact()" type="button" class="w-full btn-primary btn-lg">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/>
+                  </svg>
+                  <span>محادثة مباشرة مع المالك (شات)</span>
+                </button>
+
+                <button (click)="onOpenInquiryModal()" type="button" class="w-full btn-secondary">
+                  <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
+                  </svg>
+                  <span>إرسال استفسار عبر النموذج</span>
+                </button>
+
+                <!-- Quick Compare Toggle in Sidebar -->
+                <button
+                  (click)="onToggleCompare()"
+                  type="button"
+                  class="w-full btn-outline btn-sm flex items-center justify-center gap-1.5"
+                  [class.bg-amber-50]="isCompared()"
+                  [class.border-amber-400]="isCompared()"
+                >
+                  <span>⚖️</span>
+                  <span>{{ isCompared() ? 'العقار مضاف إلى المقارنة' : 'إضافة هذا العقار للمقارنة' }}</span>
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    }
+
+  </div>
+</div>
+
+<!-- INQUIRY MODAL -->
+<app-inquiry-modal
+  [property]="property()"
+  [isOpen]="isInquiryModalOpen()"
+  (close)="onCloseInquiryModal()"
+>
+</app-inquiry-modal>
+
+<!-- MORTGAGE CALCULATOR MODAL -->
+@if (isMortgageModalOpen() && property()) {
+  <app-mortgage-calculator
+    [initialPrice]="property()!.price"
+    [isModal]="true"
+    [isOpen]="true"
+    (close)="closeMortgageCalculator()"
+  ></app-mortgage-calculator>
+}

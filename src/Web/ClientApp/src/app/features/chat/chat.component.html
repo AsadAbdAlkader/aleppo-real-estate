@@ -1,0 +1,352 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6" dir="rtl">
+  
+  <!-- Main Chat Container -->
+  <div class="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden h-[calc(100vh-140px)] min-h-[600px] flex flex-col md:flex-row">
+    
+    <!-- LEFT PANEL: Conversation List -->
+    <div 
+      class="w-full md:w-80 lg:w-96 border-l border-slate-200 bg-slate-50/50 flex flex-col h-full"
+      [class.hidden]="isMobileConversationSelected()"
+      [class.md:flex]="true"
+    >
+      <!-- Panel Header & Search -->
+      <div class="p-4 border-b border-slate-200 bg-white space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+            <span>💬</span>
+            <span>المحادثات المباشرة</span>
+          </h2>
+          @if (chatService.unreadChatCount() > 0) {
+            <span class="bg-amber-400 text-slate-950 text-xs font-black px-2.5 py-0.5 rounded-full shadow-sm">
+              {{ chatService.unreadChatCount() }} غير مقروء
+            </span>
+          }
+        </div>
+
+        <!-- Search Input Field -->
+        <div class="relative">
+          <input 
+            type="text" 
+            [ngModel]="searchTerm()" 
+            (ngModelChange)="searchTerm.set($event)"
+            placeholder="ابحث عن محادثة..." 
+            class="w-full pl-4 pr-9 py-2 rounded-xl bg-slate-100 border border-slate-200 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all"
+          />
+          <span class="absolute right-3 top-2.5 text-slate-400 text-xs">🔍</span>
+        </div>
+      </div>
+
+      <!-- Conversations Scrollable Stream -->
+      <div class="flex-1 overflow-y-auto divide-y divide-slate-100 custom-scrollbar">
+        @if (chatService.loading()) {
+          <div class="p-4 space-y-4">
+            @for (i of [1,2,3]; track i) {
+              <div class="animate-pulse flex items-center space-x-3 space-x-reverse">
+                <div class="rounded-full bg-slate-200 h-12 w-12"></div>
+                <div class="flex-1 space-y-2 py-1">
+                  <div class="h-3 bg-slate-200 rounded w-3/4"></div>
+                  <div class="h-2 bg-slate-200 rounded w-1/2"></div>
+                </div>
+              </div>
+            }
+          </div>
+        } @else if (filteredConversations().length === 0) {
+          <div class="p-8 text-center text-slate-400 text-xs space-y-2">
+            <span class="text-3xl block">📥</span>
+            <p>لا توجد محادثات تطابق بحثك</p>
+          </div>
+        } @else {
+          @for (conv of filteredConversations(); track conv.otherUserId) {
+            <div 
+              (click)="selectConversation(conv)"
+              class="p-4 hover:bg-white transition-colors cursor-pointer text-right relative group border-r-4"
+              [class.bg-white]="chatService.activeContact()?.otherUserId === conv.otherUserId"
+              [class.border-teal-600]="chatService.activeContact()?.otherUserId === conv.otherUserId"
+              [class.shadow-sm]="chatService.activeContact()?.otherUserId === conv.otherUserId"
+              [class.border-transparent]="chatService.activeContact()?.otherUserId !== conv.otherUserId"
+            >
+              <div class="flex items-start gap-3">
+                <!-- Contact Avatar -->
+                <div class="relative flex-shrink-0">
+                  <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-slate-700 to-slate-900 text-white font-bold text-base flex items-center justify-center shadow-sm">
+                    {{ conv.otherUserName.charAt(0) }}
+                  </div>
+                  <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full ring-2 ring-white" title="نشط حالياً"></span>
+                </div>
+
+                <!-- Info Column -->
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between gap-1 mb-1">
+                    <h3 class="text-sm font-bold text-slate-900 group-hover:text-teal-700 transition-colors truncate">
+                      {{ conv.otherUserName }}
+                    </h3>
+                    <span class="text-[10px] text-slate-400 font-medium whitespace-nowrap">
+                      {{ formatTime(conv.lastMessageTime) }}
+                    </span>
+                  </div>
+
+                  <!-- Role Badge & Unread -->
+                  <div class="flex items-center justify-between gap-2 mb-1">
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-md border" [ngClass]="getRoleBadge(conv.otherUserRole).css">
+                      {{ getRoleBadge(conv.otherUserRole).text }}
+                    </span>
+
+                    @if (conv.unreadCount > 0) {
+                      <span class="bg-amber-400 text-slate-950 text-[10px] font-black px-1.5 py-0.5 rounded-full shadow-sm">
+                        {{ conv.unreadCount }}
+                      </span>
+                    }
+                  </div>
+
+                  <!-- Property snippet badge if available -->
+                  @if (conv.propertyTitle) {
+                    <div class="text-[10px] text-teal-800 bg-teal-50/80 rounded px-1.5 py-0.5 truncate mb-1 border border-teal-100 flex items-center gap-1">
+                      <span>🏠</span>
+                      <span class="truncate">{{ conv.propertyTitle }}</span>
+                    </div>
+                  }
+
+                  <!-- Last Message Snippet -->
+                  <p class="text-xs text-slate-500 truncate font-normal">
+                    {{ conv.lastMessage }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: Active Chat Window -->
+    <div 
+      class="flex-1 flex flex-col h-full bg-slate-100/60"
+      [class.hidden]="!isMobileConversationSelected()"
+      [class.md:flex]="true"
+    >
+      @if (chatService.activeContact(); as contact) {
+        
+        <!-- ACTIVE CHAT HEADER BAR -->
+        <div class="p-4 border-b border-slate-200 bg-white shadow-sm flex items-center justify-between z-10">
+          <div class="flex items-center gap-3">
+            <!-- Mobile Back Button -->
+            <button 
+              (click)="backToConversationList()" 
+              class="md:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition-colors"
+              title="العودة للمحادثات"
+            >
+              ➡️
+            </button>
+
+            <!-- Contact Avatar & Status -->
+            <div class="relative flex-shrink-0">
+              <div class="w-11 h-11 rounded-full bg-gradient-to-tr from-teal-600 to-teal-700 text-white font-bold text-base flex items-center justify-center shadow-sm">
+                {{ contact.otherUserName.charAt(0) }}
+              </div>
+              <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full ring-2 ring-white"></span>
+            </div>
+
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-base font-extrabold text-slate-900 leading-snug">
+                  {{ contact.otherUserName }}
+                </h2>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-md border" [ngClass]="getRoleBadge(contact.otherUserRole).css">
+                  {{ getRoleBadge(contact.otherUserRole).text }}
+                </span>
+              </div>
+              <div class="flex items-center gap-1.5 text-xs text-emerald-600 font-semibold mt-0.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>نشط حالياً</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Phone Quick Link -->
+          @if (contact.otherUserPhone) {
+            <a 
+              [href]="'tel:' + contact.otherUserPhone" 
+              class="hidden sm:flex items-center gap-1.5 text-xs font-bold text-teal-700 bg-teal-50 border border-teal-200 px-3 py-1.5 rounded-xl hover:bg-teal-100 transition-colors"
+            >
+              <span>📞</span>
+              <span>{{ contact.otherUserPhone }}</span>
+            </a>
+          }
+        </div>
+
+        <!-- LINKED PROPERTY BADGE SNIPPET -->
+        @if (contact.propertyTitle) {
+          <div class="bg-gradient-to-r from-amber-500/10 via-amber-400/5 to-teal-500/10 px-4 py-2.5 border-b border-amber-200/60 flex items-center justify-between text-xs">
+            <div class="flex items-center gap-2 text-slate-800 font-bold truncate">
+              <span class="text-base">🏢</span>
+              <span class="text-slate-600 font-medium">محادثة حول العقار:</span>
+              <span class="text-slate-900 truncate">{{ contact.propertyTitle }}</span>
+            </div>
+
+            @if (contact.propertyId) {
+              <a 
+                [routerLink]="['/properties', contact.propertyId]" 
+                class="flex-shrink-0 text-[11px] font-bold text-amber-800 bg-amber-100 hover:bg-amber-200 px-3 py-1 rounded-lg transition-colors shadow-sm"
+              >
+                عرض العقار 🔗
+              </a>
+            }
+          </div>
+        }
+
+        <!-- MESSAGE STREAM CONTAINER -->
+        <div 
+          #messageContainer 
+          class="flex-1 p-4 overflow-y-auto space-y-4 custom-scrollbar"
+        >
+          @if (chatService.activeMessages().length === 0) {
+            <div class="h-full flex flex-col items-center justify-center text-center p-8 text-slate-400 space-y-3">
+              <div class="w-16 h-16 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center text-2xl shadow-inner">
+                💬
+              </div>
+              <div>
+                <p class="text-sm font-bold text-slate-700">لا توجد رسائل سابقة مع {{ contact.otherUserName }}</p>
+                <p class="text-xs text-slate-400 mt-1">اكتب رسالتك الأولى في الأسفل للبدء</p>
+              </div>
+            </div>
+          } @else {
+            @for (msg of chatService.activeMessages(); track msg.id) {
+              
+              <!-- Message Item -->
+              <div 
+                class="flex flex-col"
+                [class.items-start]="msg.senderId !== currentUserId()"
+                [class.items-end]="msg.senderId === currentUserId()"
+              >
+                <!-- Bubble -->
+                <div 
+                  class="max-w-[85%] sm:max-w-[75%] p-3.5 shadow-sm text-sm leading-relaxed whitespace-pre-line"
+                  [class.bg-white]="msg.senderId !== currentUserId()"
+                  [class.text-slate-900]="msg.senderId !== currentUserId()"
+                  [class.border]="msg.senderId !== currentUserId()"
+                  [class.border-slate-200]="msg.senderId !== currentUserId()"
+                  [class.rounded-2xl]="true"
+                  [class.rounded-tr-none]="msg.senderId !== currentUserId()"
+                  [class.bg-slate-900]="msg.senderId === currentUserId()"
+                  [class.text-white]="msg.senderId === currentUserId()"
+                  [class.rounded-tl-none]="msg.senderId === currentUserId()"
+                >
+                  <!-- Property context badge inside message if present -->
+                  @if (msg.propertyTitle && msg.propertyTitle !== contact.propertyTitle) {
+                    <div class="text-[10px] bg-amber-400/20 text-amber-300 rounded px-2 py-0.5 mb-1.5 border border-amber-400/30">
+                      🏠 {{ msg.propertyTitle }}
+                    </div>
+                  }
+
+                  <p>{{ msg.message }}</p>
+
+                  <!-- Time & Read status footer -->
+                  <div 
+                    class="flex items-center gap-1.5 justify-end text-[10px] mt-1.5"
+                    [class.text-slate-400]="msg.senderId !== currentUserId()"
+                    [class.text-slate-300]="msg.senderId === currentUserId()"
+                  >
+                    <span>{{ formatMessageTime(msg.createdAt) }}</span>
+                    
+                    @if (msg.senderId === currentUserId()) {
+                      <span class="font-bold text-xs" [class.text-teal-400]="msg.isRead" [class.text-slate-400]="!msg.isRead">
+                        {{ msg.isRead ? '✓✓' : '✓' }}
+                      </span>
+                    }
+                  </div>
+                </div>
+              </div>
+
+            }
+          }
+        </div>
+
+        <!-- ATTACHMENT TOAST -->
+        @if (attachmentToast()) {
+          <div class="bg-teal-600 text-white text-xs font-bold px-4 py-2 text-center transition-all animate-bounce">
+            ℹ️ {{ attachmentToast() }}
+          </div>
+        }
+
+        <!-- EMOJI PICKER POPUP GRID -->
+        @if (showEmojiPicker()) {
+          <div class="bg-white border-t border-slate-200 p-3 flex flex-wrap gap-2 justify-center shadow-inner">
+            @for (emoji of commonEmojis; track emoji) {
+              <button 
+                (click)="addEmoji(emoji)" 
+                type="button" 
+                class="w-9 h-9 text-lg rounded-xl hover:bg-slate-100 flex items-center justify-center transition-transform hover:scale-125 focus:outline-none"
+              >
+                {{ emoji }}
+              </button>
+            }
+          </div>
+        }
+
+        <!-- MESSAGE INPUT BAR -->
+        <div class="p-3 sm:p-4 bg-white border-t border-slate-200 z-10">
+          <form (ngSubmit)="sendMessage()" class="flex items-center gap-2">
+            
+            <!-- Emoji Picker Button -->
+            <button 
+              type="button" 
+              (click)="toggleEmojiPicker()" 
+              class="p-2.5 rounded-xl text-slate-500 hover:text-amber-600 hover:bg-amber-50 transition-colors focus:outline-none"
+              title="إدراج رمز تعبيري"
+            >
+              😊
+            </button>
+
+            <!-- Attachment Button -->
+            <button 
+              type="button" 
+              (click)="onAttachmentClick()" 
+              class="p-2.5 rounded-xl text-slate-500 hover:text-teal-600 hover:bg-teal-50 transition-colors focus:outline-none"
+              title="إرفاق ملف"
+            >
+              📎
+            </button>
+
+            <!-- Input Field -->
+            <input 
+              type="text" 
+              [ngModel]="newMessageText()" 
+              (ngModelChange)="newMessageText.set($event)"
+              name="chatMessage" 
+              placeholder="اكتب رسالتك هنا..." 
+              class="flex-1 px-4 py-3 rounded-2xl bg-slate-100 border border-slate-200 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:bg-white transition-all"
+              autocomplete="off"
+            />
+
+            <!-- Send Button -->
+            <button 
+              type="submit" 
+              [disabled]="!newMessageText().trim()" 
+              class="btn-primary py-3 px-5 rounded-2xl flex items-center gap-2 font-bold disabled:opacity-40 disabled:cursor-not-allowed shadow-md shadow-amber-500/20"
+            >
+              <span>إرسال</span>
+              <span>✈️</span>
+            </button>
+
+          </form>
+        </div>
+
+      } @else {
+        <!-- EMPTY STATE (NO CHAT SELECTED) -->
+        <div class="h-full flex flex-col items-center justify-center text-center p-8 text-slate-400 space-y-4">
+          <div class="w-20 h-20 rounded-full bg-slate-200/60 text-slate-400 flex items-center justify-center text-4xl shadow-inner">
+            💬
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-slate-700">اختر محادثة لبدء التواصل المباشر</h3>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto mt-1">
+              يمكنك مراسلة مكاتب العقارات والوكلاء وأصحاب العقارات للاستفسار وتحديد مواعيد المعاينة بسهولة.
+            </p>
+          </div>
+        </div>
+      }
+    </div>
+
+  </div>
+
+</div>

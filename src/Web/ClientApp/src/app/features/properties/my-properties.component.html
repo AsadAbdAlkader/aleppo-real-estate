@@ -1,0 +1,220 @@
+<div class="min-h-screen bg-stone-50/60 py-8 px-4 sm:px-6 lg:px-8 font-sans" dir="rtl">
+  <div class="max-w-7xl mx-auto space-y-6">
+    
+    <!-- Dashboard Canvas Card -->
+    <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200/60 space-y-6">
+
+      <!-- Page Header Banner -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-slate-100 pb-6 gap-4">
+        <div>
+          <div class="flex items-center gap-3">
+            <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">عقاراتي المعلنة (My Properties)</h1>
+            <span class="bg-teal-50 text-teal-700 text-xs font-bold px-2.5 py-1 rounded-full border border-teal-100">
+              {{ properties().length }} عقار
+            </span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">
+            إدارة، تعديل، ونشر عقاراتك الخاصة المعروضة للبيع وللإيجار في مختلف أحياء مدينة حلب.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          (click)="openCreateModal()"
+          class="btn-primary"
+        >
+          <span class="text-base">+</span>
+          <span>إضافة عقار جديد</span>
+        </button>
+      </div>
+
+      <!-- Error Alert Banner -->
+      @if (errorMessage()) {
+        <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-base">⚠️</span>
+            <span>{{ errorMessage() }}</span>
+          </div>
+          <button
+            (click)="loadMyProperties()"
+            class="px-4 py-1.5 bg-rose-600 text-white text-xs font-bold rounded-xl hover:bg-rose-700 transition-colors"
+          >
+            إعادة المحاولة
+          </button>
+        </div>
+      }
+
+      <!-- Loading Skeleton Grid -->
+      @if (loading()) {
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          @for (i of [1, 2, 3, 4]; track i) {
+            <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm animate-pulse space-y-4 p-4">
+              <div class="w-full h-44 bg-slate-200 rounded-xl"></div>
+              <div class="h-4 bg-slate-200 rounded w-3/4"></div>
+              <div class="h-3 bg-slate-200 rounded w-1/2"></div>
+              <div class="h-8 bg-slate-200 rounded-xl w-full pt-2"></div>
+            </div>
+          }
+        </div>
+      }
+      
+      <!-- Empty State -->
+      @else if (properties().length === 0) {
+        <div class="py-16 text-center max-w-md mx-auto my-6 space-y-4">
+          <div class="w-20 h-20 bg-teal-50 rounded-3xl flex items-center justify-center text-4xl mx-auto shadow-inner text-teal-600">
+            🏢
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-slate-900">لم تقم بإضافة أي عقارات حتى الآن</h3>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+              يمكنك إضافة عقارك الأول وسنقوم بعرضه فوراً أمام الراغبين بالشراء والإيجار في حلب.
+            </p>
+          </div>
+          <div>
+            <button
+              type="button"
+              (click)="openCreateModal()"
+              class="btn-primary"
+            >
+              <span>+</span>
+              <span>إضافة عقارك الأول</span>
+            </button>
+          </div>
+        </div>
+      }
+
+      <!-- Properties Grid -->
+      @else {
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          @for (property of properties(); track property.id) {
+            <div class="group bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full">
+              
+              <!-- Image & Badges Overlay -->
+              <div class="relative h-48 bg-slate-100 overflow-hidden shrink-0">
+                <img
+                  [src]="property.imageUrls && property.imageUrls.length > 0 ? property.imageUrls[0] : defaultImage"
+                  [alt]="property.title"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                
+                <!-- Status Badge Top Right -->
+                <div class="absolute top-3 right-3 z-10">
+                  <span
+                    class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border shadow-sm backdrop-blur-md"
+                    [ngClass]="getStatusBadgeClass(property.status)"
+                  >
+                    {{ getStatusLabel(property.status) }}
+                  </span>
+                </div>
+
+                <!-- Category Badge Top Left -->
+                <div class="absolute top-3 left-3 z-10">
+                  <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-900/80 text-white backdrop-blur-md">
+                    {{ getCategoryLabel(property.category) }}
+                  </span>
+                </div>
+
+                <!-- Price Badge Bottom Right -->
+                <div class="absolute bottom-3 right-3 z-10">
+                  <span class="bg-white/95 text-slate-950 text-sm font-black px-3 py-1 rounded-xl shadow-md backdrop-blur-md">
+                    ${{ property.price | number:'1.0-0' }}
+                    @if (property.purpose === 'Rent') { <span class="text-[10px] text-slate-500 font-bold">/ شهري</span> }
+                  </span>
+                </div>
+              </div>
+
+              <!-- Card Content Body -->
+              <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+                <div>
+                  <h3 class="text-sm font-bold text-slate-900 line-clamp-1 group-hover:text-teal-600 transition-colors" [title]="property.title">
+                    {{ property.title }}
+                  </h3>
+                  
+                  <p class="text-[11px] text-slate-500 mt-1 flex items-center gap-1">
+                    <span>📍</span>
+                    <span>{{ property.cityArea }} - {{ property.address }}</span>
+                  </p>
+                </div>
+
+                <!-- Property Specs Bar -->
+                <div class="flex items-center justify-between py-2 px-2.5 bg-slate-50 rounded-xl text-[11px] font-medium text-slate-700 border border-slate-100">
+                  <div class="flex items-center gap-1">
+                    <span>🛏️ {{ property.bedrooms }}</span>
+                  </div>
+                  <div class="w-px h-3 bg-slate-200"></div>
+                  <div class="flex items-center gap-1">
+                    <span>🚿 {{ property.bathrooms }}</span>
+                  </div>
+                  <div class="w-px h-3 bg-slate-200"></div>
+                  <div class="flex items-center gap-1">
+                    <span>📐 {{ property.areaSquareMeters }} م²</span>
+                  </div>
+                </div>
+
+                <!-- Card Action Buttons -->
+                <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-100">
+                  <button
+                    type="button"
+                    (click)="openEditModal(property)"
+                    class="flex-1 py-1.5 px-3 text-xs font-bold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200/80 rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer"
+                  >
+                    <span>✏️</span>
+                    <span>تعديل</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    (click)="openDeleteModal(property)"
+                    class="py-1.5 px-3 text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200/80 rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer"
+                  >
+                    <span>🗑️</span>
+                    <span>حذف</span>
+                  </button>
+                </div>
+
+              </div>
+
+            </div>
+          }
+        </div>
+
+        <!-- Modern Pagination Bar -->
+        <div class="pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="text-xs text-slate-500 font-medium">
+            عرض <span class="font-bold text-slate-800">{{ properties().length }}</span> من إجمالي العقارات المعروضة
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold flex items-center justify-center transition-all cursor-pointer">
+              &gt;
+            </button>
+            <button class="w-8 h-8 rounded-xl bg-teal-600 text-white text-xs font-bold flex items-center justify-center shadow-md">
+              1
+            </button>
+            <button class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold flex items-center justify-center transition-all cursor-pointer">
+              &lt;
+            </button>
+          </div>
+        </div>
+      }
+
+    </div>
+
+  </div>
+</div>
+
+<!-- Form Modal (Create & Update) -->
+<app-property-form-modal
+  [isOpen]="isFormModalOpen()"
+  [property]="selectedPropertyForEdit()"
+  (close)="closeFormModal()"
+  (saved)="onPropertySaved($event)"
+/>
+
+<!-- Delete Confirmation Modal -->
+<app-delete-confirm-modal
+  [isOpen]="isDeleteModalOpen()"
+  [property]="selectedPropertyForDelete()"
+  (close)="closeDeleteModal()"
+  (confirmed)="onDeleteConfirmed($event)"
+/>

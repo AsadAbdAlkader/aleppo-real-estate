@@ -1,0 +1,233 @@
+<div class="bg-white rounded-3xl p-6 sm:p-7 shadow-card border border-slate-200/70 mb-8 transition-all text-right">
+
+  <!-- Header: Purpose Tabs & Actions -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-5 mb-6 gap-4">
+
+    <!-- Purpose Tabs -->
+    <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-full w-fit">
+      @for (tab of purposeTabs; track tab.id) {
+        <button
+          type="button"
+          (click)="setPurpose(tab.id)"
+          [class]="purpose() === tab.id
+            ? 'px-5 py-2 rounded-full text-xs font-black bg-gradient-to-b from-amber-300 to-amber-500 text-ink-950 shadow-gold-sm transition-all'
+            : 'px-5 py-2 rounded-full text-xs font-bold text-slate-500 hover:text-slate-800 transition-all'"
+        >
+          {{ tab.label }}
+        </button>
+      }
+    </div>
+
+    <!-- Actions -->
+    <div class="flex items-center gap-3">
+      <button
+        type="button"
+        (click)="toggleAdvanced()"
+        [class]="showAdvanced()
+          ? 'text-xs font-bold text-amber-800 bg-amber-50 border border-amber-200 px-4 py-2 rounded-full transition-all flex items-center gap-1.5'
+          : 'text-xs font-bold text-slate-600 hover:bg-slate-100 border border-slate-200 px-4 py-2 rounded-full transition-all flex items-center gap-1.5'">
+        <span>{{ showAdvanced() ? 'إخفاء التصفية المتقدمة' : 'تصفية متقدمة' }}</span>
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="showAdvanced() ? 'M4.5 15.75l7.5-7.5 7.5 7.5' : 'M19.5 8.25l-7.5 7.5-7.5-7.5'"/>
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        (click)="clearFilters()"
+        class="text-xs font-bold text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-rose-200 px-4 py-2 rounded-full transition-all flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/>
+        </svg>
+        <span>مسح الفلاتر</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Main Search Row -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4">
+
+    <!-- Search Input -->
+    <div class="lg:col-span-4">
+      <label class="field-label">كلمات البحث</label>
+      <div class="relative">
+        <input
+          type="text"
+          [ngModel]="searchTerm()"
+          (ngModelChange)="onSearchTermChange($event)"
+          (keyup.enter)="onSearchSubmit()"
+          placeholder="ابحث بالعنوان، الحي، أو التفاصيل..."
+          class="field pl-10"
+        />
+        <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- City -->
+    <div class="lg:col-span-2">
+      <label class="field-label">المدينة</label>
+      <select
+        [ngModel]="city()"
+        (ngModelChange)="onCityChange($event)"
+        class="field appearance-none bg-no-repeat bg-[left_0.9rem_center] pl-9"
+        style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 24 24%22 stroke=%22%238A8579%22 stroke-width=%222%22><path stroke-linecap=%22round%22 stroke-linejoin=%22round%22 d=%22M19.5 8.25l-7.5 7.5-7.5-7.5%22/></svg>');background-position:left 0.85rem center;background-size:14px"
+      >
+        @for (c of cities; track c.id) {
+          <option [value]="c.id">{{ c.label }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Neighborhood -->
+    <div class="lg:col-span-3">
+      <label class="field-label">الحي / المنطقة</label>
+      <select
+        [ngModel]="cityArea()"
+        (ngModelChange)="onCityAreaChange($event)"
+        class="field"
+        style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 24 24%22 stroke=%22%238A8579%22 stroke-width=%222%22><path stroke-linecap=%22round%22 stroke-linejoin=%22round%22 d=%22M19.5 8.25l-7.5 7.5-7.5-7.5%22/></svg>');background-position:left 0.85rem center;background-size:14px;background-repeat:no-repeat"
+      >
+        @for (area of cityAreas; track area.id) {
+          <option [value]="area.id">{{ area.label }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Category -->
+    <div class="lg:col-span-3">
+      <label class="field-label">تصنيف العقار</label>
+      <select
+        [ngModel]="category()"
+        (ngModelChange)="onCategoryChange($event)"
+        class="field"
+        style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 24 24%22 stroke=%22%238A8579%22 stroke-width=%222%22><path stroke-linecap=%22round%22 stroke-linejoin=%22round%22 d=%22M19.5 8.25l-7.5 7.5-7.5-7.5%22/></svg>');background-position:left 0.85rem center;background-size:14px;background-repeat:no-repeat"
+      >
+        @for (cat of categories; track cat.id) {
+          <option [value]="cat.id">{{ cat.label }}</option>
+        }
+      </select>
+    </div>
+
+  </div>
+
+  <!-- Price Range & Sorting Row -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 mt-4">
+
+    <!-- Price Range -->
+    <div class="lg:col-span-6">
+      <label class="field-label">نطاق السعر ($)</label>
+      <div class="grid grid-cols-2 gap-3">
+        <input
+          type="number"
+          [ngModel]="minPrice()"
+          (ngModelChange)="onMinPriceChange($event)"
+          placeholder="الحد الأدنى"
+          class="field font-latin text-center"
+        />
+        <input
+          type="number"
+          [ngModel]="maxPrice()"
+          (ngModelChange)="onMaxPriceChange($event)"
+          placeholder="الحد الأعلى"
+          class="field font-latin text-center"
+        />
+      </div>
+    </div>
+
+    <!-- Sorting -->
+    <div class="lg:col-span-4">
+      <label class="field-label">ترتيب النتائج</label>
+      <select
+        [ngModel]="sortBy()"
+        (ngModelChange)="onSortByChange($event)"
+        class="field"
+        style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 24 24%22 stroke=%22%238A8579%22 stroke-width=%222%22><path stroke-linecap=%22round%22 stroke-linejoin=%22round%22 d=%22M19.5 8.25l-7.5 7.5-7.5-7.5%22/></svg>');background-position:left 0.85rem center;background-size:14px;background-repeat:no-repeat"
+      >
+        @for (sort of sortOptions; track sort.id) {
+          <option [value]="sort.id">{{ sort.label }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Search Button -->
+    <div class="lg:col-span-2 flex items-end">
+      <button
+        type="button"
+        (click)="onSearchSubmit()"
+        class="w-full btn-primary btn-sm py-3"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+        </svg>
+        <span>بحث</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Advanced Filters -->
+  @if (showAdvanced()) {
+    <div class="mt-6 pt-6 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 animate-fadeIn">
+
+      <!-- Area Range -->
+      <div class="lg:col-span-6">
+        <label class="field-label">المساحة (متر مربع m²)</label>
+        <div class="grid grid-cols-2 gap-3">
+          <input
+            type="number"
+            [ngModel]="minArea()"
+            (ngModelChange)="onMinAreaChange($event)"
+            placeholder="أدنى مساحة"
+            class="field font-latin text-center"
+          />
+          <input
+            type="number"
+            [ngModel]="maxArea()"
+            (ngModelChange)="onMaxAreaChange($event)"
+            placeholder="أعلى مساحة"
+            class="field font-latin text-center"
+          />
+        </div>
+      </div>
+
+      <!-- Bedrooms -->
+      <div class="lg:col-span-3">
+        <label class="field-label">غرف النوم (الحد الأدنى)</label>
+        <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-full">
+          @for (bed of bedroomOptions; track bed.label) {
+            <button
+              type="button"
+              (click)="setBedrooms(bed.id)"
+              [class]="bedrooms() === bed.id
+                ? 'flex-1 py-1.5 rounded-full text-xs font-black bg-slate-950 text-amber-300 shadow-soft transition-all'
+                : 'flex-1 py-1.5 rounded-full text-xs font-medium text-slate-500 hover:text-slate-800 transition-all'">
+              {{ bed.label }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Bathrooms -->
+      <div class="lg:col-span-3">
+        <label class="field-label">الحمامات (الحد الأدنى)</label>
+        <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-full">
+          @for (bath of bathroomOptions; track bath.label) {
+            <button
+              type="button"
+              (click)="setBathrooms(bath.id)"
+              [class]="bathrooms() === bath.id
+                ? 'flex-1 py-1.5 rounded-full text-xs font-black bg-slate-950 text-amber-300 shadow-soft transition-all'
+                : 'flex-1 py-1.5 rounded-full text-xs font-medium text-slate-500 hover:text-slate-800 transition-all'">
+              {{ bath.label }}
+            </button>
+          }
+        </div>
+      </div>
+
+    </div>
+  }
+
+</div>

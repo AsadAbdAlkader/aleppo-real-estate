@@ -1,0 +1,65 @@
+@Web_HostAddress = http://localhost:5215
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+### Health Check
+GET {{Web_HostAddress}}/api/health
+Accept: application/json
+
+### Get All Properties
+GET {{Web_HostAddress}}/api/properties?pageNumber=1&pageSize=10
+Accept: application/json
+
+### Get My Properties
+GET {{Web_HostAddress}}/api/properties/my
+Authorization: Bearer {{authToken}}
+Accept: application/json
+
+### Get Property By Id
+GET {{Web_HostAddress}}/api/properties/3fa85f64-5717-4562-b3fc-2c963f66afa6
+Accept: application/json
+
+### Create Property
+POST {{Web_HostAddress}}/api/properties
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "title": "شقة فاخرة للبيع في حي الشهباء",
+  "description": "شقة سكنية مميزة بتشطيبات عالية الجودة",
+  "price": 250000.00,
+  "category": "Apartment",
+  "cityArea": "الشهباء",
+  "address": "شارع النيل - قرب الحديقة العامة",
+  "bedrooms": 3,
+  "bathrooms": 2,
+  "areaSquareMeters": 180.5,
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1560518883-ce09059eeffa"
+  ],
+  "status": "Available"
+}
+
+### Update Property
+PUT {{Web_HostAddress}}/api/properties/3fa85f64-5717-4562-b3fc-2c963f66afa6
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "title": "شقة فاخرة معدلة للبيع في حي الشهباء",
+  "description": "تحديث الوصف والتشطيبات الفاخرة",
+  "price": 260000.00,
+  "category": "Apartment",
+  "cityArea": "الشهباء",
+  "address": "شارع النيل - قرب الحديقة العامة",
+  "bedrooms": 3,
+  "bathrooms": 2,
+  "areaSquareMeters": 185.0,
+  "imageUrls": [
+    "https://images.unsplash.com/photo-1560518883-ce09059eeffa"
+  ],
+  "status": "Available"
+}
+
+### Delete Property
+DELETE {{Web_HostAddress}}/api/properties/3fa85f64-5717-4562-b3fc-2c963f66afa6
+Authorization: Bearer {{authToken}}

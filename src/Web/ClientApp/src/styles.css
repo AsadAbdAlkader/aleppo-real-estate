@@ -1,0 +1,216 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ══════════════════════════════════════════════════════════════
+   ALEPPO REAL ESTATE — "Modern Heritage" Design System
+   Ivory surfaces · Champagne gold · Deep pine · Warm ink
+   ══════════════════════════════════════════════════════════════ */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: 'Tajawal', system-ui, -apple-system, sans-serif;
+    background-color: #faf8f3;
+    color: #2c2a25;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Display typography: elegant Kufi headings across the app */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Reem Kufi', 'Tajawal', system-ui, sans-serif;
+    font-weight: 700;
+  }
+
+  ::selection {
+    background-color: #e4cc96;
+    color: #191712;
+  }
+
+  /* Refined focus ring — champagne gold hairline */
+  :focus-visible {
+    outline: 2px solid rgba(199, 156, 78, 0.7);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* ═══════════════════════════════════════════════════════════
+     BUTTONS — pill silhouette, champagne & ink
+     ═══════════════════════════════════════════════════════════ */
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm text-ink-950
+      bg-gradient-to-b from-amber-300 to-amber-500 border border-amber-400/50
+      shadow-gold-sm hover:from-amber-200 hover:to-amber-400 hover:shadow-gold-lg hover:-translate-y-0.5
+      active:translate-y-0 active:to-amber-600 transition-all duration-200 cursor-pointer
+      disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-gold-sm;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm text-ivory-50
+      bg-ink-950 border border-ink-800
+      hover:bg-slate-900 hover:border-amber-600/60 hover:text-amber-200 hover:-translate-y-0.5
+      active:translate-y-0 transition-all duration-200 cursor-pointer
+      disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-semibold text-sm text-slate-700
+      bg-white/80 hover:bg-amber-50 active:bg-amber-100 border border-slate-200 hover:border-amber-300
+      hover:text-amber-800 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer
+      disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-glass {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-semibold text-sm text-white
+      bg-white/10 border border-white/20 backdrop-blur-md
+      hover:bg-white/20 hover:border-white/40 hover:-translate-y-0.5 active:translate-y-0
+      transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm text-rose-700
+      bg-rose-50 hover:bg-rose-100 active:bg-rose-200 border border-rose-200/80 hover:border-rose-300
+      hover:text-rose-800 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer
+      disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-extrabold text-sm text-ink-950
+      bg-gradient-to-r from-amber-200 via-amber-400 to-amber-500 border border-amber-300/60
+      shadow-gold-sm hover:from-amber-300 hover:via-amber-300 hover:to-amber-400 hover:shadow-gold-lg
+      hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer
+      disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-icon {
+    @apply p-2.5 rounded-full text-slate-500 hover:text-amber-700 hover:bg-amber-50 border border-transparent
+      hover:border-amber-200/70 transition-all duration-200 cursor-pointer focus:outline-none;
+  }
+
+  .btn-sm {
+    @apply px-4 py-1.5 text-xs rounded-full;
+  }
+
+  .btn-lg {
+    @apply px-7 py-3.5 text-[15px] rounded-full;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     SURFACES — ivory cards with hairline borders
+     ═══════════════════════════════════════════════════════════ */
+
+  .card {
+    @apply bg-white rounded-3xl border border-slate-200/70 shadow-soft;
+  }
+
+  .card-hover {
+    @apply card transition-all duration-300 hover:shadow-card hover:-translate-y-1;
+  }
+
+  .card-dark {
+    @apply bg-ink-950 rounded-3xl border border-slate-800 shadow-lift;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     FORM FIELDS
+     ═══════════════════════════════════════════════════════════ */
+
+  .field {
+    @apply w-full appearance-none bg-ivory-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm font-medium text-slate-900
+      placeholder-slate-400 transition-all duration-200
+      focus:outline-none focus:ring-2 focus:ring-amber-400/60 focus:border-amber-400 focus:bg-white;
+  }
+
+  .field-label {
+    @apply block text-xs font-bold text-slate-600 mb-1.5;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     EDITORIAL DETAILS
+     ═══════════════════════════════════════════════════════════ */
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-[11px] font-extrabold text-amber-700;
+  }
+
+  .eyebrow::before {
+    content: '';
+    @apply inline-block w-6 h-px bg-gradient-to-l from-amber-500 to-amber-200;
+  }
+
+  .gold-text {
+    @apply bg-gradient-to-l from-amber-300 via-amber-400 to-amber-500 bg-clip-text text-transparent;
+  }
+
+  .hairline {
+    @apply h-px w-full bg-gradient-to-l from-transparent via-slate-200 to-transparent;
+  }
+
+  .hairline-gold {
+    @apply h-px w-full bg-gradient-to-l from-transparent via-amber-400/50 to-transparent;
+  }
+
+  .num {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-feature-settings: 'lnum';
+    letter-spacing: 0.01em;
+  }
+
+  /* Arabic labels should never be letter-spaced */
+  .tracking-normal-ar {
+    letter-spacing: 0 !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   UTILITIES (classes referenced by templates)
+   ═══════════════════════════════════════════════════════════ */
+
+.dir-ltr {
+  direction: ltr;
+}
+
+.animate-fadeIn {
+  animation: fadeInUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slim, warm scrollbars */
+.custom-scrollbar::-webkit-scrollbar,
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track,
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb,
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(199, 156, 78, 0.45);
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover,
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(199, 156, 78, 0.75);
+}

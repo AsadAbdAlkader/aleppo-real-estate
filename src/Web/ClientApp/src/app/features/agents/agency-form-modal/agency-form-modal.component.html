@@ -1,0 +1,173 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn" dir="rtl" (click)="closeModal()">
+  <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6 overflow-hidden max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+    
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl font-bold">
+          🏛️
+        </div>
+        <div>
+          <h2 class="text-lg font-extrabold text-slate-900">
+            {{ agency ? 'تعديل بيانات المكتب العقاري' : 'إضافة مكتب عقاري جديد' }}
+          </h2>
+          <p class="text-xs text-slate-500">أدخل المعلومات التجارية وتفاصيل التواصل للمكتب</p>
+        </div>
+      </div>
+      <button (click)="closeModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors">
+        ✕
+      </button>
+    </div>
+
+    <!-- Error Alert -->
+    @if (errorMsg()) {
+      <div class="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold">
+        {{ errorMsg() }}
+      </div>
+    }
+
+    <!-- Form -->
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+      
+      <!-- Agency Name -->
+      <div>
+        <label for="agencyName" class="block text-xs font-bold text-slate-700 mb-1">
+          اسم المكتب العقاري <span class="text-rose-500">*</span>
+        </label>
+        <input
+          id="agencyName"
+          type="text"
+          formControlName="name"
+          class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:border-sky-500 focus:ring-sky-500/20"
+          placeholder="مثال: مكتب الشهباء العقاري"
+        />
+        @if (form.get('name')?.touched && form.get('name')?.hasError('required')) {
+          <p class="text-xs text-rose-500 mt-1">اسم المكتب العقاري مطلوب</p>
+        }
+      </div>
+
+      <!-- City Area & Phone -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="agencyCityArea" class="block text-xs font-bold text-slate-700 mb-1">
+            المنطقة / الحي بحلب
+          </label>
+          <select
+            id="agencyCityArea"
+            formControlName="cityArea"
+            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:border-sky-500 focus:ring-sky-500/20 bg-white"
+          >
+            <option value="الشهباء">الشهباء</option>
+            <option value="العزيزية">العزيزية</option>
+            <option value="الفرقان">الفرقان</option>
+            <option value="السبيل">السبيل</option>
+            <option value="السريان">السريان</option>
+            <option value="المحافظة">المحافظة</option>
+            <option value="حلب الجديدة">حلب الجديدة</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="agencyPhone" class="block text-xs font-bold text-slate-700 mb-1">
+            رقم هاتف المكتب
+          </label>
+          <input
+            id="agencyPhone"
+            type="tel"
+            formControlName="phoneNumber"
+            dir="ltr"
+            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:border-sky-500 focus:ring-sky-500/20 text-right"
+            placeholder="+963 21 2000001"
+          />
+        </div>
+      </div>
+
+      <!-- Address -->
+      <div>
+        <label for="agencyAddress" class="block text-xs font-bold text-slate-700 mb-1">
+          العنوان التفصيلي
+        </label>
+        <input
+          id="agencyAddress"
+          type="text"
+          formControlName="address"
+          class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:border-sky-500 focus:ring-sky-500/20"
+          placeholder="مثال: حي الشهباء - شارع النيل - بناء الاستثمار"
+        />
+      </div>
+
+      <!-- License Number & Logo URL -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="licenseNumber" class="block text-xs font-bold text-slate-700 mb-1">
+            رقم الترخيص التجاري
+          </label>
+          <input
+            id="licenseNumber"
+            type="text"
+            formControlName="licenseNumber"
+            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:border-sky-500 focus:ring-sky-500/20"
+            placeholder="ALE-AGENCY-01"
+          />
+        </div>
+
+        <div>
+          <label for="logoUrl" class="block text-xs font-bold text-slate-700 mb-1">
+            رابط الشعار / الصورة
+          </label>
+          <input
+            id="logoUrl"
+            type="url"
+            formControlName="logoUrl"
+            dir="ltr"
+            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:border-sky-500 focus:ring-sky-500/20"
+            placeholder="https://images.unsplash.com/..."
+          />
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label for="agencyDesc" class="block text-xs font-bold text-slate-700 mb-1">
+          نبذة عن خدمات المكتب
+        </label>
+        <textarea
+          id="agencyDesc"
+          formControlName="description"
+          rows="3"
+          class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:border-sky-500 focus:ring-sky-500/20"
+          placeholder="اكتب نبذة عن التخصصات العقارية والخدمات التي يقدمها المكتب..."
+        ></textarea>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+        <button
+          type="button"
+          (click)="closeModal()"
+          class="px-5 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-100 transition-colors"
+        >
+          إلغاء
+        </button>
+
+        <button
+          type="submit"
+          [disabled]="isSubmitting()"
+          class="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-sky-600 hover:bg-sky-700 disabled:bg-sky-300 text-white text-xs font-bold rounded-xl shadow-md shadow-sky-600/20 transition-all cursor-pointer"
+        >
+          @if (isSubmitting()) {
+            <svg class="animate-spin h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>جارٍ الحفظ...</span>
+          } @else {
+            <span>{{ agency ? 'حفظ التعديلات' : 'إضافة المكتب' }}</span>
+          }
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+</div>

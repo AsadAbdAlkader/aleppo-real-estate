@@ -1,0 +1,194 @@
+<div class="min-h-screen bg-stone-50/60 py-8 px-4 sm:px-6 lg:px-8 font-sans" dir="rtl">
+  <div class="max-w-7xl mx-auto space-y-6">
+
+    <!-- Dashboard Canvas Card -->
+    <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200/60 space-y-6">
+      
+      <!-- Top Title & Subtitle Banner -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-slate-100 pb-6 gap-4">
+        <div>
+          <div class="flex items-center gap-3">
+            <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">المفضلة (My Favorites)</h1>
+            <span class="bg-rose-50 text-rose-700 text-xs font-bold px-2.5 py-1 rounded-full border border-rose-100">
+              {{ favoriteService.favoritesCount() }} عقار
+            </span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">
+            يسعدنا رؤيتك مجدداً! قائمة العقارات التي قمت بحفظها ومتابعتها في مدينة حلب.
+          </p>
+        </div>
+
+        <a 
+          routerLink="/properties" 
+          class="btn-outline btn-sm"
+        >
+          <span>🔍</span>
+          <span>تصفح المزيد من العقارات</span>
+        </a>
+      </div>
+
+      <!-- Loading State Skeleton -->
+      @if (favoriteService.loading()) {
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          @for (i of [1, 2, 3, 4, 5, 6, 7, 8]; track i) {
+            <div class="bg-white rounded-2xl h-80 border border-slate-200/80 animate-pulse p-4 flex flex-col justify-between">
+              <div class="bg-slate-200 h-44 rounded-xl w-full"></div>
+              <div class="bg-slate-200 h-4 rounded w-3/4"></div>
+              <div class="bg-slate-100 h-3 rounded w-1/2"></div>
+              <div class="bg-slate-100 h-8 rounded-xl w-full"></div>
+            </div>
+          }
+        </div>
+      } 
+      
+      <!-- Empty State -->
+      @else if (favoriteService.favorites().length === 0) {
+        <div class="py-16 text-center max-w-md mx-auto my-6 space-y-4">
+          <div class="w-20 h-20 bg-rose-50 text-rose-500 rounded-3xl flex items-center justify-center text-4xl mx-auto shadow-inner">
+            🤍
+          </div>
+          <h3 class="text-lg font-bold text-slate-900">لا توجد عقارات في المفضلة حالياً</h3>
+          <p class="text-xs text-slate-500 leading-relaxed">
+            لم تقم بحفظ أي عقار بعد. يمكنك النقر على أيقونة القلب على أي عقار لإضافته إلى قائمة المفضلة والعودة إليه لاحقاً.
+          </p>
+          <a 
+            routerLink="/properties" 
+            class="btn-primary"
+          >
+            تصفح العقارات المتاحة
+          </a>
+        </div>
+      } 
+      
+      <!-- Loaded Properties Grid -->
+      @else {
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          @for (property of favoriteService.favorites(); track property.id) {
+            <div class="group bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full">
+              
+              <!-- Image & Floating Badges -->
+              <div class="relative h-48 bg-slate-100 overflow-hidden shrink-0">
+                <img 
+                  [src]="property.imageUrls && property.imageUrls.length > 0 ? property.imageUrls[0] : 'assets/images/placeholder.jpg'" 
+                  [alt]="property.title"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+
+                <!-- Top Left: Delete / Remove from Favorites Trash Button -->
+                <button
+                  (click)="favoriteService.removeFavorite(property.id).subscribe()"
+                  type="button"
+                  class="absolute top-3 left-3 z-20 w-8 h-8 rounded-xl bg-white/90 hover:bg-rose-600 text-slate-600 hover:text-white backdrop-blur-md flex items-center justify-center shadow-md transition-all duration-200 cursor-pointer"
+                  title="إزالة من المفضلة"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                </button>
+
+                <!-- Top Right: Featured Badge if exists -->
+                @if (property.isFeatured) {
+                  <div class="absolute top-3 right-3 z-10">
+                    <span class="bg-rose-500 text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-lg shadow-sm tracking-wider flex items-center gap-1">
+                      <span>⭐</span>
+                      <span>مميز</span>
+                    </span>
+                  </div>
+                }
+
+                <!-- Bottom Right: Floating Price Tag -->
+                <div class="absolute bottom-3 right-3 z-10">
+                  <span class="bg-white/95 text-slate-950 text-sm font-black px-3 py-1 rounded-xl shadow-md backdrop-blur-md">
+                    ${{ property.price | number }}
+                    @if (property.purpose === 'Rent') { <span class="text-[10px] text-slate-500 font-bold">/ شهري</span> }
+                  </span>
+                </div>
+              </div>
+
+              <!-- Content Body -->
+              <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+                <div>
+                  <!-- Location -->
+                  <div class="text-[11px] font-semibold text-teal-700 mb-1 flex items-center gap-1">
+                    <span>📍</span>
+                    <span>حلب - {{ property.cityArea }}</span>
+                  </div>
+
+                  <!-- Title -->
+                  <h3 class="text-sm font-bold text-slate-900 truncate hover:text-teal-600 transition-colors" [title]="property.title">
+                    <a [routerLink]="['/properties', property.id]">{{ property.title }}</a>
+                  </h3>
+
+                  <!-- Specs Icons Bar -->
+                  <div class="flex items-center gap-3 text-[11px] font-medium text-slate-500 py-2 border-y border-slate-100 my-2">
+                    @if (property.bedrooms > 0) {
+                      <span class="flex items-center gap-1">🛏️ {{ property.bedrooms }}</span>
+                    }
+                    @if (property.bathrooms > 0) {
+                      <span class="flex items-center gap-1">🚿 {{ property.bathrooms }}</span>
+                    }
+                    <span class="flex items-center gap-1">📐 {{ property.areaSquareMeters }} م²</span>
+                  </div>
+                </div>
+
+                <!-- Footer Purpose Badge & Actions -->
+                <div class="flex items-center justify-between pt-1">
+                  <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200">
+                    {{ property.purpose === 'Rent' ? 'للإيجار' : 'للبيع' }}
+                  </span>
+
+                  <div class="flex items-center gap-1.5">
+                    <button 
+                      (click)="openInquiryModal(property)"
+                      type="button"
+                      class="btn-primary btn-sm"
+                      title="استفسار"
+                    >
+                      <span>✉️</span>
+                    </button>
+                    <a 
+                      [routerLink]="['/properties', property.id]"
+                      class="btn-outline btn-sm"
+                    >
+                      التفاصيل
+                    </a>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          }
+        </div>
+
+        <!-- Modern Pagination Bar -->
+        <div class="pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="text-xs text-slate-500 font-medium">
+            عرض <span class="font-bold text-slate-800">{{ favoriteService.favorites().length }}</span> من إجمالي العقارات المحفوظة
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold flex items-center justify-center transition-all cursor-pointer">
+              &gt;
+            </button>
+            <button class="w-8 h-8 rounded-xl bg-teal-600 text-white text-xs font-bold flex items-center justify-center shadow-md">
+              1
+            </button>
+            <button class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold flex items-center justify-center transition-all cursor-pointer">
+              &lt;
+            </button>
+          </div>
+        </div>
+      }
+
+    </div>
+
+  </div>
+</div>
+
+<!-- Inquiry Modal -->
+<app-inquiry-modal
+  [property]="selectedInquiryProperty()"
+  [isOpen]="isInquiryModalOpen()"
+  (close)="closeInquiryModal()"
+></app-inquiry-modal>

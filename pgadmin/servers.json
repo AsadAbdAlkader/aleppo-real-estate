@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Aleppo Real Estate DB",
+      "Group": "Servers",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "aleppo_real_estate",
+      "Username": "postgres",
+      "SSLMode": "prefer"
+    }
+  }
+}

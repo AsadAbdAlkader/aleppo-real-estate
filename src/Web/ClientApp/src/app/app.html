@@ -1,0 +1,20 @@
+<div class="min-h-screen bg-stone-50 flex flex-col lg:flex-row-reverse" dir="rtl">
+  <!-- Right Navigation Sidebar -->
+  <app-sidebar class="flex-shrink-0" />
+
+  <!-- Main View Area (Header + Content) -->
+  <div class="flex-1 flex flex-col min-w-0 min-h-screen">
+    <app-header />
+    <main
+      class="flex-1 min-w-0"
+      [class.p-4]="!isLanding()"
+      [class.sm\:p-6]="!isLanding()"
+      [class.lg\:p-8]="!isLanding()"
+    >
+      <router-outlet />
+    </main>
+  </div>
+
+  <!-- Global Property Comparison Floating Dock & Modal -->
+  <app-property-comparison />
+</div>

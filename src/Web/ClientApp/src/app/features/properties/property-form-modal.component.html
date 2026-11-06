@@ -1,0 +1,267 @@
+@if (isOpen()) {
+  <div class="fixed inset-0 z-50 overflow-y-auto" dir="rtl">
+    <!-- Backdrop overlay -->
+    <div
+      class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+      (click)="onClose()"
+    ></div>
+
+    <!-- Modal Container -->
+    <div class="flex min-h-full items-center justify-center p-4 text-center">
+      <div
+        class="relative transform overflow-hidden rounded-3xl bg-white text-right shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-2xl border border-slate-100 p-6 sm:p-8 space-y-6"
+        (click)="$event.stopPropagation()"
+      >
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center font-bold text-lg">
+              @if (isEditMode) { ✏️ } @else { ➕ }
+            </div>
+            <div>
+              <h3 class="text-xl font-extrabold text-slate-900">
+                @if (isEditMode) { تعديل بيانات العقار } @else { إضافة عقار جديد }
+              </h3>
+              <p class="text-xs text-slate-500 mt-0.5">
+                @if (isEditMode) { تحديث تفاصيل ومعلومات العقار الخاص بك } @else { أدخل تفاصيل العقار الجديد لإدراجه في المنصة }
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            (click)="onClose()"
+            class="text-slate-400 hover:text-slate-600 transition-colors rounded-xl p-2 hover:bg-slate-100"
+          >
+            ✕
+          </button>
+        </div>
+
+        <!-- Success Message Alert -->
+        @if (successMessage()) {
+          <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold flex items-center gap-3">
+            <span class="text-lg">✅</span>
+            <span>{{ successMessage() }}</span>
+          </div>
+        }
+
+        <!-- Error Message Alert -->
+        @if (errorMessage()) {
+          <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-sm font-semibold flex items-center gap-3">
+            <span class="text-lg">⚠️</span>
+            <span>{{ errorMessage() }}</span>
+          </div>
+        }
+
+        <!-- Form -->
+        <form [formGroup]="propertyForm" (ngSubmit)="onSubmit()" class="space-y-5">
+          <!-- Property Title -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">عنوان العقار <span class="text-rose-500">*</span></label>
+            <input
+              type="text"
+              formControlName="title"
+              placeholder="مثال: شقة فاخرة للبيع في حي الشهباء"
+              class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all"
+              [ngClass]="{ 'border-rose-400 bg-rose-50/20': isFieldInvalid('title') }"
+            />
+            @if (isFieldInvalid('title')) {
+              <div class="text-xs text-rose-600 font-medium mt-1">
+                @if (propertyForm.get('title')?.errors?.['required']) { عنوان العقار مطلوب }
+                @if (propertyForm.get('title')?.errors?.['minlength']) { عنوان العقار يجب أن يكون 5 حروف على الأقل }
+              </div>
+            }
+          </div>
+
+          <!-- Category & Price Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Category -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">نوع العقار <span class="text-rose-500">*</span></label>
+              <select
+                formControlName="category"
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all bg-white"
+                [ngClass]="{ 'border-rose-400 bg-rose-50/20': isFieldInvalid('category') }"
+              >
+                @for (cat of categories; track cat.value) {
+                  <option [value]="cat.value">{{ cat.label }}</option>
+                }
+              </select>
+              @if (isFieldInvalid('category')) {
+                <div class="text-xs text-rose-600 font-medium mt-1">نوع العقار مطلوب</div>
+              }
+            </div>
+
+            <!-- Price -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">السعر ($) <span class="text-rose-500">*</span></label>
+              <input
+                type="number"
+                formControlName="price"
+                placeholder="مثال: 250000"
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all"
+                [ngClass]="{ 'border-rose-400 bg-rose-50/20': isFieldInvalid('price') }"
+              />
+              @if (isFieldInvalid('price')) {
+                <div class="text-xs text-rose-600 font-medium mt-1">
+                  @if (propertyForm.get('price')?.errors?.['required']) { السعر مطلوب }
+                  @if (propertyForm.get('price')?.errors?.['min']) { السعر لا يمكن أن يكون سالباً }
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- City Area & Address Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- City Area -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">المنطقة / الحي <span class="text-rose-500">*</span></label>
+              <select
+                formControlName="cityArea"
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all bg-white"
+                [ngClass]="{ 'border-rose-400 bg-rose-50/20': isFieldInvalid('cityArea') }"
+              >
+                @for (area of cityAreas; track area) {
+                  <option [value]="area">{{ area }}</option>
+                }
+              </select>
+              @if (isFieldInvalid('cityArea')) {
+                <div class="text-xs text-rose-600 font-medium mt-1">المنطقة / الحي مطلوب</div>
+              }
+            </div>
+
+            <!-- Detailed Address -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">العنوان التفصيلي <span class="text-rose-500">*</span></label>
+              <input
+                type="text"
+                formControlName="address"
+                placeholder="شارع النيل - قرب الحديقة العامة"
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all"
+                [ngClass]="{ 'border-rose-400 bg-rose-50/20': isFieldInvalid('address') }"
+              />
+              @if (isFieldInvalid('address')) {
+                <div class="text-xs text-rose-600 font-medium mt-1">العنوان التفصيلي مطلوب</div>
+              }
+            </div>
+          </div>
+
+          <!-- Bedrooms, Bathrooms & Area Grid -->
+          <div class="grid grid-cols-3 gap-3 sm:gap-4">
+            <!-- Bedrooms -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">الغرف <span class="text-rose-500">*</span></label>
+              <input
+                type="number"
+                formControlName="bedrooms"
+                class="w-full px-3 py-3 rounded-xl border border-slate-200 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all"
+                [ngClass]="{ 'border-rose-400 bg-rose-50/20': isFieldInvalid('bedrooms') }"
+              />
+              @if (isFieldInvalid('bedrooms')) {
+                <div class="text-[11px] text-rose-600 font-medium mt-1">عدد الغرف مطلوب</div>
+              }
+            </div>
+
+            <!-- Bathrooms -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">الحمامات <span class="text-rose-500">*</span></label>
+              <input
+                type="number"
+                formControlName="bathrooms"
+                class="w-full px-3 py-3 rounded-xl border border-slate-200 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all"
+                [ngClass]="{ 'border-rose-400 bg-rose-50/20': isFieldInvalid('bathrooms') }"
+              />
+              @if (isFieldInvalid('bathrooms')) {
+                <div class="text-[11px] text-rose-600 font-medium mt-1">عدد الحمامات مطلوب</div>
+              }
+            </div>
+
+            <!-- Area Square Meters -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">المساحة (م²) <span class="text-rose-500">*</span></label>
+              <input
+                type="number"
+                formControlName="areaSquareMeters"
+                class="w-full px-3 py-3 rounded-xl border border-slate-200 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all"
+                [ngClass]="{ 'border-rose-400 bg-rose-50/20': isFieldInvalid('areaSquareMeters') }"
+              />
+              @if (isFieldInvalid('areaSquareMeters')) {
+                <div class="text-[11px] text-rose-600 font-medium mt-1">المساحة مطلوبة</div>
+              }
+            </div>
+          </div>
+
+          <!-- Status (Update Mode Only) -->
+          @if (isEditMode) {
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">حالة العقار</label>
+              <select
+                formControlName="status"
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all bg-white"
+              >
+                @for (st of statuses; track st.value) {
+                  <option [value]="st.value">{{ st.label }}</option>
+                }
+              </select>
+            </div>
+          }
+
+          <!-- Property Images Manager -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">صور العقار (المعرض والصورة الرئيسية)</label>
+            <app-image-manager
+              [propertyId]="property()?.id || null"
+              [images]="propertyImages()"
+              [disabled]="submitting()"
+              (imagesChange)="onImagesChange($event)"
+            ></app-image-manager>
+          </div>
+
+          <!-- Property Description -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">الوصف التفصيلي <span class="text-rose-500">*</span></label>
+            <textarea
+              formControlName="description"
+              rows="3"
+              placeholder="اكتب وصفاً كاملاً للعقار، الخصائص، الإطلالة، والخدمات القريبة..."
+              class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all resize-none"
+              [ngClass]="{ 'border-rose-400 bg-rose-50/20': isFieldInvalid('description') }"
+            ></textarea>
+            @if (isFieldInvalid('description')) {
+              <div class="text-xs text-rose-600 font-medium mt-1">
+                @if (propertyForm.get('description')?.errors?.['required']) { الوصف التفصيلي مطلوب }
+                @if (propertyForm.get('description')?.errors?.['minlength']) { الوصف يجب أن يكون 10 حروف على الأقل }
+              </div>
+            }
+          </div>
+
+          <!-- Actions -->
+          <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+            <button
+              type="button"
+              (click)="onClose()"
+              [disabled]="submitting()"
+              class="px-5 py-2.5 text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all disabled:opacity-50"
+            >
+              إلغاء
+            </button>
+            <button
+              type="submit"
+              [disabled]="submitting()"
+              class="px-6 py-2.5 text-sm font-bold text-white bg-sky-600 hover:bg-sky-700 active:bg-sky-800 rounded-xl shadow-md shadow-sky-600/25 transition-all flex items-center gap-2 disabled:opacity-50"
+            >
+              @if (submitting()) {
+                <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>جاري الحفظ...</span>
+              } @else {
+                <span>@if (isEditMode) { حفظ التغييرات } @else { إضافة العقار }</span>
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+}

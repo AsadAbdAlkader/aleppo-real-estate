@@ -1,0 +1,240 @@
+<div class="min-h-screen bg-stone-50 flex items-center justify-center p-4 sm:p-6 lg:p-10 relative overflow-hidden" dir="rtl">
+  <!-- Ambient glow -->
+  <div class="absolute -top-32 right-1/4 w-[520px] h-[520px] bg-amber-300/25 blur-[140px] rounded-full pointer-events-none"></div>
+  <div class="absolute -bottom-40 -left-24 w-[460px] h-[460px] bg-teal-500/15 blur-[130px] rounded-full pointer-events-none"></div>
+
+  <!-- Split-Screen Card -->
+  <div class="max-w-5xl w-full bg-white rounded-[32px] overflow-hidden shadow-lift border border-slate-200/70 flex flex-col lg:flex-row-reverse my-auto relative">
+
+    <!-- Visual Panel -->
+    <div class="lg:w-[46%] relative p-8 sm:p-10 flex flex-col justify-between text-white min-h-[380px] lg:min-h-[640px] overflow-hidden group">
+      <img
+        src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop"
+        alt="عقارات حلب"
+        class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/55 to-slate-950/30"></div>
+      <div class="absolute -top-20 -left-16 w-64 h-64 bg-amber-400/20 blur-[80px] rounded-full"></div>
+
+      <!-- Brand -->
+      <div class="relative z-10 flex items-center gap-3">
+        <span class="w-11 h-11 rounded-2xl bg-white/15 backdrop-blur-md border border-white/25 flex items-center justify-center shadow-lg">
+          <svg viewBox="0 0 32 32" class="w-6 h-6 text-amber-300" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 27V15a10 10 0 0 1 20 0v12" />
+            <path d="M11.5 27v-8a4.5 4.5 0 0 1 9 0v8" />
+            <path d="M3.5 27h25" />
+          </svg>
+        </span>
+        <span>
+          <span class="block text-lg font-bold text-white leading-tight">عقارات حلب</span>
+          <span class="block font-latin text-[9px] font-semibold text-amber-300/90 tracking-[0.3em]">ALEPPO ESTATE</span>
+        </span>
+      </div>
+
+      <!-- Headline -->
+      <div class="relative z-10 space-y-5 max-w-md">
+        <div class="h-px w-16 bg-gradient-to-l from-amber-300 to-transparent"></div>
+        <h2 class="text-3xl sm:text-[38px] font-bold leading-[1.4] text-white">
+          اعثر على منزل أحلامك
+        </h2>
+        <p class="text-sm text-slate-200/90 leading-loose">
+          اكتشف أفضل العقارات السكنية والتجارية المعروضة في حلب بخطوات بسيطة، سريعة، وموثوقة.
+        </p>
+
+        <!-- Trust stats -->
+        <div class="flex items-center gap-6 pt-2">
+          <div>
+            <p class="font-latin text-xl font-semibold text-amber-300">+1,500</p>
+            <p class="text-[11px] text-slate-300 font-bold mt-0.5">عقار مدرج</p>
+          </div>
+          <div class="w-px h-9 bg-white/15"></div>
+          <div>
+            <p class="font-latin text-xl font-semibold text-amber-300">+25</p>
+            <p class="text-[11px] text-slate-300 font-bold mt-0.5">حي في حلب</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Panel -->
+    <div class="lg:w-[54%] p-8 sm:p-12 flex flex-col justify-between bg-white text-right">
+
+      <!-- Top Bar -->
+      <div class="flex justify-between items-center mb-8">
+        <a routerLink="/" class="text-xs font-bold text-slate-400 hover:text-amber-700 transition-colors flex items-center gap-1.5">
+          <span>العودة للرئيسية</span>
+          <svg class="w-3.5 h-3.5 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+          </svg>
+        </a>
+        <a
+          routerLink="/register"
+          class="inline-flex items-center px-5 py-2.5 rounded-full text-xs font-bold text-white bg-slate-950 hover:bg-slate-900 hover:-translate-y-0.5 border border-slate-800 transition-all shadow-soft cursor-pointer"
+        >
+          إنشاء حساب
+        </a>
+      </div>
+
+      <!-- Form -->
+      <div class="space-y-6 my-auto max-w-md w-full mx-auto">
+
+        <div>
+          <span class="eyebrow">تسجيل الدخول</span>
+          <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-3 leading-snug">
+            مرحباً بك مجدداً في عقارات حلب
+          </h1>
+          <p class="text-[13px] text-slate-500 mt-2 font-medium leading-relaxed">
+            أدخل بريدك الإلكتروني وكلمة المرور للدخول إلى حسابك
+          </p>
+        </div>
+
+        @if (errorMessage()) {
+          <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center gap-2.5 animate-fadeIn">
+            <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+            </svg>
+            <span>{{ errorMessage() }}</span>
+          </div>
+        }
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4">
+
+          <!-- Email -->
+          <div>
+            <label for="email" class="field-label">البريد الإلكتروني</label>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="example@domain.com"
+              class="field dir-ltr text-right"
+              [class.border-rose-400]="email.invalid && (email.dirty || email.touched)"
+            />
+            @if (email.invalid && (email.dirty || email.touched)) {
+              <p class="mt-1.5 text-xs text-rose-600 font-medium">
+                @if (email.errors?.['required']) { أدخل البريد الإلكتروني. }
+                @if (email.errors?.['email']) { البريد الإلكتروني غير صحيح. }
+              </p>
+            }
+          </div>
+
+          <!-- Password -->
+          <div>
+            <label for="password" class="field-label">كلمة المرور</label>
+            <div class="relative">
+              <input
+                id="password"
+                [type]="showPassword() ? 'text' : 'password'"
+                formControlName="password"
+                placeholder="••••••••"
+                class="field dir-ltr text-right pl-11"
+                [class.border-rose-400]="password.invalid && (password.dirty || password.touched)"
+              />
+              <button
+                type="button"
+                (click)="togglePasswordVisibility()"
+                class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-amber-700 transition-colors p-1"
+                title="إظهار/إخفاء كلمة المرور"
+              >
+                @if (showPassword()) {
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.774 3.162 10.066 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243"/>
+                  </svg>
+                } @else {
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.7">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  </svg>
+                }
+              </button>
+            </div>
+            @if (password.invalid && (password.dirty || password.touched)) {
+              <p class="mt-1.5 text-xs text-rose-600 font-medium">
+                @if (password.errors?.['required']) { أدخل كلمة المرور. }
+                @if (password.errors?.['minlength']) { كلمة المرور قصيرة جداً. }
+              </p>
+            }
+          </div>
+
+          <!-- Remember / Forgot -->
+          <div class="flex items-center justify-between text-xs pt-1">
+            <label class="flex items-center gap-2 font-bold text-slate-600 cursor-pointer">
+              <input
+                type="checkbox"
+                formControlName="rememberMe"
+                class="w-4 h-4 rounded border-slate-300 accent-slate-950 cursor-pointer"
+              />
+              <span>تذكرني</span>
+            </label>
+            <a href="javascript:void(0)" class="font-bold text-slate-400 hover:text-amber-700 transition-colors">
+              نسيت كلمة المرور؟
+            </a>
+          </div>
+
+          <!-- Submit -->
+          <div class="pt-2">
+            <button
+              type="submit"
+              [disabled]="isSubmitting()"
+              class="btn-primary btn-lg w-full"
+            >
+              @if (isSubmitting()) {
+                <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>جاري تسجيل الدخول...</span>
+              } @else {
+                <span>تسجيل الدخول</span>
+              }
+            </button>
+          </div>
+
+        </form>
+
+        <!-- Divider -->
+        <div class="relative flex items-center justify-center my-6">
+          <div class="hairline w-full"></div>
+          <span class="bg-white px-3 text-[11px] font-black text-slate-400 whitespace-nowrap absolute">
+            الدخول السريع (تجريبي)
+          </span>
+        </div>
+
+        <!-- Demo Logins -->
+        <div class="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            (click)="fillDemo('buyer')"
+            class="flex items-center justify-center gap-2 py-3 px-3 bg-ivory-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-300 rounded-full text-xs font-bold text-slate-700 hover:text-amber-800 transition-all cursor-pointer"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+            </svg>
+            <span>حساب مشتري</span>
+          </button>
+          <button
+            type="button"
+            (click)="fillDemo('agent')"
+            class="flex items-center justify-center gap-2 py-3 px-3 bg-ivory-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-300 rounded-full text-xs font-bold text-slate-700 hover:text-amber-800 transition-all cursor-pointer"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/>
+            </svg>
+            <span>حساب وكيل</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Bottom Link -->
+      <div class="mt-8 text-center text-xs font-semibold text-slate-500 pt-5 border-t border-slate-100">
+        ليس لديك حساب بعد؟
+        <a routerLink="/register" class="text-amber-700 hover:text-amber-900 font-black ml-1 hover:underline underline-offset-4">
+          إنشاء حساب جديد
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+</div>

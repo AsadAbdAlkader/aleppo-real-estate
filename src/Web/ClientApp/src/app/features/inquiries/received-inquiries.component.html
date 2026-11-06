@@ -1,0 +1,347 @@
+<div class="min-h-screen bg-slate-50/50 py-8 px-4 sm:px-6 lg:px-8" dir="rtl">
+  <div class="max-w-5xl mx-auto space-y-6">
+
+    <!-- Header Section -->
+    <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-3 mb-1">
+          <span class="text-2xl">📥</span>
+          <h1 class="text-2xl font-black text-slate-900 tracking-tight">الاستفسارات الواردة</h1>
+        </div>
+        <p class="text-xs text-slate-500 font-medium">
+          إدارة ومتابعة طلبات واستفسارات المشترين الخاصة بعقاراتك المضافة.
+        </p>
+      </div>
+
+      <a 
+        routerLink="/my-properties" 
+        class="inline-flex items-center gap-2 text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 px-4 py-2.5 rounded-xl border border-sky-100 transition-colors"
+      >
+        <span>عقاراتي المعروضة</span>
+        <span>←</span>
+      </a>
+    </div>
+
+    <!-- Filter Tabs Bar -->
+    <div class="bg-white p-2 rounded-2xl border border-slate-200/80 shadow-sm flex flex-wrap items-center gap-2">
+      <button
+        (click)="setStatusFilter('')"
+        [class]="selectedStatus() === '' 
+          ? 'bg-sky-600 text-white shadow-sm font-bold' 
+          : 'bg-transparent text-slate-600 hover:bg-slate-100 font-semibold'"
+        class="px-4 py-2 text-xs rounded-xl transition-all"
+      >
+        الكل
+      </button>
+
+      <button
+        (click)="setStatusFilter('New')"
+        [class]="selectedStatus() === 'New' 
+          ? 'bg-blue-600 text-white shadow-sm font-bold' 
+          : 'bg-transparent text-slate-600 hover:bg-blue-50 hover:text-blue-700 font-semibold'"
+        class="px-4 py-2 text-xs rounded-xl transition-all flex items-center gap-1.5"
+      >
+        <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+        <span>جديد</span>
+      </button>
+
+      <button
+        (click)="setStatusFilter('Contacted')"
+        [class]="selectedStatus() === 'Contacted' 
+          ? 'bg-amber-600 text-white shadow-sm font-bold' 
+          : 'bg-transparent text-slate-600 hover:bg-amber-50 hover:text-amber-700 font-semibold'"
+        class="px-4 py-2 text-xs rounded-xl transition-all flex items-center gap-1.5"
+      >
+        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+        <span>تم التواصل</span>
+      </button>
+
+      <button
+        (click)="setStatusFilter('Closed')"
+        [class]="selectedStatus() === 'Closed' 
+          ? 'bg-slate-700 text-white shadow-sm font-bold' 
+          : 'bg-transparent text-slate-600 hover:bg-slate-100 font-semibold'"
+        class="px-4 py-2 text-xs rounded-xl transition-all flex items-center gap-1.5"
+      >
+        <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+        <span>مغلق</span>
+      </button>
+    </div>
+
+    <!-- Content Area -->
+    @if (loading()) {
+      <!-- Shimmer Loading Skeleton -->
+      <div class="space-y-4">
+        @for (i of [1, 2, 3]; track i) {
+          <div class="bg-white rounded-2xl p-6 border border-slate-200 animate-pulse space-y-4">
+            <div class="flex justify-between items-center">
+              <div class="h-5 bg-slate-200 rounded w-1/3"></div>
+              <div class="h-6 bg-slate-200 rounded-full w-20"></div>
+            </div>
+            <div class="h-4 bg-slate-100 rounded w-1/2"></div>
+            <div class="h-16 bg-slate-50 rounded-xl"></div>
+          </div>
+        }
+      </div>
+    } @else if (error()) {
+      <!-- Error State -->
+      <div class="bg-rose-50 border border-rose-200 rounded-3xl p-8 text-center max-w-md mx-auto my-8">
+        <div class="text-3xl mb-3">⚠️</div>
+        <h3 class="text-base font-bold text-rose-900 mb-1">حدث خطأ أثناء تحميل البيانات</h3>
+        <p class="text-xs text-rose-700 mb-4">{{ error() }}</p>
+        <button
+          (click)="loadReceivedInquiries()"
+          class="px-4 py-2 text-xs font-bold bg-rose-600 text-white rounded-xl shadow hover:bg-rose-700 transition-colors"
+        >
+          إعادة المحاولة
+        </button>
+      </div>
+    } @else if (!paginatedResult()?.items?.length) {
+      <!-- Empty State -->
+      <div class="bg-white rounded-3xl p-12 text-center border border-slate-200/80 max-w-md mx-auto my-12 shadow-sm">
+        <div class="w-20 h-20 bg-sky-50 text-sky-600 rounded-3xl flex items-center justify-center text-3xl mx-auto mb-4">
+          📭
+        </div>
+        <h3 class="text-lg font-bold text-slate-900 mb-2">لا توجد استفسارات واردة</h3>
+        <p class="text-xs text-slate-500 leading-relaxed">
+          لم تتلق أي استفسارات ضمن هذا التصنيف حالياً. عند تواصل المشترين عبر عقاراتك ستظهر جميع الرسائل هنا.
+        </p>
+      </div>
+    } @else {
+      <!-- Received Inquiries List -->
+      <div class="space-y-4">
+        @for (inquiry of paginatedResult()?.items; track inquiry.id) {
+          <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm hover:shadow-md transition-all space-y-4">
+            
+            <!-- Card Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-2">
+              <div>
+                <a 
+                  [routerLink]="['/properties', inquiry.propertyId]" 
+                  class="group inline-flex items-center gap-2 text-base font-bold text-slate-900 hover:text-sky-600 transition-colors"
+                >
+                  <span>🏢</span>
+                  <span class="group-hover:underline">{{ inquiry.propertyTitle }}</span>
+                  <span class="text-xs text-sky-600">↗</span>
+                </a>
+                <div class="text-[11px] text-slate-400 font-medium mt-1">
+                  تاريخ الورود: {{ inquiry.createdAt | date:'mediumDate' }} - {{ inquiry.createdAt | date:'shortTime' }}
+                </div>
+              </div>
+
+              <!-- Status Badge -->
+              <span [class]="'self-start sm:self-auto inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ' + getStatusBadge(inquiry.status).class">
+                <span [class]="'w-2 h-2 rounded-full ' + getStatusBadge(inquiry.status).dotClass"></span>
+                <span>{{ getStatusBadge(inquiry.status).label }}</span>
+              </span>
+            </div>
+
+            <!-- Buyer Details & Message -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <!-- Buyer Info Box -->
+              <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-2">
+                <span class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">معلومات المشتري</span>
+                <div class="text-xs font-bold text-slate-900 flex items-center gap-2">
+                  <span>👤</span>
+                  <span>{{ inquiry.buyerName }}</span>
+                </div>
+                <div class="text-xs text-slate-700 flex items-center gap-2">
+                  <span>📞</span>
+                  <span class="dir-ltr text-slate-900 font-bold">{{ inquiry.phoneNumber }}</span>
+                </div>
+              </div>
+
+              <!-- Inquiry Message Box -->
+              <div class="md:col-span-2 bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-1">
+                <span class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">نص الاستفسار</span>
+                <p class="text-xs text-slate-800 leading-relaxed font-medium">
+                  {{ inquiry.message }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Agent Notes Section (If existing) -->
+            @if (inquiry.agentNotes) {
+              <div class="bg-amber-50/60 p-4 rounded-xl border border-amber-200/80 space-y-1">
+                <div class="flex items-center justify-between text-[11px] font-bold text-amber-800">
+                  <span class="flex items-center gap-1.5">
+                    <span>📝</span>
+                    <span>ملاحظات المالك / الوكيل:</span>
+                  </span>
+                  @if (inquiry.updatedAt) {
+                    <span class="text-[10px] text-amber-600/80 font-medium">
+                      آخر تحديث: {{ inquiry.updatedAt | date:'short' }}
+                    </span>
+                  }
+                </div>
+                <p class="text-xs text-amber-900 leading-relaxed">
+                  {{ inquiry.agentNotes }}
+                </p>
+              </div>
+            }
+
+            <!-- Card Actions -->
+            <div class="flex items-center justify-end pt-2">
+              <button
+                (click)="openEditModal(inquiry)"
+                class="inline-flex items-center gap-2 text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 px-4 py-2 rounded-xl transition-all shadow-sm"
+              >
+                <span>✏️</span>
+                <span>تعديل الحالة والملاحظات</span>
+              </button>
+            </div>
+
+          </div>
+        }
+      </div>
+
+      <!-- Pagination Controls -->
+      @if (paginatedResult() && paginatedResult()!.totalPages > 1) {
+        <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="text-xs font-medium text-slate-500">
+            عرض الصفحة <span class="font-bold text-slate-900">{{ currentPage() }}</span> من <span class="font-bold text-slate-900">{{ paginatedResult()!.totalPages }}</span> (إجمالي {{ paginatedResult()!.totalCount }} استفسار)
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button
+              (click)="goToPage(currentPage() - 1)"
+              [disabled]="currentPage() <= 1"
+              class="px-3 py-1.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              السابق
+            </button>
+
+            <span class="text-xs font-bold text-slate-600 px-2">
+              {{ currentPage() }} / {{ paginatedResult()!.totalPages }}
+            </span>
+
+            <button
+              (click)="goToPage(currentPage() + 1)"
+              [disabled]="currentPage() >= paginatedResult()!.totalPages"
+              class="px-3 py-1.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              التالي
+            </button>
+          </div>
+        </div>
+      }
+    }
+
+  </div>
+
+  <!-- Status Update Modal -->
+  @if (isModalOpen()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn" dir="rtl">
+      <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 space-y-6 relative">
+        
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+          <div>
+            <h3 class="text-lg font-bold text-slate-900">تحديث حالة الاستفسار</h3>
+            <p class="text-xs text-slate-500 font-medium mt-0.5 truncate max-w-xs">
+              {{ selectedInquiry()?.propertyTitle }}
+            </p>
+          </div>
+          <button
+            (click)="closeModal()"
+            class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 font-bold flex items-center justify-center transition-colors"
+          >
+            ✕
+          </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="space-y-5">
+          <!-- Status Selection -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-2">حالة الطلب:</label>
+            <div class="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                (click)="editStatus.set('New')"
+                [class]="editStatus() === 'New' 
+                  ? 'bg-blue-600 text-white font-bold border-blue-600 shadow-sm' 
+                  : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100 font-medium'"
+                class="py-2.5 px-3 text-xs rounded-xl border transition-all text-center"
+              >
+                جديد
+              </button>
+
+              <button
+                type="button"
+                (click)="editStatus.set('Contacted')"
+                [class]="editStatus() === 'Contacted' 
+                  ? 'bg-amber-600 text-white font-bold border-amber-600 shadow-sm' 
+                  : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100 font-medium'"
+                class="py-2.5 px-3 text-xs rounded-xl border transition-all text-center"
+              >
+                تم التواصل
+              </button>
+
+              <button
+                type="button"
+                (click)="editStatus.set('Closed')"
+                [class]="editStatus() === 'Closed' 
+                  ? 'bg-slate-700 text-white font-bold border-slate-700 shadow-sm' 
+                  : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100 font-medium'"
+                class="py-2.5 px-3 text-xs rounded-xl border transition-all text-center"
+              >
+                مغلق
+              </button>
+            </div>
+          </div>
+
+          <!-- Agent Notes Textarea -->
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-xs font-bold text-slate-700">ملاحظات الوكيل / المالك (اختياري):</label>
+              <span class="text-[10px] text-slate-400 font-medium">{{ editAgentNotes().length }} / 2000</span>
+            </div>
+            <textarea
+              [ngModel]="editAgentNotes()"
+              (ngModelChange)="editAgentNotes.set($event)"
+              maxlength="2000"
+              rows="4"
+              placeholder="أدخل ملاحظات التنسيق، تفاصيل التواصل، أو أسباب الإغلاق..."
+              class="w-full text-xs p-3.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all resize-y"
+            ></textarea>
+          </div>
+
+          <!-- Modal Error Alert -->
+          @if (modalError()) {
+            <div class="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 font-medium">
+              {{ modalError() }}
+            </div>
+          }
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+          <button
+            type="button"
+            (click)="closeModal()"
+            [disabled]="isSaving()"
+            class="px-4 py-2.5 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors disabled:opacity-50"
+          >
+            إلغاء
+          </button>
+          
+          <button
+            type="button"
+            (click)="saveStatusUpdate()"
+            [disabled]="isSaving()"
+            class="px-6 py-2.5 text-xs font-bold text-white bg-sky-600 hover:bg-sky-700 rounded-xl shadow-md shadow-sky-600/20 transition-all disabled:opacity-50 flex items-center gap-2"
+          >
+            @if (isSaving()) {
+              <span class="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              <span>جارٍ الحفظ...</span>
+            } @else {
+              <span>حفظ التغييرات</span>
+            }
+          </button>
+        </div>
+
+      </div>
+    </div>
+  }
+</div>

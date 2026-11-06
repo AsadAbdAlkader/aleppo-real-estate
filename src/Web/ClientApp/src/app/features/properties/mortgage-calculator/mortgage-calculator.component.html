@@ -1,0 +1,229 @@
+<!-- Wrapper: Can be rendered inline or as a Modal -->
+<div [ngClass]="isModal() ? 'fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4' : 'w-full'" dir="rtl">
+  
+  <div 
+    class="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden transition-all duration-300 w-full"
+    [ngClass]="isModal() ? 'max-w-3xl my-8 animate-fadeIn' : ''"
+  >
+
+    <!-- Header -->
+    <div class="bg-gradient-to-l from-slate-950 via-slate-900 to-slate-950 text-white p-6 sm:p-7 relative border-b border-amber-500/20">
+      <div class="flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-amber-500/15 border border-amber-400/30 flex items-center justify-center text-2xl shadow-gold-sm">
+            🧮
+          </div>
+          <div>
+            <h3 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+              <span>حاسبة التمويل العقاري والأقساط</span>
+              <span class="text-xs bg-amber-400/20 text-amber-300 font-bold px-2.5 py-0.5 rounded-full border border-amber-400/30">حلب</span>
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-300 mt-1">
+              احسب قيمة الدفعة الأولى، القسط الشهري، وإجمالي تكلفة التمويل بدقة بالدولار أو الليرة السورية
+            </p>
+          </div>
+        </div>
+
+        @if (isModal()) {
+          <button 
+            (click)="onClose()" 
+            type="button" 
+            class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition-colors focus:outline-none"
+            title="إغلاق النافذة"
+          >
+            ✕
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Body Container -->
+    <div class="p-6 sm:p-8 space-y-7">
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+        <!-- Controls Column (7 cols) -->
+        <div class="lg:col-span-7 space-y-6">
+
+          <!-- Property Price Input -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-xs font-bold text-slate-700">
+              <label for="mortgage-price">سعر العقار التقديري</label>
+              <span class="text-amber-700 font-extrabold text-sm">{{ formatPrice(propertyPrice()) }}</span>
+            </div>
+            <div class="relative">
+              <input
+                id="mortgage-price"
+                type="number"
+                [value]="propertyPrice()"
+                (input)="onPriceChange($event)"
+                step="5000"
+                min="10000"
+                class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-2xl text-slate-900 font-bold text-base focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all font-latin"
+              />
+              <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 font-bold text-xs">
+                USD $
+              </span>
+            </div>
+          </div>
+
+          <!-- Down Payment Slider & Input -->
+          <div class="space-y-2.5 bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200/80">
+            <div class="flex items-center justify-between text-xs font-bold">
+              <span class="text-slate-700">الدفعة الأولى (المقدم)</span>
+              <span class="text-amber-700 font-black text-sm">
+                {{ downPaymentPercent() }}% ({{ formatPrice(downPaymentAmount()) }})
+              </span>
+            </div>
+            
+            <input 
+              type="range" 
+              min="10" 
+              max="80" 
+              step="5"
+              [ngModel]="downPaymentPercent()" 
+              (ngModelChange)="setDownPayment($event)"
+              class="w-full accent-amber-500 h-2 bg-slate-200 rounded-lg cursor-pointer"
+            />
+
+            <!-- Quick Percent Buttons -->
+            <div class="flex items-center justify-between gap-1.5 pt-1">
+              @for (p of [10, 20, 30, 40, 50]; track p) {
+                <button
+                  type="button"
+                  (click)="setDownPayment(p)"
+                  [class]="downPaymentPercent() === p ? 'bg-amber-500 text-slate-950 font-black shadow-sm' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'"
+                  class="flex-1 py-1 text-[11px] rounded-lg transition-colors text-center"
+                >
+                  {{ p }}%
+                </button>
+              }
+            </div>
+          </div>
+
+          <!-- Loan Duration (Years) -->
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between text-xs font-bold text-slate-700">
+              <label>مدة سداد التمويل</label>
+              <span class="text-teal-700 font-black text-sm">{{ loanTermYears() }} سنوات ({{ totalMonths() }} شهراً)</span>
+            </div>
+
+            <!-- Quick Duration Chips -->
+            <div class="grid grid-cols-4 gap-2">
+              @for (y of [5, 10, 15, 20]; track y) {
+                <button
+                  type="button"
+                  (click)="setTerm(y)"
+                  [class]="loanTermYears() === y ? 'bg-teal-700 text-white font-black shadow-sm border-teal-700' : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200'"
+                  class="py-2.5 text-xs font-bold rounded-xl border transition-colors text-center"
+                >
+                  {{ y }} سنوات
+                </button>
+              }
+            </div>
+          </div>
+
+          <!-- Profit Margin / Annual Rate -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-xs font-bold text-slate-700">
+              <label for="interest-rate">هامش الربح السنوي / نسبة الفائدة</label>
+              <span class="text-slate-800 font-extrabold text-sm">{{ annualInterestRate() }}%</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <input 
+                id="interest-rate"
+                type="range" 
+                min="0" 
+                max="15" 
+                step="0.25"
+                [ngModel]="annualInterestRate()" 
+                (ngModelChange)="annualInterestRate.set($event)"
+                class="w-full accent-amber-500 h-2 bg-slate-200 rounded-lg cursor-pointer"
+              />
+              <span class="text-xs font-bold text-slate-500 whitespace-nowrap w-12 text-left font-latin">
+                {{ annualInterestRate() }}%
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Results Column (5 cols) -->
+        <div class="lg:col-span-5 bg-gradient-to-br from-slate-900 to-slate-950 text-white p-6 sm:p-7 rounded-3xl border border-slate-800 shadow-lg space-y-6">
+
+          <!-- Monthly Payment Highlight Box -->
+          <div class="text-center bg-white/5 border border-amber-400/20 p-5 rounded-2xl relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-28 h-28 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+            <span class="text-xs font-bold text-amber-300 uppercase tracking-wider block mb-1">
+              القسط الشهري التقديري
+            </span>
+            <div class="text-3xl sm:text-4xl font-black text-white font-latin leading-none my-2 text-amber-400">
+              {{ formatPrice(monthlyPayment()) }}
+            </div>
+            <span class="text-[11px] text-slate-400 block">
+              شهرياً لمدة {{ loanTermYears() }} سنة
+            </span>
+          </div>
+
+          <!-- Breakdown Metrics Grid -->
+          <div class="space-y-3 text-xs">
+
+            <div class="flex items-center justify-between py-2 border-b border-white/10">
+              <span class="text-slate-400">مبلغ الدفعة الأولى (المقدم):</span>
+              <span class="font-bold text-amber-300 font-latin">{{ formatPrice(downPaymentAmount()) }}</span>
+            </div>
+
+            <div class="flex items-center justify-between py-2 border-b border-white/10">
+              <span class="text-slate-400">أصل مبلغ التمويل:</span>
+              <span class="font-bold text-white font-latin">{{ formatPrice(loanPrincipal()) }}</span>
+            </div>
+
+            <div class="flex items-center justify-between py-2 border-b border-white/10">
+              <span class="text-slate-400">إجمالي الفائدة / أرباح التمويل:</span>
+              <span class="font-bold text-teal-400 font-latin">{{ formatPrice(totalInterest()) }}</span>
+            </div>
+
+            <div class="flex items-center justify-between py-2.5 font-bold text-sm bg-white/5 px-3 rounded-xl">
+              <span class="text-white">إجمالي المبلغ المسدد:</span>
+              <span class="text-amber-400 font-latin">{{ formatPrice(totalRepayment()) }}</span>
+            </div>
+
+          </div>
+
+          <!-- Visual Progress Ratio -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between text-[11px] text-slate-400">
+              <span>أصل التمويل ({{ principalPercent() }}%)</span>
+              <span>الأرباح ({{ interestPercent() }}%)</span>
+            </div>
+            <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden flex">
+              <div 
+                class="bg-amber-400 h-full transition-all duration-300"
+                [style.width.%]="principalPercent()"
+                title="أصل التمويل"
+              ></div>
+              <div 
+                class="bg-teal-500 h-full transition-all duration-300"
+                [style.width.%]="interestPercent()"
+                title="الأرباح"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Disclaimer Note -->
+          <div class="text-[11px] text-slate-400 leading-relaxed bg-white/5 p-3 rounded-xl border border-white/5 flex items-start gap-2">
+            <span>ℹ️</span>
+            <span>
+              الحسابات تقريبية استرشادية، وتخضع للشروط المعتمدة لدى المصارف والجهات التمويلية في الجمهورية العربية السورية.
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

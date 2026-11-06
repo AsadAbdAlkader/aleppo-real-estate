@@ -1,0 +1,367 @@
+<div class="min-h-screen bg-stone-50/50 py-8 px-4 sm:px-6 lg:px-8 font-sans" dir="rtl">
+  <div class="max-w-7xl mx-auto space-y-8">
+
+    <!-- Loading Skeleton State -->
+    @if (dashboardService.loading()) {
+      <div class="animate-pulse space-y-8">
+        <!-- Header Skeleton -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-100 flex items-center gap-5">
+          <div class="w-16 h-16 rounded-2xl bg-slate-200"></div>
+          <div class="space-y-3 flex-1">
+            <div class="h-6 bg-slate-200 rounded w-1/4"></div>
+            <div class="h-4 bg-slate-200 rounded w-1/6"></div>
+          </div>
+        </div>
+
+        <!-- Stats Grid Skeleton -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          @for (i of [1,2,3,4,5]; track i) {
+            <div class="h-32 bg-slate-200 rounded-2xl"></div>
+          }
+        </div>
+
+        <!-- Action Bar Skeleton -->
+        <div class="h-16 bg-slate-200 rounded-2xl"></div>
+
+        <!-- Lists Skeleton -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="h-64 bg-slate-200 rounded-2xl"></div>
+          <div class="h-64 bg-slate-200 rounded-2xl"></div>
+          <div class="h-64 bg-slate-200 rounded-2xl"></div>
+        </div>
+      </div>
+    }
+
+    <!-- Error State -->
+    @else if (dashboardService.error()) {
+      <div class="bg-rose-50 border border-rose-200 rounded-3xl p-8 text-center max-w-xl mx-auto shadow-sm">
+        <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">
+          ⚠️
+        </div>
+        <h3 class="text-xl font-bold text-rose-900 mb-2">عذراً، حدث خطأ أثناء جلب البيانات</h3>
+        <p class="text-sm text-rose-700 mb-6">{{ dashboardService.error() }}</p>
+        <button
+          (click)="loadData()"
+          class="inline-flex items-center gap-2 px-6 py-3 text-sm font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-xl shadow-md transition-all"
+        >
+          🔄 إعادة المحاولة
+        </button>
+      </div>
+    }
+
+    <!-- Loaded Dashboard Content -->
+    @else if (dashboardService.dashboardData(); as data) {
+      
+      <!-- 1. Welcome Header -->
+      <div class="bg-gradient-to-r from-slate-900 via-teal-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+        <!-- Ambient Decorative Pattern -->
+        <div class="absolute -left-10 -bottom-10 w-60 h-60 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -right-10 -top-10 w-60 h-60 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div class="flex items-center gap-4 sm:gap-5">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-teal-500 to-cyan-400 p-0.5 shadow-lg shadow-teal-500/30 flex-shrink-0">
+              <div class="w-full h-full bg-slate-900 rounded-[14px] flex items-center justify-center text-2xl sm:text-3xl font-extrabold text-white">
+                {{ data.user.firstName?.charAt(0) || '👤' }}
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center gap-3 flex-wrap">
+                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                  أهلاً بك، {{ data.user.firstName }} {{ data.user.lastName }} 👋
+                </h1>
+                <span [class]="'inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border ' + getRoleBadge(data.user.role).class">
+                  {{ getRoleBadge(data.user.role).label }}
+                </span>
+              </div>
+              <p class="text-slate-300 text-sm mt-1">
+                مرحباً بك في لوحة تحكم عقارات حلب. ملخص إحصائياتك ونشاطك العقاري الأخير.
+              </p>
+            </div>
+          </div>
+
+          <!-- Direct Quick Action -->
+          <div class="flex items-center gap-3">
+            @if (authService.userRole() === 'Agent' || authService.userRole() === 'Admin') {
+              <a
+                routerLink="/my-properties"
+                [queryParams]="{ action: 'new' }"
+                class="inline-flex items-center gap-2 px-5 py-3 text-sm font-bold text-white bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 rounded-2xl shadow-lg shadow-teal-600/25 transition-all transform hover:-translate-y-0.5"
+              >
+                <span class="text-lg">➕</span>
+                <span>إضافة عقار جديد</span>
+              </a>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Stats Cards Grid (5 Cards with Icons & Gradients) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
+        
+        <!-- Card 1: Total My Properties -->
+        <div class="group bg-white rounded-3xl p-5 shadow-sm hover:shadow-md border border-slate-100 transition-all duration-200 relative overflow-hidden">
+          <div class="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-r from-teal-500 to-cyan-600"></div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">إجمالي عقاراتي</span>
+            <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+              🏛️
+            </div>
+          </div>
+          <div class="text-3xl font-black text-slate-900 tracking-tight mb-1">
+            {{ data.stats.myPropertiesCount }}
+          </div>
+          <span class="text-[11px] font-semibold text-slate-400">عقارات مضافة للنظام</span>
+        </div>
+
+        <!-- Card 2: Active Properties -->
+        <div class="group bg-white rounded-3xl p-5 shadow-sm hover:shadow-md border border-slate-100 transition-all duration-200 relative overflow-hidden">
+          <div class="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-r from-emerald-500 to-teal-500"></div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">العقارات النشطة</span>
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+              ✅
+            </div>
+          </div>
+          <div class="text-3xl font-black text-slate-900 tracking-tight mb-1">
+            {{ data.stats.activePropertiesCount }}
+          </div>
+          <span class="text-[11px] font-semibold text-emerald-600">معروضة للبيع/الإيجار</span>
+        </div>
+
+        <!-- Card 3: Archived/Sold Properties -->
+        <div class="group bg-white rounded-3xl p-5 shadow-sm hover:shadow-md border border-slate-100 transition-all duration-200 relative overflow-hidden">
+          <div class="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-r from-amber-500 to-orange-500"></div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">العقارات المؤرشفة</span>
+            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+              📦
+            </div>
+          </div>
+          <div class="text-3xl font-black text-slate-900 tracking-tight mb-1">
+            {{ data.stats.archivedPropertiesCount }}
+          </div>
+          <span class="text-[11px] font-semibold text-amber-600">مباعة أو مكتملة</span>
+        </div>
+
+        <!-- Card 4: Favorites -->
+        <div class="group bg-white rounded-3xl p-5 shadow-sm hover:shadow-md border border-slate-100 transition-all duration-200 relative overflow-hidden">
+          <div class="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-r from-rose-500 to-pink-600"></div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">المفضلة</span>
+            <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+              ❤️
+            </div>
+          </div>
+          <div class="text-3xl font-black text-slate-900 tracking-tight mb-1">
+            {{ data.stats.favoritesCount }}
+          </div>
+          <span class="text-[11px] font-semibold text-rose-500">عقارات محفوظة</span>
+        </div>
+
+        <!-- Card 5: My Inquiries -->
+        <div class="group bg-white rounded-3xl p-5 shadow-sm hover:shadow-md border border-slate-100 transition-all duration-200 relative overflow-hidden">
+          <div class="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-r from-purple-500 to-indigo-600"></div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">استفساراتي</span>
+            <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+              📩
+            </div>
+          </div>
+          <div class="text-3xl font-black text-slate-900 tracking-tight mb-1">
+            {{ data.stats.myInquiriesCount }}
+          </div>
+          <span class="text-[11px] font-semibold text-purple-600">رسائل واستعلامات</span>
+        </div>
+
+      </div>
+
+      <!-- 3. Quick Actions Bar -->
+      <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
+        <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+          <span>⚡</span>
+          <span>الإجراءات السريعة</span>
+        </h2>
+        
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+          @if (authService.userRole() === 'Agent' || authService.userRole() === 'Admin') {
+            <a
+              routerLink="/my-properties"
+              [queryParams]="{ action: 'new' }"
+              class="flex flex-col items-center justify-center p-4 rounded-2xl bg-teal-50/70 hover:bg-teal-100 border border-teal-100 text-teal-800 transition-all text-center group"
+            >
+              <span class="text-2xl mb-1.5 group-hover:scale-110 transition-transform">➕</span>
+              <span class="text-xs font-bold">إضافة عقار</span>
+            </a>
+          }
+
+          <a
+            routerLink="/my-properties"
+            class="flex flex-col items-center justify-center p-4 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200/80 text-slate-800 transition-all text-center group"
+          >
+            <span class="text-2xl mb-1.5 group-hover:scale-110 transition-transform">📋</span>
+            <span class="text-xs font-bold">عقاراتي</span>
+          </a>
+
+          <a
+            routerLink="/favorites"
+            class="flex flex-col items-center justify-center p-4 rounded-2xl bg-rose-50/70 hover:bg-rose-100 border border-rose-100 text-rose-800 transition-all text-center group"
+          >
+            <span class="text-2xl mb-1.5 group-hover:scale-110 transition-transform">❤️</span>
+            <span class="text-xs font-bold">المفضلة</span>
+          </a>
+
+          <a
+            routerLink="/inquiries"
+            class="flex flex-col items-center justify-center p-4 rounded-2xl bg-purple-50/70 hover:bg-purple-100 border border-purple-100 text-purple-800 transition-all text-center group"
+          >
+            <span class="text-2xl mb-1.5 group-hover:scale-110 transition-transform">💬</span>
+            <span class="text-xs font-bold">استفساراتي</span>
+          </a>
+
+          <a
+            routerLink="/properties"
+            class="flex flex-col items-center justify-center p-4 rounded-2xl bg-teal-50/70 hover:bg-teal-100 border border-teal-100 text-teal-800 transition-all text-center group col-span-2 sm:col-span-1"
+          >
+            <span class="text-2xl mb-1.5 group-hover:scale-110 transition-transform">🔍</span>
+            <span class="text-xs font-bold">تصفح السوق</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 4, 5, 6. Recent Lists Section (Grid 3 Columns) -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- 4. Recent Properties Grid (Top 5) -->
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col">
+          <div class="flex items-center justify-between mb-5">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🏡</span>
+              <h2 class="text-lg font-bold text-slate-900">أحدث عقاراتي</h2>
+            </div>
+            <a routerLink="/my-properties" class="text-xs font-bold text-teal-600 hover:text-teal-700 hover:underline">
+              عرض الكل &larr;
+            </a>
+          </div>
+
+          <div class="space-y-4 flex-1">
+            @for (prop of data.recentProperties; track prop.id) {
+              <div class="p-4 rounded-2xl bg-slate-50/70 hover:bg-slate-100/80 border border-slate-100 transition-all flex items-center justify-between gap-3">
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span [class]="'text-[10px] font-bold px-2 py-0.5 rounded-md border ' + getStatusBadge(prop.status).class">
+                      {{ getStatusBadge(prop.status).label }}
+                    </span>
+                    <span class="text-xs font-medium text-slate-500">📍 {{ prop.cityArea }}</span>
+                  </div>
+                  <h3 class="text-sm font-bold text-slate-900 truncate" [title]="prop.title">
+                    {{ prop.title }}
+                  </h3>
+                  <div class="flex items-center gap-3 text-xs text-slate-500 mt-1">
+                    <span class="font-bold text-teal-600">{{ formatPrice(prop.price) }}</span>
+                    <span>• {{ getCategoryLabel(prop.category) }}</span>
+                  </div>
+                </div>
+              </div>
+            } @empty {
+              <div class="py-12 text-center text-slate-400 flex flex-col items-center justify-center my-auto">
+                <span class="text-4xl mb-2">📭</span>
+                <p class="text-xs font-medium">لم تقم بإضافة أي عقارات بعد.</p>
+                @if (authService.userRole() === 'Agent' || authService.userRole() === 'Admin') {
+                  <a routerLink="/my-properties" [queryParams]="{ action: 'new' }" class="mt-3 text-xs font-bold text-teal-600 hover:underline">
+                    + إضافة أول عقار
+                  </a>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- 5. Recent Favorites List (Top 5) -->
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col">
+          <div class="flex items-center justify-between mb-5">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">❤️</span>
+              <h2 class="text-lg font-bold text-slate-900">أحدث المفضلة</h2>
+            </div>
+            <a routerLink="/favorites" class="text-xs font-bold text-teal-600 hover:text-teal-700 hover:underline">
+              عرض الكل &larr;
+            </a>
+          </div>
+
+          <div class="space-y-4 flex-1">
+            @for (fav of data.recentFavorites; track fav.id) {
+              <div class="p-4 rounded-2xl bg-rose-50/40 hover:bg-rose-50/80 border border-rose-100/60 transition-all flex items-center justify-between gap-3">
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="text-xs font-medium text-slate-500">📍 {{ fav.cityArea }}</span>
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-teal-50 text-teal-700 border border-teal-100">
+                      {{ getCategoryLabel(fav.category) }}
+                    </span>
+                  </div>
+                  <h3 class="text-sm font-bold text-slate-900 truncate" [title]="fav.title">
+                    {{ fav.title }}
+                  </h3>
+                  <div class="text-xs font-bold text-rose-600 mt-1">
+                    {{ formatPrice(fav.price) }}
+                  </div>
+                </div>
+              </div>
+            } @empty {
+              <div class="py-12 text-center text-slate-400 flex flex-col items-center justify-center my-auto">
+                <span class="text-4xl mb-2">🤍</span>
+                <p class="text-xs font-medium">قائمة المفضلة فارغة حالياً.</p>
+                <a routerLink="/properties" class="mt-3 text-xs font-bold text-teal-600 hover:underline">
+                  تصفح العقارات وحفظ المفضلة
+                </a>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- 6. Recent Inquiries List (Top 5) -->
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col">
+          <div class="flex items-center justify-between mb-5">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">💬</span>
+              <h2 class="text-lg font-bold text-slate-900">أحدث الاستفسارات</h2>
+            </div>
+            <a routerLink="/inquiries" class="text-xs font-bold text-teal-600 hover:text-teal-700 hover:underline">
+              عرض الكل &larr;
+            </a>
+          </div>
+
+          <div class="space-y-4 flex-1">
+            @for (inq of data.recentInquiries; track inq.id) {
+              <div class="p-4 rounded-2xl bg-purple-50/40 hover:bg-purple-50/80 border border-purple-100/60 transition-all">
+                <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+                  <span class="font-bold text-purple-700 truncate max-w-[200px]" [title]="inq.propertyTitle">
+                    {{ inq.propertyTitle }}
+                  </span>
+                  <span>{{ formatDate(inq.createdAt) }}</span>
+                </div>
+                <p class="text-xs text-slate-700 font-medium line-clamp-2 mt-1 bg-white/80 p-2 rounded-xl border border-purple-50">
+                  "{{ inq.message }}"
+                </p>
+                @if (inq.phoneNumber) {
+                  <div class="text-[11px] text-slate-500 mt-2 font-mono flex items-center gap-1">
+                    <span>📞</span>
+                    <span dir="ltr">{{ inq.phoneNumber }}</span>
+                  </div>
+                }
+              </div>
+            } @empty {
+              <div class="py-12 text-center text-slate-400 flex flex-col items-center justify-center my-auto">
+                <span class="text-4xl mb-2">📬</span>
+                <p class="text-xs font-medium">لا توجد أي استفسارات مسجلة بعد.</p>
+              </div>
+            }
+          </div>
+        </div>
+
+      </div>
+
+    }
+
+  </div>
+</div>

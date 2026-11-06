@@ -1,0 +1,529 @@
+<div class="min-h-screen bg-stone-50 py-8 px-4 sm:px-6 lg:px-8" dir="rtl">
+  <div class="max-w-4xl mx-auto space-y-6">
+
+    <!-- Page Header & Summary Card -->
+    <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200/80 transition-all">
+      <div class="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-6">
+        
+        <div class="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-right">
+          <!-- Avatar Icon Card -->
+          <div class="relative">
+            <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-teal-600 to-cyan-700 text-white font-black text-3xl sm:text-4xl flex items-center justify-center shadow-lg shadow-teal-500/25 ring-4 ring-white">
+              {{ (profile()?.firstName || authService.currentUser()?.firstName)?.charAt(0) || '👤' }}
+            </div>
+            <span class="absolute -bottom-1 -left-1 bg-emerald-500 text-white p-1 rounded-full ring-2 ring-white" title="حساب نشط">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+              </svg>
+            </span>
+          </div>
+
+          <!-- User Details Summary -->
+          <div class="space-y-1">
+            <div class="flex items-center justify-center sm:justify-start gap-2.5 flex-wrap">
+              <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                {{ profile()?.firstName || authService.currentUser()?.firstName }} {{ profile()?.lastName || authService.currentUser()?.lastName }}
+              </h1>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold bg-teal-100 text-teal-800 border border-teal-200">
+                {{ getRoleLabel(profile()?.role) }}
+              </span>
+            </div>
+            
+            <p class="text-sm font-medium text-slate-500 flex items-center justify-center sm:justify-start gap-1.5 dir-ltr sm:dir-rtl">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-slate-400">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+              </svg>
+              <span>{{ profile()?.email || authService.currentUser()?.email }}</span>
+            </p>
+
+            @if (profile()?.createdAt) {
+              <p class="text-xs text-slate-400 pt-1">
+                عضو منذ: {{ profile()?.createdAt | date:'yyyy/MM/dd' }}
+              </p>
+            }
+          </div>
+        </div>
+
+        <!-- Back to Dashboard / Header Action -->
+        <a
+          routerLink="/dashboard"
+          class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 px-3.5 py-2 rounded-xl transition-all"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+          </svg>
+          <span>لوحة التحكم</span>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- Main Tabs Card -->
+    <div class="bg-white rounded-3xl shadow-sm border border-slate-200/80 overflow-hidden">
+      
+      <!-- Tab Navigation Header -->
+      <div class="flex border-b border-slate-200 bg-slate-50/70 p-1.5 sm:p-2 gap-2">
+        <button
+          type="button"
+          (click)="setTab('personal')"
+          class="flex-1 inline-flex items-center justify-center gap-2 py-3 px-4 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer"
+          [class.bg-white]="activeTab() === 'personal'"
+          [class.text-teal-700]="activeTab() === 'personal'"
+          [class.shadow-sm]="activeTab() === 'personal'"
+          [class.text-slate-600]="activeTab() !== 'personal'"
+          [class.hover:text-slate-900]="activeTab() !== 'personal'"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+          </svg>
+          <span>البيانات الشخصية</span>
+        </button>
+
+        <button
+          type="button"
+          (click)="setTab('security')"
+          class="flex-1 inline-flex items-center justify-center gap-2 py-3 px-4 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer"
+          [class.bg-white]="activeTab() === 'security'"
+          [class.text-teal-700]="activeTab() === 'security'"
+          [class.shadow-sm]="activeTab() === 'security'"
+          [class.text-slate-600]="activeTab() !== 'security'"
+          [class.hover:text-slate-900]="activeTab() !== 'security'"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+          </svg>
+          <span>الأمان وكلمة المرور</span>
+        </button>
+
+        @if (authService.userRole() === 'Agent' || authService.userRole() === 'Admin') {
+          <button
+            type="button"
+            (click)="setTab('agent')"
+            class="flex-1 inline-flex items-center justify-center gap-2 py-3 px-4 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer"
+            [class.bg-white]="activeTab() === 'agent'"
+            [class.text-teal-700]="activeTab() === 'agent'"
+            [class.shadow-sm]="activeTab() === 'agent'"
+            [class.text-slate-600]="activeTab() !== 'agent'"
+            [class.hover:text-slate-900]="activeTab() !== 'agent'"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5s.75 0 .75.75v1.5c0 .75-.75.75-.75.75H9m0-3H7.5m1.5 0v3.75m0-3.75H9m6 0h1.5s.75 0 .75.75v1.5c0 .75-.75.75-.75.75H15m0-3h-1.5m1.5 0v3.75m0-3.75H15" />
+            </svg>
+            <span>الملف المهني للوكيل</span>
+          </button>
+        }
+      </div>
+
+      <!-- Tab Content Area -->
+      <div class="p-6 sm:p-8">
+
+        @if (isLoadingProfile()) {
+          <!-- Skeleton Loading State -->
+          <div class="space-y-6 animate-pulse">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="h-12 bg-slate-100 rounded-xl"></div>
+              <div class="h-12 bg-slate-100 rounded-xl"></div>
+            </div>
+            <div class="h-12 bg-slate-100 rounded-xl"></div>
+            <div class="h-12 bg-slate-100 rounded-xl"></div>
+            <div class="h-10 w-32 bg-slate-200 rounded-xl"></div>
+          </div>
+        } @else {
+
+          <!-- TAB 1: PERSONAL INFORMATION -->
+          @if (activeTab() === 'personal') {
+            <form [formGroup]="personalForm" (ngSubmit)="onSubmitPersonal()" class="space-y-6">
+
+              <!-- Success Alert Toast -->
+              @if (personalSuccessMsg()) {
+                <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold flex items-center justify-between gap-3 animate-fadeIn">
+                  <div class="flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-emerald-600">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                    <span>{{ personalSuccessMsg() }}</span>
+                  </div>
+                  <button type="button" (click)="personalSuccessMsg.set(null)" class="text-emerald-600 hover:text-emerald-900">✕</button>
+                </div>
+              }
+
+              <!-- Error Alert -->
+              @if (personalErrorMsg()) {
+                <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-sm font-semibold flex items-center justify-between gap-3 animate-fadeIn">
+                  <div class="flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-rose-600">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0zm-9 3.75h.008v.008H12v-.008z" />
+                    </svg>
+                    <span>{{ personalErrorMsg() }}</span>
+                  </div>
+                  <button type="button" (click)="personalErrorMsg.set(null)" class="text-rose-600 hover:text-rose-900">✕</button>
+                </div>
+              }
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <!-- First Name -->
+                <div>
+                  <label for="firstName" class="block text-xs font-bold text-slate-700 mb-1.5">
+                    الاسم الأول <span class="text-rose-500">*</span>
+                  </label>
+                  <input
+                    id="firstName"
+                    type="text"
+                    formControlName="firstName"
+                    class="w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2"
+                    [class.border-slate-200]="!(personalForm.get('firstName')?.touched && personalForm.get('firstName')?.invalid)"
+                    [class.focus:border-teal-500]="!(personalForm.get('firstName')?.touched && personalForm.get('firstName')?.invalid)"
+                    [class.focus:ring-teal-500\/20]="!(personalForm.get('firstName')?.touched && personalForm.get('firstName')?.invalid)"
+                    [class.border-rose-400]="personalForm.get('firstName')?.touched && personalForm.get('firstName')?.invalid"
+                    [class.bg-rose-50\/30]="personalForm.get('firstName')?.touched && personalForm.get('firstName')?.invalid"
+                    placeholder="مثال: أحمد"
+                  />
+                  @if (personalForm.get('firstName')?.touched && personalForm.get('firstName')?.hasError('required')) {
+                    <p class="text-xs font-medium text-rose-500 mt-1">الاسم الأول مطلوب</p>
+                  }
+                </div>
+
+                <!-- Last Name -->
+                <div>
+                  <label for="lastName" class="block text-xs font-bold text-slate-700 mb-1.5">
+                    اسم العائلة <span class="text-rose-500">*</span>
+                  </label>
+                  <input
+                    id="lastName"
+                    type="text"
+                    formControlName="lastName"
+                    class="w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2"
+                    [class.border-slate-200]="!(personalForm.get('lastName')?.touched && personalForm.get('lastName')?.invalid)"
+                    [class.focus:border-teal-500]="!(personalForm.get('lastName')?.touched && personalForm.get('lastName')?.invalid)"
+                    [class.focus:ring-teal-500\/20]="!(personalForm.get('lastName')?.touched && personalForm.get('lastName')?.invalid)"
+                    [class.border-rose-400]="personalForm.get('lastName')?.touched && personalForm.get('lastName')?.invalid"
+                    [class.bg-rose-50\/30]="personalForm.get('lastName')?.touched && personalForm.get('lastName')?.invalid"
+                    placeholder="مثال: الحلبي"
+                  />
+                  @if (personalForm.get('lastName')?.touched && personalForm.get('lastName')?.hasError('required')) {
+                    <p class="text-xs font-medium text-rose-500 mt-1">اسم العائلة مطلوب</p>
+                  }
+                </div>
+              </div>
+
+              <!-- Phone Number -->
+              <div>
+                <label for="phoneNumber" class="block text-xs font-bold text-slate-700 mb-1.5">
+                  رقم الهاتف للتواصل
+                </label>
+                <div class="relative">
+                  <input
+                    id="phoneNumber"
+                    type="tel"
+                    formControlName="phoneNumber"
+                    dir="ltr"
+                    class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm transition-all focus:outline-none focus:ring-2 focus:border-teal-500 focus:ring-teal-500/20 text-right"
+                    placeholder="+963 911 222 333"
+                  />
+                </div>
+                <p class="text-[11px] text-slate-400 mt-1">يُستخدم رقم الهاتف للتواصل حول استفسارات العقارات والخدمات.</p>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-2">
+                <!-- Email (Disabled Read-Only) -->
+                <div>
+                  <label for="email" class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+                    <span>البريد الإلكتروني</span>
+                    <span class="text-[10px] text-slate-400 font-normal">غير قابل للتعديل 🔒</span>
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    formControlName="email"
+                    class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-100 text-slate-500 text-sm cursor-not-allowed font-mono"
+                  />
+                </div>
+
+                <!-- Role (Disabled Read-Only) -->
+                <div>
+                  <label for="role" class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+                    <span>نوع الحساب (الصلاحيات)</span>
+                    <span class="text-[10px] text-slate-400 font-normal">مستند للنظام 🔒</span>
+                  </label>
+                  <input
+                    id="role"
+                    type="text"
+                    formControlName="role"
+                    class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-100 text-slate-700 text-sm cursor-not-allowed font-bold"
+                  />
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="pt-4 border-t border-slate-100 flex justify-end">
+                <button
+                  type="submit"
+                  [disabled]="isSavingPersonal()"
+                  class="btn-primary"
+                >
+                  @if (isSavingPersonal()) {
+                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>جارٍ الحفظ...</span>
+                  } @else {
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                    <span>حفظ التغييرات</span>
+                  }
+                </button>
+              </div>
+
+            </form>
+          }
+
+          <!-- TAB 2: CHANGE PASSWORD & SECURITY -->
+          @if (activeTab() === 'security') {
+            <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()" class="space-y-6 max-w-xl">
+
+              <!-- Success Alert Toast -->
+              @if (passwordSuccessMsg()) {
+                <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold flex items-center justify-between gap-3 animate-fadeIn">
+                  <div class="flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-emerald-600">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                    <span>{{ passwordSuccessMsg() }}</span>
+                  </div>
+                  <button type="button" (click)="passwordSuccessMsg.set(null)" class="text-emerald-600 hover:text-emerald-900">✕</button>
+                </div>
+              }
+
+              <!-- Error Alert Toast -->
+              @if (passwordErrorMsg()) {
+                <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-sm font-semibold flex items-center justify-between gap-3 animate-fadeIn">
+                  <div class="flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-rose-600">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0zm-9 3.75h.008v.008H12v-.008z" />
+                    </svg>
+                    <span>{{ passwordErrorMsg() }}</span>
+                  </div>
+                  <button type="button" (click)="passwordErrorMsg.set(null)" class="text-rose-600 hover:text-rose-900">✕</button>
+                </div>
+              }
+
+              <!-- Current Password -->
+              <div>
+                <label for="currentPassword" class="block text-xs font-bold text-slate-700 mb-1.5">
+                  كلمة المرور الحالية <span class="text-rose-500">*</span>
+                </label>
+                <input
+                  id="currentPassword"
+                  type="password"
+                  formControlName="currentPassword"
+                  class="w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2"
+                  [class.border-slate-200]="!(passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid)"
+                  [class.focus:border-teal-500]="!(passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid)"
+                  [class.focus:ring-teal-500\/20]="!(passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid)"
+                  [class.border-rose-400]="passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid"
+                  [class.bg-rose-50\/30]="passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid"
+                  placeholder="أدخل كلمة المرور الحالية"
+                />
+                @if (passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.hasError('required')) {
+                  <p class="text-xs font-medium text-rose-500 mt-1">كلمة المرور الحالية مطلوبة</p>
+                }
+              </div>
+
+              <!-- New Password -->
+              <div>
+                <label for="newPassword" class="block text-xs font-bold text-slate-700 mb-1.5">
+                  كلمة المرور الجديدة <span class="text-rose-500">*</span>
+                </label>
+                <input
+                  id="newPassword"
+                  type="password"
+                  formControlName="newPassword"
+                  class="w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2"
+                  [class.border-slate-200]="!(passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.invalid)"
+                  [class.focus:border-teal-500]="!(passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.invalid)"
+                  [class.focus:ring-teal-500\/20]="!(passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.invalid)"
+                  [class.border-rose-400]="passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.invalid"
+                  [class.bg-rose-50\/30]="passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.invalid"
+                  placeholder="6 خانات على الأقل"
+                />
+                @if (passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.hasError('required')) {
+                  <p class="text-xs font-medium text-rose-500 mt-1">كلمة المرور الجديدة مطلوبة</p>
+                }
+                @if (passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.hasError('minlength')) {
+                  <p class="text-xs font-medium text-rose-500 mt-1">كلمة المرور يجب أن لا تقل عن 6 خانات</p>
+                }
+              </div>
+
+              <!-- Confirm Password -->
+              <div>
+                <label for="confirmPassword" class="block text-xs font-bold text-slate-700 mb-1.5">
+                  تأكيد كلمة المرور الجديدة <span class="text-rose-500">*</span>
+                </label>
+                <input
+                  id="confirmPassword"
+                  type="password"
+                  formControlName="confirmPassword"
+                  class="w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2"
+                  [class.border-slate-200]="!((passwordForm.get('confirmPassword')?.touched && passwordForm.get('confirmPassword')?.invalid) || (passwordForm.touched && passwordForm.hasError('passwordMismatch')))"
+                  [class.focus:border-teal-500]="!((passwordForm.get('confirmPassword')?.touched && passwordForm.get('confirmPassword')?.invalid) || (passwordForm.touched && passwordForm.hasError('passwordMismatch')))"
+                  [class.focus:ring-teal-500\/20]="!((passwordForm.get('confirmPassword')?.touched && passwordForm.get('confirmPassword')?.invalid) || (passwordForm.touched && passwordForm.hasError('passwordMismatch')))"
+                  [class.border-rose-400]="(passwordForm.get('confirmPassword')?.touched && passwordForm.get('confirmPassword')?.invalid) || (passwordForm.touched && passwordForm.hasError('passwordMismatch'))"
+                  [class.bg-rose-50\/30]="(passwordForm.get('confirmPassword')?.touched && passwordForm.get('confirmPassword')?.invalid) || (passwordForm.touched && passwordForm.hasError('passwordMismatch'))"
+                  placeholder="أعد كتابة كلمة المرور الجديدة"
+                />
+                @if (passwordForm.get('confirmPassword')?.touched && passwordForm.get('confirmPassword')?.hasError('required')) {
+                  <p class="text-xs font-medium text-rose-500 mt-1">تأكيد كلمة المرور مطلوب</p>
+                }
+                @if (passwordForm.touched && passwordForm.hasError('passwordMismatch') && !passwordForm.get('confirmPassword')?.hasError('required')) {
+                  <p class="text-xs font-medium text-rose-500 mt-1">كلمتا المرور غير متطابقتين</p>
+                }
+              </div>
+
+              <!-- Security Information Note -->
+              <div class="p-4 rounded-2xl bg-teal-50/60 border border-teal-100 text-teal-900 text-xs leading-relaxed flex items-start gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-5 h-5 text-teal-600 flex-shrink-0 mt-0.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                </svg>
+                <div>
+                  <span class="font-bold block mb-0.5">ملاحظة الأمان:</span>
+                  يُنصح دائماً باستخدام كلمات مرور قوية تتضمن أرقاماً ورموزاً لضمان حماية أفضل لحسابك وسجل استفساراتك.
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="pt-4 border-t border-slate-100 flex justify-end">
+                <button
+                  type="submit"
+                  [disabled]="isSavingPassword()"
+                  class="btn-primary"
+                >
+                  @if (isSavingPassword()) {
+                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>جارٍ تحديث كلمة المرور...</span>
+                  } @else {
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                    </svg>
+                    <span>تحديث كلمة المرور</span>
+                  }
+                </button>
+              </div>
+
+            </form>
+          }
+
+          <!-- TAB 3: AGENT PUBLIC PROFILE (AGENTS & ADMINS) -->
+          @if (activeTab() === 'agent' && (authService.userRole() === 'Agent' || authService.userRole() === 'Admin')) {
+            <form [formGroup]="agentForm" (ngSubmit)="onSubmitAgent()" class="space-y-6">
+
+              <!-- Success Alert Toast -->
+              @if (agentSuccessMsg()) {
+                <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold flex items-center justify-between gap-3 animate-fadeIn">
+                  <div class="flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-emerald-600">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                    <span>{{ agentSuccessMsg() }}</span>
+                  </div>
+                  <button type="button" (click)="agentSuccessMsg.set(null)" class="text-emerald-600 hover:text-emerald-900">✕</button>
+                </div>
+              }
+
+              <!-- Error Alert -->
+              @if (agentErrorMsg()) {
+                <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-sm font-semibold flex items-center justify-between gap-3 animate-fadeIn">
+                  <div class="flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-rose-600">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0zm-9 3.75h.008v.008H12v-.008z" />
+                    </svg>
+                    <span>{{ agentErrorMsg() }}</span>
+                  </div>
+                  <button type="button" (click)="agentErrorMsg.set(null)" class="text-rose-600 hover:text-rose-900">✕</button>
+                </div>
+              }
+
+              <!-- Public Phone -->
+              <div>
+                <label for="publicPhone" class="block text-xs font-bold text-slate-700 mb-1.5">
+                  رقم الهاتف العام للعملاء
+                </label>
+                <input
+                  id="publicPhone"
+                  type="tel"
+                  formControlName="publicPhone"
+                  dir="ltr"
+                  class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm transition-all focus:outline-none focus:ring-2 focus:border-teal-500 focus:ring-teal-500/20 text-right"
+                  placeholder="+963 911 000 111"
+                />
+                <p class="text-[11px] text-slate-400 mt-1">يظهر هذا الرقم في بطاقة الوكيل العامة وفي صفحة التفاصيل للعملاء.</p>
+              </div>
+
+              <!-- Agency Affiliation Selector -->
+              <div>
+                <label for="agencyId" class="block text-xs font-bold text-slate-700 mb-1.5">
+                  المكتب العقاري التابع له
+                </label>
+                <select
+                  id="agencyId"
+                  formControlName="agencyId"
+                  class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm transition-all focus:outline-none focus:ring-2 focus:border-teal-500 focus:ring-teal-500/20 bg-white"
+                >
+                  <option value="">-- وكيل مستقل (بدون مكتب) --</option>
+                  @for (agency of agencies(); track agency.id) {
+                    <option [value]="agency.id">{{ agency.name }} ({{ agency.cityArea || 'حلب' }})</option>
+                  }
+                </select>
+                <p class="text-[11px] text-slate-400 mt-1">اختر المكتب العقاري الذي تنتمي إليه أو ابقهِ مستقلاً.</p>
+              </div>
+
+              <!-- Bio -->
+              <div>
+                <label for="bio" class="block text-xs font-bold text-slate-700 mb-1.5">
+                  النبذة التعريفية والخبرات (Bio)
+                </label>
+                <textarea
+                  id="bio"
+                  formControlName="bio"
+                  rows="4"
+                  class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm transition-all focus:outline-none focus:ring-2 focus:border-teal-500 focus:ring-teal-500/20"
+                  placeholder="اكتب نبذة عن خبراتك والمناطق العقارية المتخصص بها..."
+                ></textarea>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="pt-4 border-t border-slate-100 flex justify-end">
+                <button
+                  type="submit"
+                  [disabled]="isSavingAgent()"
+                  class="btn-primary"
+                >
+                  @if (isSavingAgent()) {
+                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>جارٍ الحفظ...</span>
+                  } @else {
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                    <span>حفظ الملف المهني</span>
+                  }
+                </button>
+              </div>
+
+            </form>
+          }
+
+        }
+
+      </div>
+    </div>
+
+  </div>
+</div>

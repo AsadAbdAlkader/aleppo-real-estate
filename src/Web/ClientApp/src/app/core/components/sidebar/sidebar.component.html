@@ -1,0 +1,361 @@
+<!-- Mobile Top Header Bar with Toggle -->
+<div class="lg:hidden bg-slate-950 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-40 border-b border-amber-500/15" dir="rtl">
+  <a routerLink="/" class="flex items-center gap-2.5">
+    <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-ink-950 shadow-gold-sm">
+      <svg viewBox="0 0 32 32" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 27V15a10 10 0 0 1 20 0v12" />
+        <path d="M11.5 27v-8a4.5 4.5 0 0 1 9 0v8" />
+        <path d="M3.5 27h25" />
+      </svg>
+    </span>
+    <span class="font-bold text-lg tracking-tight text-white">عقارات حلب</span>
+  </a>
+
+  <div class="flex items-center gap-2">
+    @if (authService.isAuthenticated()) {
+      <!-- Mobile Notifications Bell -->
+      <button
+        (click)="toggleNotificationDropdown($event)"
+        class="relative p-2 rounded-full text-slate-300 hover:text-amber-200 hover:bg-white/10 border border-transparent hover:border-white/10 transition-colors"
+        aria-label="الإشعارات"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.7">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+        </svg>
+        @if (notificationService.unreadCount() > 0) {
+          <span class="absolute -top-0.5 -right-0.5 bg-amber-400 text-ink-950 text-[10px] font-black min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full shadow-gold-sm">
+            {{ notificationService.unreadCount() }}
+          </span>
+        }
+      </button>
+    }
+
+    <!-- Hamburger Menu Button -->
+    <button
+      (click)="toggleMobileMenu()"
+      class="p-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 text-white transition-colors focus:outline-none"
+      aria-label="القائمة الجانبية"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+        @if (!isMobileOpen()) {
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        } @else {
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        }
+      </svg>
+    </button>
+  </div>
+</div>
+
+<!-- Mobile Drawer Backdrop -->
+@if (isMobileOpen()) {
+  <div
+    (click)="closeMobileMenu()"
+    class="lg:hidden fixed inset-0 bg-ink-950/70 backdrop-blur-sm z-40 transition-opacity"
+  ></div>
+}
+
+<!-- Right Navigation Sidebar Container -->
+<aside
+  class="fixed lg:sticky top-0 right-0 z-50 lg:z-30 w-72 h-screen bg-slate-950 text-slate-300 flex flex-col border-l border-amber-500/10 shadow-2xl transition-transform duration-300 ease-in-out"
+  [class.translate-x-0]="isMobileOpen()"
+  [class.translate-x-full]="!isMobileOpen()"
+  [class.lg:translate-x-0]="true"
+  dir="rtl"
+>
+  <!-- Sidebar Branding -->
+  <div class="p-5 border-b border-white/5 flex items-center justify-between">
+    <a routerLink="/" (click)="closeMobileMenu()" class="flex items-center gap-3 group">
+      <span class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-ink-950 shadow-gold-sm group-hover:scale-105 transition-transform">
+        <svg viewBox="0 0 32 32" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 27V15a10 10 0 0 1 20 0v12" />
+          <path d="M11.5 27v-8a4.5 4.5 0 0 1 9 0v8" />
+          <path d="M3.5 27h25" />
+        </svg>
+      </span>
+      <span>
+        <span class="block text-lg font-bold text-white leading-tight">عقارات حلب</span>
+        <span class="block font-latin text-[9px] font-semibold text-amber-400/80 tracking-[0.3em]">ALEPPO ESTATE</span>
+      </span>
+    </a>
+  </div>
+
+  <!-- User Account Card -->
+  @if (authService.isAuthenticated()) {
+    <div class="p-3 mx-4 mt-4 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <span class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 text-ink-950 font-black flex flex-shrink-0 items-center justify-center text-base shadow-gold-sm">
+          {{ authService.currentUser()?.firstName?.charAt(0) || '?' }}
+        </span>
+        <div class="min-w-0 text-right">
+          <div class="text-xs font-bold text-white truncate">
+            {{ authService.currentUser()?.firstName }} {{ authService.currentUser()?.lastName }}
+          </div>
+          <span class="inline-block text-[10px] font-bold text-amber-300 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded-md mt-1">
+            {{ roleLabel }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Quick Notification Bell -->
+      <div class="relative">
+        <button
+          (click)="toggleNotificationDropdown($event)"
+          class="relative p-2 rounded-full text-slate-400 hover:text-amber-200 hover:bg-white/10 transition-colors"
+          title="الإشعارات"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.7">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+          </svg>
+          @if (notificationService.unreadCount() > 0) {
+            <span class="absolute -top-0.5 -right-0.5 bg-amber-400 text-ink-950 text-[10px] font-black min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full shadow-gold-sm">
+              {{ notificationService.unreadCount() }}
+            </span>
+          }
+        </button>
+
+        <!-- Notification Dropdown Panel -->
+        @if (isNotificationDropdownOpen()) {
+          <div
+            class="absolute right-0 mt-3 w-80 rounded-3xl bg-ivory-50 text-slate-900 shadow-lift z-50 overflow-hidden text-right border border-slate-200/80 animate-fadeIn"
+            (click)="$event.stopPropagation()"
+          >
+            <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200/70 bg-white">
+              <div class="flex items-center gap-2">
+                <h3 class="text-xs font-bold text-slate-800">الإشعارات</h3>
+                @if (notificationService.unreadCount() > 0) {
+                  <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    {{ notificationService.unreadCount() }} غير مقروء
+                  </span>
+                }
+              </div>
+              @if (notificationService.unreadCount() > 0) {
+                <button (click)="markAllAsRead()" class="text-[11px] font-bold text-amber-700 hover:text-amber-900 cursor-pointer">
+                  تعليم الكل كمقروء
+                </button>
+              }
+            </div>
+
+            @if (notificationService.notifications().length === 0) {
+              <div class="py-8 text-center text-xs text-slate-500">لا توجد إشعارات حالياً</div>
+            } @else {
+              <div class="max-h-64 overflow-y-auto divide-y divide-slate-200/70 custom-scrollbar">
+                @for (n of notificationService.notifications(); track n.id) {
+                  <div
+                    (click)="onNotificationClick(n)"
+                    class="p-3.5 hover:bg-white cursor-pointer text-right text-xs transition-colors"
+                    [class.bg-amber-50\/70]="!n.isRead"
+                  >
+                    <div class="font-bold text-slate-800">{{ n.title }}</div>
+                    <div class="text-slate-600 text-[11px] mt-0.5 line-clamp-2">{{ n.message }}</div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Navigation -->
+  <nav class="flex-1 px-4 py-5 space-y-6 overflow-y-auto custom-scrollbar">
+
+    <!-- Group 1: التصفح الرئيسي -->
+    <div>
+      <div class="px-3 mb-2.5 text-[10.5px] font-black text-amber-500/90">التصفح الرئيسي</div>
+      <div class="space-y-1">
+        <a
+          routerLink="/"
+          (click)="closeMobileMenu()"
+          routerLinkActive="bg-amber-500/15 text-amber-300 border-r-2 border-amber-400"
+          [routerLinkActiveOptions]="{exact: true}"
+          class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+        >
+          <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955a1.126 1.126 0 011.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75"/>
+          </svg>
+          <span>الرئيسية</span>
+        </a>
+
+        <a
+          routerLink="/properties"
+          (click)="closeMobileMenu()"
+          routerLinkActive="bg-amber-500/15 text-amber-300 border-r-2 border-amber-400"
+          class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+        >
+          <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+          </svg>
+          <span>العقارات المتاحة</span>
+        </a>
+
+        <a
+          routerLink="/agents"
+          (click)="closeMobileMenu()"
+          routerLinkActive="bg-amber-500/15 text-amber-300 border-r-2 border-amber-400"
+          class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+        >
+          <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/>
+          </svg>
+          <span>دليل الوكلاء والمكاتب</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Group 2: إدارة حسابي والعقارات -->
+    @if (authService.isAuthenticated()) {
+      <div>
+        <div class="px-3 mb-2.5 text-[10.5px] font-black text-amber-500/90">إدارة حسابي والعقارات</div>
+        <div class="space-y-1">
+          <a
+            routerLink="/dashboard"
+            (click)="closeMobileMenu()"
+            routerLinkActive="bg-amber-500/15 text-amber-300 border-r-2 border-amber-400"
+            class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+          >
+            <span class="flex items-center gap-3">
+              <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/>
+              </svg>
+              <span>لوحة التحكم</span>
+            </span>
+            <span class="text-[10px] bg-white/5 text-slate-400 border border-white/10 px-2 py-0.5 rounded-full font-bold">إحصائيات</span>
+          </a>
+
+          <a
+            routerLink="/messages"
+            (click)="closeMobileMenu()"
+            routerLinkActive="bg-amber-500/15 text-amber-300 border-r-2 border-amber-400"
+            class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+          >
+            <span class="flex items-center gap-3">
+              <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/>
+              </svg>
+              <span>المحادثات المباشرة</span>
+            </span>
+            @if (chatService.unreadChatCount() > 0) {
+              <span class="bg-amber-400 text-ink-950 text-[10px] font-black px-2 py-0.5 rounded-full shadow-gold-sm">
+                {{ chatService.unreadChatCount() }}
+              </span>
+            }
+          </a>
+
+          <a
+            routerLink="/my-properties"
+            (click)="closeMobileMenu()"
+            routerLinkActive="bg-amber-500/15 text-amber-300 border-r-2 border-amber-400"
+            class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+          >
+            <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/>
+            </svg>
+            <span>عقاراتي السكنية</span>
+          </a>
+
+          <a
+            routerLink="/my-property-inquiries"
+            (click)="closeMobileMenu()"
+            routerLinkActive="bg-amber-500/15 text-amber-300 border-r-2 border-amber-400"
+            class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+          >
+            <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 13.5h3.381c.38 0 .724.239.855.615l.784 4.686a1.125 1.125 0 01-1.109 1.361H6.19M2.25 13.5L5.46 4.92A1.125 1.125 0 016.568 4h10.864a1.125 1.125 0 011.107 1.08L21.75 13.5m-19.5 0v6.75c0 .621.504 1.125 1.125 1.125h14.25c.621 0 1.125-.504 1.125-1.125v-6.75"/>
+            </svg>
+            <span>الاستفسارات الواردة</span>
+          </a>
+
+          <a
+            routerLink="/inquiries"
+            (click)="closeMobileMenu()"
+            routerLinkActive="bg-amber-500/15 text-amber-300 border-r-2 border-amber-400"
+            class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+          >
+            <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
+            </svg>
+            <span>استفساراتي المرسلة</span>
+          </a>
+
+          <a
+            routerLink="/favorites"
+            (click)="closeMobileMenu()"
+            routerLinkActive="bg-amber-500/15 text-amber-300 border-r-2 border-amber-400"
+            class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+          >
+            <span class="flex items-center gap-3">
+              <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
+              </svg>
+              <span>العقارات المفضلة</span>
+            </span>
+            @if (favoriteService.favoritesCount() > 0) {
+              <span class="bg-amber-400 text-ink-950 text-[10px] font-black px-2 py-0.5 rounded-full shadow-gold-sm">
+                {{ favoriteService.favoritesCount() }}
+              </span>
+            }
+          </a>
+
+          <a
+            routerLink="/profile"
+            (click)="closeMobileMenu()"
+            routerLinkActive="bg-amber-500/15 text-amber-300 border-r-2 border-amber-400"
+            class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+          >
+            <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+            </svg>
+            <span>الملف الشخصي والإعدادات</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Agent Quick Action -->
+      @if (authService.userRole() === 'Agent' || authService.userRole() === 'Admin') {
+        <div class="pt-1">
+          <a
+            routerLink="/my-properties"
+            [queryParams]="{ action: 'new' }"
+            (click)="closeMobileMenu()"
+            class="w-full btn-primary"
+          >
+            <span class="text-base leading-none">+</span>
+            <span>إضافة عقار جديد</span>
+          </a>
+        </div>
+      }
+    }
+  </nav>
+
+  <!-- Sidebar Footer / Auth Actions -->
+  <div class="p-4 border-t border-white/5">
+    @if (authService.isAuthenticated()) {
+      <button
+        (click)="logout()"
+        class="w-full btn-danger btn-sm py-2.5"
+      >
+        <span>تسجيل الخروج</span>
+      </button>
+    } @else {
+      <div class="space-y-2">
+        <a
+          routerLink="/login"
+          (click)="closeMobileMenu()"
+          class="w-full btn-primary btn-sm py-2.5"
+        >
+          <span>تسجيل الدخول</span>
+        </a>
+        <a
+          routerLink="/register"
+          (click)="closeMobileMenu()"
+          class="w-full btn-glass btn-sm py-2.5"
+        >
+          <span>إنشاء حساب جديد</span>
+        </a>
+      </div>
+    }
+  </div>
+
+</aside>

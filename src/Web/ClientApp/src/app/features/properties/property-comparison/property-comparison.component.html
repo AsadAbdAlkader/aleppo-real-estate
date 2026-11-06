@@ -1,0 +1,275 @@
+<!-- FLOATING BOTTOM DOCK (Visible when properties are selected for comparison) -->
+@if (comparisonService.hasProperties() && !comparisonService.isCompareModalOpen()) {
+  <div 
+    class="fixed bottom-5 inset-x-4 sm:inset-x-auto sm:right-8 z-40 bg-slate-950/95 text-white border border-amber-500/30 rounded-3xl p-3 sm:p-4 shadow-2xl backdrop-blur-xl flex items-center gap-4 transition-all duration-300 animate-slideUp max-w-xl"
+    dir="rtl"
+  >
+    <!-- Icon & Badge -->
+    <div class="relative flex-shrink-0">
+      <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center text-xl font-black shadow-gold-sm">
+        ⚖️
+      </div>
+      <span class="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full bg-rose-600 text-white text-[11px] font-black flex items-center justify-center ring-2 ring-slate-950">
+        {{ comparisonService.count() }}
+      </span>
+    </div>
+
+    <!-- Thumbnails & Info -->
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center justify-between text-xs font-bold mb-1.5">
+        <span class="text-amber-300">مقارنة العقارات المختارة</span>
+        <span class="text-slate-400 text-[11px] font-normal">({{ comparisonService.count() }}/{{ comparisonService.MAX_COMPARE_COUNT }})</span>
+      </div>
+
+      <!-- Small Thumbnails Row -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+        @for (prop of comparisonService.comparedProperties(); track prop.id) {
+          <div class="relative group flex-shrink-0 w-10 h-10 rounded-xl overflow-hidden border border-white/20">
+            <img 
+              [src]="prop.imageUrls && prop.imageUrls[0] ? prop.imageUrls[0] : 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop'" 
+              [alt]="prop.title" 
+              class="w-full h-full object-cover"
+            />
+            <button
+              (click)="comparisonService.removeProperty(prop.id); $event.stopPropagation()"
+              type="button"
+              class="absolute inset-0 bg-rose-900/80 text-white text-xs opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+              title="إزالة من المقارنة"
+            >
+              ✕
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex items-center gap-2 flex-shrink-0">
+      <button
+        (click)="comparisonService.openModal()"
+        type="button"
+        class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs px-4 py-2.5 rounded-2xl shadow-gold-sm transition-all flex items-center gap-1.5 hover:scale-105 active:scale-95"
+      >
+        <span>عرض الجدول</span>
+        <span>←</span>
+      </button>
+
+      <button
+        (click)="comparisonService.clearComparison()"
+        type="button"
+        class="p-2 text-slate-400 hover:text-rose-400 hover:bg-white/10 rounded-xl transition-colors"
+        title="إفراغ المقارنة"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+}
+
+<!-- FULL COMPARISON MODAL -->
+@if (comparisonService.isCompareModalOpen()) {
+  <div 
+    class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
+    dir="rtl"
+    (click)="comparisonService.closeModal()"
+  >
+    <div 
+      class="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-6xl w-full my-8 overflow-hidden animate-fadeIn"
+      (click)="$event.stopPropagation()"
+    >
+      <!-- Modal Header -->
+      <div class="bg-gradient-to-l from-slate-950 via-slate-900 to-slate-950 text-white p-5 sm:p-6 flex items-center justify-between border-b border-amber-500/20">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-2xl shadow-gold-sm">
+            ⚖️
+          </div>
+          <div>
+            <h3 class="text-lg sm:text-xl font-black text-white flex items-center gap-2">
+              <span>جدول مقارنة العقارات في حلب</span>
+              <span class="text-xs bg-amber-400/20 text-amber-300 font-bold px-2 py-0.5 rounded-full border border-amber-400/30">
+                {{ comparisonService.count() }} عقارات
+              </span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">
+              مقارنة تفصيلية جنباً إلى جنب للمواصفات والأسعار والموقع والخدمات
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button
+            (click)="comparisonService.clearComparison()"
+            type="button"
+            class="text-xs text-rose-400 hover:text-rose-300 font-bold px-3 py-1.5 rounded-xl hover:bg-rose-500/10 transition-colors"
+          >
+            مسح الكل
+          </button>
+          <button
+            (click)="comparisonService.closeModal()"
+            type="button"
+            class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition-colors text-base"
+            title="إغلاق"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Comparison Table Container -->
+      <div class="p-4 sm:p-6 overflow-x-auto">
+        <table class="w-full border-collapse text-right text-sm min-w-[650px]">
+          <tbody>
+
+            <!-- Row 1: Property Images & Title -->
+            <tr class="border-b border-slate-200">
+              <td class="p-3.5 font-bold text-slate-500 w-36 bg-slate-50/70 align-top">
+                العقار
+              </td>
+              @for (prop of comparisonService.comparedProperties(); track prop.id) {
+                <td class="p-3.5 align-top min-w-[200px]">
+                  <div class="space-y-2 relative group">
+                    <!-- Image -->
+                    <div class="h-36 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 relative">
+                      <img 
+                        [src]="prop.imageUrls && prop.imageUrls[0] ? prop.imageUrls[0] : 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop'" 
+                        [alt]="prop.title" 
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                      />
+                      <button
+                        (click)="comparisonService.removeProperty(prop.id)"
+                        type="button"
+                        class="absolute top-2 left-2 w-7 h-7 rounded-full bg-slate-900/80 hover:bg-rose-600 text-white flex items-center justify-center text-xs transition-colors shadow-sm"
+                        title="إزالة من المقارنة"
+                      >
+                        ✕
+                      </button>
+                    </div>
+
+                    <!-- Title -->
+                    <h4 class="font-bold text-slate-900 text-sm line-clamp-2 leading-snug">
+                      <a [routerLink]="['/properties', prop.id]" (click)="comparisonService.closeModal()" class="hover:text-amber-700">
+                        {{ prop.title }}
+                      </a>
+                    </h4>
+                  </div>
+                </td>
+              }
+            </tr>
+
+            <!-- Row 2: Price -->
+            <tr class="border-b border-slate-100 hover:bg-slate-50/50">
+              <td class="p-3.5 font-bold text-slate-500 bg-slate-50/70">السعر المطلوب</td>
+              @for (prop of comparisonService.comparedProperties(); track prop.id) {
+                <td class="p-3.5 font-black text-amber-700 text-lg font-latin">
+                  {{ formatPrice(prop.price) }}
+                </td>
+              }
+            </tr>
+
+            <!-- Row 3: Price per m² -->
+            <tr class="border-b border-slate-100 hover:bg-slate-50/50">
+              <td class="p-3.5 font-bold text-slate-500 bg-slate-50/70">سعر المتر المربع (م²)</td>
+              @for (prop of comparisonService.comparedProperties(); track prop.id) {
+                <td class="p-3.5 font-bold text-slate-800 text-xs font-latin">
+                  {{ getPricePerSquareMeter(prop) }}
+                </td>
+              }
+            </tr>
+
+            <!-- Row 4: Neighborhood -->
+            <tr class="border-b border-slate-100 hover:bg-slate-50/50">
+              <td class="p-3.5 font-bold text-slate-500 bg-slate-50/70">المنطقة والحي</td>
+              @for (prop of comparisonService.comparedProperties(); track prop.id) {
+                <td class="p-3.5 font-semibold text-teal-800">
+                  حلب — {{ prop.cityArea }}
+                </td>
+              }
+            </tr>
+
+            <!-- Row 5: Total Area -->
+            <tr class="border-b border-slate-100 hover:bg-slate-50/50">
+              <td class="p-3.5 font-bold text-slate-500 bg-slate-50/70">المساحة الإجمالية</td>
+              @for (prop of comparisonService.comparedProperties(); track prop.id) {
+                <td class="p-3.5 font-bold text-slate-800 font-latin">
+                  {{ prop.areaSquareMeters }} م²
+                </td>
+              }
+            </tr>
+
+            <!-- Row 6: Bedrooms & Bathrooms -->
+            <tr class="border-b border-slate-100 hover:bg-slate-50/50">
+              <td class="p-3.5 font-bold text-slate-500 bg-slate-50/70">الغرف والحمامات</td>
+              @for (prop of comparisonService.comparedProperties(); track prop.id) {
+                <td class="p-3.5 text-xs text-slate-700 font-medium">
+                  🛏️ {{ prop.bedrooms }} غرف &nbsp;|&nbsp; 🚿 {{ prop.bathrooms }} حمام
+                </td>
+              }
+            </tr>
+
+            <!-- Row 7: Property Category -->
+            <tr class="border-b border-slate-100 hover:bg-slate-50/50">
+              <td class="p-3.5 font-bold text-slate-500 bg-slate-50/70">نوع العقار</td>
+              @for (prop of comparisonService.comparedProperties(); track prop.id) {
+                <td class="p-3.5 text-xs font-bold text-slate-800">
+                  {{ getCategoryLabel(prop.category) }}
+                </td>
+              }
+            </tr>
+
+            <!-- Row 8: Purpose -->
+            <tr class="border-b border-slate-100 hover:bg-slate-50/50">
+              <td class="p-3.5 font-bold text-slate-500 bg-slate-50/70">الغرض</td>
+              @for (prop of comparisonService.comparedProperties(); track prop.id) {
+                <td class="p-3.5 text-xs font-bold text-slate-800">
+                  <span class="px-2.5 py-1 rounded-md bg-amber-50 text-amber-800 border border-amber-200">
+                    {{ getPurposeLabel(prop.purpose) }}
+                  </span>
+                </td>
+              }
+            </tr>
+
+            <!-- Row 9: Status -->
+            <tr class="border-b border-slate-100 hover:bg-slate-50/50">
+              <td class="p-3.5 font-bold text-slate-500 bg-slate-50/70">حالة العقار</td>
+              @for (prop of comparisonService.comparedProperties(); track prop.id) {
+                <td class="p-3.5">
+                  <span [class]="getStatusBadge(prop.status).css" class="text-xs font-bold px-2.5 py-0.5 rounded-full">
+                    {{ getStatusBadge(prop.status).label }}
+                  </span>
+                </td>
+              }
+            </tr>
+
+            <!-- Row 10: Actions -->
+            <tr class="bg-slate-50/60">
+              <td class="p-3.5 font-bold text-slate-500 bg-slate-50/70">الإجراءات المباشرة</td>
+              @for (prop of comparisonService.comparedProperties(); track prop.id) {
+                <td class="p-3.5 space-y-2">
+                  <a
+                    [routerLink]="['/properties', prop.id]"
+                    (click)="comparisonService.closeModal()"
+                    class="btn-primary btn-sm w-full text-center block"
+                  >
+                    عرض التفاصيل الكاملة
+                  </a>
+                  <a
+                    [routerLink]="['/messages']"
+                    [queryParams]="{ userId: prop.ownerId || '3fa85f64-5717-4562-b3fc-2c963f66b222', propertyId: prop.id }"
+                    (click)="comparisonService.closeModal()"
+                    class="btn-outline btn-sm w-full text-center block"
+                  >
+                    💬 محادثة شات
+                  </a>
+                </td>
+              }
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+}
