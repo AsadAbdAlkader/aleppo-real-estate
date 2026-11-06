@@ -2,6 +2,7 @@ using System.Text.Json;
 using Application.Common.Interfaces;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Infrastructure.Data;
 
@@ -83,10 +84,16 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             entity.Property(p => p.IsFeatured)
                 .HasDefaultValue(false);
 
+            var stringListComparer = new ValueComparer<List<string>>(
+                (c1, c2) => c1 != null && c2 != null ? c1.SequenceEqual(c2) : c1 == c2,
+                c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                c => c.ToList());
+
             entity.Property(p => p.ImageUrls)
                 .HasConversion(
                     v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
-                    v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions?)null) ?? new List<string>()
+                    v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions?)null) ?? new List<string>(),
+                    stringListComparer
                 );
 
             entity.HasIndex(p => new { p.Category, p.Status })
