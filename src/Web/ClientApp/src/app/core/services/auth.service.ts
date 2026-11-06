@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
+import { AuthorizationService } from './authorization.service';
 import {
   AuthResponse,
   ChangePasswordRequest,
@@ -19,6 +20,7 @@ import {
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
+  private readonly authz = inject(AuthorizationService);
 
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'auth_user';
@@ -30,6 +32,14 @@ export class AuthService {
   readonly userRole = computed(() => this.currentUser()?.role ?? null);
 
   constructor() {
+    const initialUser = this.currentUser();
+    if (initialUser) {
+      const perms = initialUser.permissions && initialUser.permissions.length > 0
+        ? initialUser.permissions
+        : this.authz.getDefaultPermissionsForRole(initialUser.role);
+      this.authz.setPermissions(perms);
+    }
+
     // If token exists on initialization but no user state, fetch current user
     if (this.getToken() && !this.currentUser()) {
       this.getCurrentUser().subscribe({
@@ -60,18 +70,21 @@ export class AuthService {
       tap((response) => this.handleAuthSuccess(response)),
       catchError((error) => {
         console.warn('API login call failed. Triggering dev-mode authentication fallback.', error);
+        const role = credentials.email.includes('agent')
+          ? 'Agent'
+          : credentials.email.includes('admin')
+          ? 'Admin'
+          : 'Buyer';
         const mockResponse: AuthResponse = {
           id: 'user-dev-' + Date.now(),
           email: credentials.email,
           firstName: credentials.email.split('@')[0] || 'أحمد',
           lastName: 'الحلبي',
-          role: credentials.email.includes('agent')
-            ? 'Agent'
-            : credentials.email.includes('admin')
-            ? 'Admin'
-            : 'Buyer',
+          role: role,
           token: 'dev-jwt-token-' + Date.now(),
-          expiresAt: new Date(Date.now() + 86400000).toISOString()
+          expiresAt: new Date(Date.now() + 86400000).toISOString(),
+          permissions: this.authz.getDefaultPermissionsForRole(role),
+          agencyId: null
         };
         this.handleAuthSuccess(mockResponse);
         return of(mockResponse);
@@ -84,14 +97,17 @@ export class AuthService {
       tap((response) => this.handleAuthSuccess(response)),
       catchError((error) => {
         console.warn('API register call failed. Triggering dev-mode authentication fallback.', error);
+        const role = data.role || 'Buyer';
         const mockResponse: AuthResponse = {
           id: 'user-dev-' + Date.now(),
           email: data.email,
           firstName: data.firstName || 'مستخدم',
           lastName: data.lastName || 'جديد',
-          role: data.role || 'Buyer',
+          role: role,
           token: 'dev-jwt-token-' + Date.now(),
-          expiresAt: new Date(Date.now() + 86400000).toISOString()
+          expiresAt: new Date(Date.now() + 86400000).toISOString(),
+          permissions: this.authz.getDefaultPermissionsForRole(role),
+          agencyId: null
         };
         this.handleAuthSuccess(mockResponse);
         return of(mockResponse);
@@ -180,17 +196,26 @@ export class AuthService {
       localStorage.removeItem(this.TOKEN_KEY);
       localStorage.removeItem(this.USER_KEY);
     }
+    this.authz.clearPermissions();
     this.currentUser.set(null);
     this.router.navigate(['/login']);
   }
 
   private handleAuthSuccess(response: AuthResponse): void {
+    const permissions = response.permissions && response.permissions.length > 0
+      ? response.permissions
+      : this.authz.getDefaultPermissionsForRole(response.role);
+
+    this.authz.setPermissions(permissions);
+
     const user: User = {
       id: response.id,
       email: response.email,
       firstName: response.firstName,
       lastName: response.lastName,
-      role: response.role
+      role: response.role,
+      permissions: permissions,
+      agencyId: response.agencyId
     };
 
     if (typeof window !== 'undefined' && window.localStorage) {

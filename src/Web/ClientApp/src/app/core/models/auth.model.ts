@@ -19,6 +19,8 @@ export interface AuthResponse {
   role: string;
   token: string;
   expiresAt: string;
+  permissions?: string[];
+  agencyId?: string | null;
 }
 
 export interface User {
@@ -28,6 +30,8 @@ export interface User {
   lastName: string;
   role: string;
   phoneNumber?: string;
+  permissions?: string[];
+  agencyId?: string | null;
 }
 
 export interface UserProfile {

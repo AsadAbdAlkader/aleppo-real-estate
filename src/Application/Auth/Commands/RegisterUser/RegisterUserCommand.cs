@@ -1,5 +1,6 @@
 using Application.Auth.Dtos;
 using Application.Common.Interfaces;
+using Application.Common.Security;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -59,7 +60,8 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, A
         _context.Users.Add(user);
         await _context.SaveChangesAsync(cancellationToken);
 
-        var token = _jwtTokenGenerator.GenerateToken(user);
+        var permissions = DefaultRolePermissions.GetPermissionsForRole(user.Role).ToList();
+        var token = _jwtTokenGenerator.GenerateToken(user, null, permissions);
 
         return new AuthResponseDto
         {
@@ -69,7 +71,9 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, A
             LastName = user.LastName,
             Role = user.Role,
             Token = token,
-            ExpiresAt = DateTime.UtcNow.AddDays(7)
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
+            Permissions = permissions,
+            AgencyId = null
         };
     }
 }

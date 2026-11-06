@@ -1,5 +1,6 @@
 using Application.Auth.Dtos;
 using Application.Common.Interfaces;
+using Application.Common.Security;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,7 +40,16 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, AuthRes
             throw new UnauthorizedAccessException("Invalid email or password.");
         }
 
-        var token = _jwtTokenGenerator.GenerateToken(user);
+        Guid? agencyId = null;
+        var agentProfile = await _context.AgentProfiles
+            .FirstOrDefaultAsync(ap => ap.UserId == user.Id.ToString(), cancellationToken);
+        if (agentProfile != null)
+        {
+            agencyId = agentProfile.AgencyId;
+        }
+
+        var permissions = DefaultRolePermissions.GetPermissionsForRole(user.Role).ToList();
+        var token = _jwtTokenGenerator.GenerateToken(user, agencyId, permissions);
 
         return new AuthResponseDto
         {
@@ -49,7 +59,9 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, AuthRes
             LastName = user.LastName,
             Role = user.Role,
             Token = token,
-            ExpiresAt = DateTime.UtcNow.AddDays(7)
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
+            Permissions = permissions,
+            AgencyId = agencyId
         };
     }
 }

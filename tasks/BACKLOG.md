@@ -48,6 +48,9 @@
 | BE-014 | Implement Agency & AgentProfile Create/Update CQRS Commands & Protected Endpoints | ASP.NET Core Senior | DONE | BE-013 | `src/Domain`, `src/Application`, `src/Infrastructure`, `src/Web` |
 | FE-014 | Implement Agent Profile Edit Form & Agency Management UI in Angular | Angular Senior | DONE | FE-013 | `src/Web/ClientApp` |
 | INT-013 | End-to-End Integration Verification & Security Audit for Agency & Agent Profile Subsystem | Main Agent | DONE | BE-014, FE-014 | `src/Web`, `src/Web/ClientApp` |
+| BE-015 | Implement Enterprise RBAC, MediatR Pipeline Behaviors, Dynamic Policies & Agency Scope | ASP.NET Core Senior | DONE | INT-013 | `src/Application`, `src/Infrastructure`, `src/Web` |
+| FE-015 | Implement Frontend Permission Signals Store, *appHasPermission Directive & Route Guards | Angular Senior | DONE | BE-015 | `src/Web/ClientApp` |
+| INT-014 | End-to-End Integration Verification, Security Audit & Permissions Test Coverage | Main Agent | DONE | BE-015, FE-015 | `src/Web`, `src/Web/ClientApp`, `tests` |
 | BE-015 | Implement Real-Time Direct Property Chat Subsystem, EF Core Table & Endpoints | ASP.NET Core Senior | DONE | BE-014 | `src/Domain`, `src/Application`, `src/Infrastructure`, `src/Web` |
 | FE-015 | Implement Standalone Direct Property Chat UI (/messages), Signal State & Header Badge | Angular Senior | DONE | FE-014 | `src/Web/ClientApp` |
 | INT-014 | Historical Quality Gate Audit & Architecture Baseline | Main Agent | DONE | BE-015, FE-015 | Entire Solution |
@@ -174,3 +177,20 @@
 - **Description:** Audit buyer vs property owner data isolation, verify buyer cannot see `AgentNotes` or change status, verify owner cannot see or edit inquiries for properties owned by another user (403 Forbidden), verify status update and `UpdatedAt` timestamp refresh, verify HTTP endpoints, run `dotnet build`, `dotnet test`, `npm run build`, and `npx ng test`.
 - **Assigned Sub-Agent:** Main Agent
 - **Dependencies:** BE-011, FE-011
+
+### BE-015: Implement Enterprise RBAC, MediatR Pipeline Behaviors, Dynamic Policies & Agency Scope
+- **Description:** Implement `Permissions.cs` registry, `PermissionRegistry.cs`, `DefaultRolePermissions.cs`, `[Authorize(Policy = "Permission:...")]` attribute support, `AuthorizationBehavior.cs` in MediatR pipeline, `IAgencyScopedRequest.cs` & `AgencyScopeBehavior.cs`, `PermissionPolicyProvider.cs`, `PermissionAuthorizationHandler.cs`, enrich `JwtTokenGenerator` and auth DTOs with `permissions: []` and `AgencyId`. Add unit tests in `tests/Application.UnitTests/Security/`.
+- **Assigned Sub-Agent:** ASP.NET Core Senior (`aspnet_core_senior`)
+- **Dependencies:** INT-013
+- **Files/Areas Affected:** `src/Application/Common/Security`, `src/Application/Common/Behaviors`, `src/Infrastructure/Identity`, `src/Web/Endpoints`, `tests/Application.UnitTests`
+
+### FE-015: Implement Frontend Permission Signals Store, *appHasPermission Directive & Route Guards
+- **Description:** Implement `permissions.ts` constant mirroring backend, `AuthorizationService` using Angular Signals (`signal<ReadonlySet<string>>`) and reactive storage, `HasPermissionDirective` (`*appHasPermission`), and `permissionGuard` functional route guard. Update UI buttons (e.g., edit/delete property, manage inquiries, agent actions, agency navigation) to conditionally render via directive. Add unit tests for service, directive, and guard.
+- **Assigned Sub-Agent:** Angular Senior (`angular_senior`)
+- **Dependencies:** BE-015
+- **Files/Areas Affected:** `src/Web/ClientApp/src/app/core/auth`, `src/Web/ClientApp/src/app/core/services`, `src/Web/ClientApp/src/app/core/directives`, `src/Web/ClientApp/src/app/core/guards`
+
+### INT-014: End-to-End Integration Verification, Security Audit & Permissions Test Coverage
+- **Description:** Verify full integration of Enterprise RBAC across Backend and Frontend: test valid and forbidden requests (401/403 responses), test Agency scope isolation, test Angular DOM gating via `*appHasPermission`, verify Route Guards redirect to `/forbidden` or `/auth/login`, run backend tests (`dotnet test`) and frontend tests (`npm test`), and verify production build.
+- **Assigned Sub-Agent:** Main Agent
+- **Dependencies:** BE-015, FE-015

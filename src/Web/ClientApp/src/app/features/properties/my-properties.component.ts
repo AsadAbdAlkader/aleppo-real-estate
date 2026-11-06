@@ -5,6 +5,8 @@ import { PropertyService } from '../../core/services/property.service';
 import { Property } from '../../core/models/property.model';
 import { PropertyFormModalComponent } from './property-form-modal.component';
 import { DeleteConfirmModalComponent } from './delete-confirm-modal.component';
+import { HasPermissionDirective } from '../../core/directives/has-permission.directive';
+import { Permissions } from '../../core/auth/permissions';
 
 @Component({
   selector: 'app-my-properties',
@@ -13,12 +15,14 @@ import { DeleteConfirmModalComponent } from './delete-confirm-modal.component';
     CommonModule,
     DecimalPipe,
     PropertyFormModalComponent,
-    DeleteConfirmModalComponent
+    DeleteConfirmModalComponent,
+    HasPermissionDirective
   ],
   templateUrl: './my-properties.component.html',
   styleUrls: []
 })
 export class MyPropertiesComponent implements OnInit {
+  readonly permissions = Permissions;
   private readonly propertyService = inject(PropertyService);
   private readonly route = inject(ActivatedRoute);
 

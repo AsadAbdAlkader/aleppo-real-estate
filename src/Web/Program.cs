@@ -17,6 +17,8 @@ if (builder.Environment.IsDevelopment() &&
 builder.Services.AddOpenApi();
 
 // Add Clean Architecture layer services
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<Application.Common.Interfaces.ICurrentUserService, Web.Services.CurrentUserService>();
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration, builder.Environment);
 

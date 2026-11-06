@@ -9,4 +9,6 @@ public class AuthResponseDto
     public string Role { get; set; } = string.Empty;
     public string Token { get; set; } = string.Empty;
     public DateTime ExpiresAt { get; set; }
+    public List<string> Permissions { get; set; } = new();
+    public Guid? AgencyId { get; set; }
 }

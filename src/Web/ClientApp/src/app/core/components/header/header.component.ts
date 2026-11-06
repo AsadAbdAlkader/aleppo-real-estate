@@ -9,15 +9,18 @@ import { CurrencyService, CurrencyCode } from '../../services/currency.service';
 import { ComparisonService } from '../../services/comparison.service';
 import { Notification } from '../../models/notification.model';
 import { MortgageCalculatorComponent } from '../../../features/properties/mortgage-calculator/mortgage-calculator.component';
+import { HasPermissionDirective } from '../../directives/has-permission.directive';
+import { Permissions } from '../../auth/permissions';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, MortgageCalculatorComponent],
+  imports: [CommonModule, RouterLink, RouterLinkActive, MortgageCalculatorComponent, HasPermissionDirective],
   templateUrl: './header.component.html',
   styleUrls: []
 })
 export class HeaderComponent {
+  readonly permissions = Permissions;
   readonly authService = inject(AuthService);
   readonly favoriteService = inject(FavoriteService);
   readonly notificationService = inject(NotificationService);
