@@ -1,0 +1,19 @@
+/**
+ * ══════════════════════════════════════════════════════════════
+ * CINEMATIC THEME CROSS-FADE TRANSITIONS
+ * 450ms smooth interpolation prevents jarring visual flashes
+ * ══════════════════════════════════════════════════════════════
+ */
+.theme-transitioning,
+.theme-transitioning *,
+.theme-transitioning *::before,
+.theme-transitioning *::after {
+  transition:
+    background-color 450ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 450ms cubic-bezier(0.4, 0, 0.2, 1),
+    color 450ms cubic-bezier(0.4, 0, 0.2, 1),
+    fill 450ms cubic-bezier(0.4, 0, 0.2, 1),
+    stroke 450ms cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 450ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition-delay: 0s !important;
+}

@@ -1,0 +1,200 @@
+/**
+ * ══════════════════════════════════════════════════════════════
+ * MATHEMATICAL THEME TOKENS ENGINE
+ * Syrian Heritage & Modern Aleppo Luxury Matrix
+ * ══════════════════════════════════════════════════════════════
+ */
+
+/* ── Light Mode Base (Default: Emerald Luxury Light) ── */
+:root,
+[data-theme="emerald-luxury-light"] {
+  --color-primary-rgb: 199, 156, 74;             /* Champagne Gold */
+  --color-primary: rgb(var(--color-primary-rgb));
+  --color-primary-hover: #b88a38;
+  --color-secondary-rgb: 62, 107, 91;           /* Deep Aleppo Pine */
+  --color-secondary: rgb(var(--color-secondary-rgb));
+  --color-accent-rgb: 185, 167, 121;            /* Golden Wheat */
+  --color-accent: rgb(var(--color-accent-rgb));
+
+  --color-surface-dim: #f3f0e8;
+  --color-surface: #faf8f3;                     /* Warm Ivory */
+  --color-surface-bright: #ffffff;
+  --color-surface-container: #ffffff;
+  --color-surface-container-high: #f5f2ea;
+  --color-surface-container-highest: #ece6d8;
+
+  --color-border-subtle: rgba(199, 156, 74, 0.18);
+  --color-border-strong: rgba(199, 156, 74, 0.38);
+
+  --color-text-primary: #191712;
+  --color-text-secondary: #57544b;
+  --color-text-muted: #8a8579;
+
+  --color-glow-primary: rgba(199, 156, 74, 0.25);
+  color-scheme: light;
+}
+
+/* ── Dark Mode Base (Default: Emerald Luxury Dark) ── */
+html.dark,
+[data-theme="emerald-luxury-dark"] {
+  --color-primary-rgb: 228, 204, 150;           /* Soft Champagne Gold Glow */
+  --color-primary: rgb(var(--color-primary-rgb));
+  --color-primary-hover: #f3e4bc;
+  --color-secondary-rgb: 66, 129, 119;          /* Luminous Aleppo Teal */
+  --color-secondary: rgb(var(--color-secondary-rgb));
+  --color-accent-rgb: 216, 181, 107;
+  --color-accent: rgb(var(--color-accent-rgb));
+
+  --color-surface-dim: #0d0c0a;                 /* Deep Obsidian */
+  --color-surface: #141310;                     /* Citadel Charcoal */
+  --color-surface-bright: #1b1915;              /* Elevated Card Surface */
+  --color-surface-container: #22201b;          /* Popover / Modal Surface */
+  --color-surface-container-high: #2b2822;     /* Input / Hover Surface */
+  --color-surface-container-highest: #37332c;  /* Active / Pill Surface */
+
+  --color-border-subtle: rgba(228, 204, 150, 0.12);
+  --color-border-strong: rgba(228, 204, 150, 0.28);
+
+  --color-text-primary: #faf8f3;
+  --color-text-secondary: #cfccc2;
+  --color-text-muted: #8a8579;
+
+  --color-glow-primary: rgba(228, 204, 150, 0.2);
+  color-scheme: dark;
+}
+
+/* ── Theme 2: Royal Heritage (Umber & Citadel Gold) ── */
+[data-theme="royal-heritage-light"] {
+  --color-primary-rgb: 107, 31, 42;             /* Citadel Umber */
+  --color-primary: rgb(var(--color-primary-rgb));
+  --color-primary-hover: #8a2a37;
+  --color-secondary-rgb: 199, 156, 74;          /* Gold Accent */
+  --color-secondary: rgb(var(--color-secondary-rgb));
+  --color-accent-rgb: 152, 133, 97;
+  --color-surface-dim: #f5ecec;
+  --color-surface: #fbf7f7;
+  --color-surface-bright: #ffffff;
+  --color-surface-container: #ffffff;
+  --color-border-subtle: rgba(107, 31, 42, 0.15);
+  --color-border-strong: rgba(107, 31, 42, 0.35);
+  --color-text-primary: #211214;
+  --color-text-secondary: #5e4649;
+  --color-text-muted: #8c7376;
+}
+
+[data-theme="royal-heritage-dark"] {
+  --color-primary-rgb: 217, 119, 135;
+  --color-primary: rgb(var(--color-primary-rgb));
+  --color-secondary-rgb: 228, 204, 150;
+  --color-surface-dim: #100809;
+  --color-surface: #180c0e;
+  --color-surface-bright: #241416;
+  --color-surface-container: #2e1a1d;
+  --color-surface-container-high: #3b2125;
+  --color-surface-container-highest: #492a2f;
+  --color-border-subtle: rgba(217, 119, 135, 0.14);
+  --color-border-strong: rgba(217, 119, 135, 0.30);
+  --color-text-primary: #fdf2f4;
+  --color-text-secondary: #dfc2c6;
+  --color-text-muted: #9e8588;
+}
+
+/* ── Theme 3: Forest Glass (Deep Green & Emerald Glass) ── */
+[data-theme="forest-glass-light"] {
+  --color-primary-rgb: 38, 102, 85;
+  --color-primary: rgb(var(--color-primary-rgb));
+  --color-secondary-rgb: 199, 156, 74;
+  --color-surface: #f4f8f6;
+  --color-surface-bright: #ffffff;
+  --color-text-primary: #0f1f1a;
+  --color-border-subtle: rgba(38, 102, 85, 0.15);
+}
+
+[data-theme="forest-glass-dark"] {
+  --color-primary-rgb: 82, 179, 153;
+  --color-primary: rgb(var(--color-primary-rgb));
+  --color-secondary-rgb: 228, 204, 150;
+  --color-surface-dim: #05100d;
+  --color-surface: #0a1814;
+  --color-surface-bright: #12241f;
+  --color-surface-container: #19302a;
+  --color-surface-container-high: #213c35;
+  --color-surface-container-highest: #2b4a42;
+  --color-border-subtle: rgba(82, 179, 153, 0.14);
+  --color-text-primary: #f0fdf9;
+}
+
+/* ── Theme 4: Executive Premium (Modern Midnight & Champagne) ── */
+[data-theme="executive-premium-light"] {
+  --color-primary-rgb: 28, 43, 75;
+  --color-primary: rgb(var(--color-primary-rgb));
+  --color-secondary-rgb: 199, 156, 74;
+  --color-surface: #f4f6fb;
+  --color-surface-bright: #ffffff;
+  --color-text-primary: #0f172a;
+  --color-border-subtle: rgba(28, 43, 75, 0.15);
+}
+
+[data-theme="executive-premium-dark"] {
+  --color-primary-rgb: 129, 161, 222;
+  --color-primary: rgb(var(--color-primary-rgb));
+  --color-secondary-rgb: 228, 204, 150;
+  --color-surface-dim: #070c18;
+  --color-surface: #0c1424;
+  --color-surface-bright: #131e33;
+  --color-surface-container: #1b2842;
+  --color-surface-container-high: #243454;
+  --color-surface-container-highest: #2e4166;
+  --color-border-subtle: rgba(129, 161, 222, 0.14);
+  --color-text-primary: #f8fafc;
+}
+
+/* ── Theme 5: Heritage Luxury (Aleppo Golden Stone & Ochre) ── */
+[data-theme="heritage-luxury-light"] {
+  --color-primary-rgb: 174, 129, 54;
+  --color-primary: rgb(var(--color-primary-rgb));
+  --color-secondary-rgb: 90, 65, 31;
+  --color-surface: #faf7f0;
+  --color-surface-bright: #ffffff;
+  --color-text-primary: #2b2010;
+  --color-border-subtle: rgba(174, 129, 54, 0.18);
+}
+
+[data-theme="heritage-luxury-dark"] {
+  --color-primary-rgb: 235, 195, 127;
+  --color-primary: rgb(var(--color-primary-rgb));
+  --color-secondary-rgb: 247, 239, 222;
+  --color-surface-dim: #110e09;
+  --color-surface: #18140d;
+  --color-surface-bright: #221d14;
+  --color-surface-container: #2b251a;
+  --color-surface-container-high: #373022;
+  --color-surface-container-highest: #453c2b;
+  --color-border-subtle: rgba(235, 195, 127, 0.14);
+  --color-text-primary: #faf8f2;
+}
+
+/* ── Theme 6: Syrian Identity (Syrian Green, Red Citadel & Gold) ── */
+[data-theme="syrian-identity-light"] {
+  --color-primary-rgb: 31, 107, 74;
+  --color-primary: rgb(var(--color-primary-rgb));
+  --color-secondary-rgb: 184, 40, 50;
+  --color-surface: #faf9f5;
+  --color-surface-bright: #ffffff;
+  --color-text-primary: #15241b;
+  --color-border-subtle: rgba(31, 107, 74, 0.15);
+}
+
+[data-theme="syrian-identity-dark"] {
+  --color-primary-rgb: 74, 189, 137;
+  --color-primary: rgb(var(--color-primary-rgb));
+  --color-secondary-rgb: 232, 98, 109;
+  --color-surface-dim: #090f0c;
+  --color-surface: #0f1914;
+  --color-surface-bright: #17241d;
+  --color-surface-container: #1f3028;
+  --color-surface-container-high: #273d33;
+  --color-surface-container-highest: #314b3f;
+  --color-border-subtle: rgba(74, 189, 137, 0.14);
+  --color-text-primary: #f2fbf6;
+}

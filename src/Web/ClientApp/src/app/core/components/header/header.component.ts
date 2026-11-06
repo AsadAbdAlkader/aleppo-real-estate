@@ -12,11 +12,12 @@ import { Notification } from '../../models/notification.model';
 import { MortgageCalculatorComponent } from '../../../features/properties/mortgage-calculator/mortgage-calculator.component';
 import { HasPermissionDirective } from '../../directives/has-permission.directive';
 import { Permissions } from '../../auth/permissions';
+import { ThemeSelectorComponent } from '../theme-selector/theme-selector.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, MortgageCalculatorComponent, HasPermissionDirective],
+  imports: [CommonModule, RouterLink, RouterLinkActive, MortgageCalculatorComponent, HasPermissionDirective, ThemeSelectorComponent],
   templateUrl: './header.component.html',
   styleUrls: []
 })

@@ -1,0 +1,32 @@
+/**
+ * ══════════════════════════════════════════════════════════════
+ * SYRIAN HERITAGE DESIGN SYSTEM — Single Source of Truth (SSOT)
+ * Authentic Aleppo & Levantine Natural Palette
+ * ══════════════════════════════════════════════════════════════
+ */
+:root {
+  /* 1. Aleppo Forest & Deep Pine */
+  --raw-forest-teal: #428177;
+  --raw-forest-deep: #002623;
+  --raw-pine-mid: #3e6b5b;
+  --raw-pine-dark: #121f1b;
+
+  /* 2. Golden Wheat & Aleppo Limestone */
+  --raw-wheat-light: #f7efde;
+  --raw-wheat-mid: #b9a779;
+  --raw-wheat-dark: #988561;
+  --raw-champagne-gold: #c79c4a;
+  --raw-gold-bright: #e4cc96;
+  --raw-gold-deep: #5a411f;
+
+  /* 3. Ancient Aleppo Citadel Umber & Cedar Wood */
+  --raw-umber-mid: #6b1f2a;
+  --raw-umber-dark: #4a151e;
+  --raw-stone-warm: #403d37;
+
+  /* 4. Syrian Charcoal & Pure Ivory */
+  --raw-charcoal-deep: #161616;
+  --raw-charcoal-obsidian: #0f0e0c;
+  --raw-ivory-warm: #faf8f3;
+  --raw-charcoal-white: #ffffff;
+}

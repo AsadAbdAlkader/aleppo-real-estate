@@ -114,17 +114,8 @@
       <!-- Actions (Currency Switcher + Notifications + Profile) -->
       <div class="flex items-center gap-2 sm:gap-3">
 
-        <!-- LUXURY THEME TOGGLE (DARK / LIGHT) -->
-        <button
-          (click)="themeService.toggleTheme()"
-          type="button"
-          class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/5 hover:bg-white/10 border border-amber-500/30 text-amber-300 transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
-          [title]="themeService.isDark() ? 'التبديل إلى الوضع النهاري' : 'التبديل إلى الوضع الليلي الفاخر'"
-        >
-          <span class="text-sm sm:text-base transition-transform duration-300" [class.rotate-180]="themeService.isDark()">
-            {{ themeService.isDark() ? '☀️' : '🌙' }}
-          </span>
-        </button>
+        <!-- LUXURY THEME SELECTOR & TOGGLE (DARK / LIGHT & PALETTES) -->
+        <app-theme-selector></app-theme-selector>
 
         <!-- CURRENCY SWITCHER DROPDOWN -->
         <div class="relative">
