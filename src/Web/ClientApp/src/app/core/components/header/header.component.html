@@ -1,129 +1,129 @@
-<header class="sticky top-0 z-40 bg-slate-950/95 text-white backdrop-blur-xl shadow-[0_10px_40px_-24px_rgba(0,0,0,0.8)] border-b border-amber-500/15" dir="rtl">
+<header class="sticky top-0 z-40 bg-[#fdfbf7]/95 dark:bg-[#141414]/95 text-slate-900 dark:text-white backdrop-blur-xl shadow-sm dark:shadow-[0_10px_40px_-24px_rgba(0,0,0,0.8)] border-b border-amber-600/15 dark:border-amber-500/15 transition-colors duration-300" dir="rtl">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16 lg:h-[70px] gap-4">
 
-      <!-- Primary Navigation (brand lives in the sidebar / mobile top bar) -->
+      <!-- Primary Navigation with Official Aleppo Citadel Brand -->
       <div class="hidden lg:flex items-center gap-5">
-        <a routerLink="/" class="flex items-center gap-2.5 pl-3 border-l border-white/10 group">
+        <a routerLink="/" class="flex items-center gap-2.5 pl-3 border-l border-amber-600/20 dark:border-white/10 group">
           <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-300 via-amber-400 to-amber-500 flex items-center justify-center p-1 shadow-gold-sm group-hover:scale-105 transition-transform overflow-hidden">
             <img src="/assets/syria/aleppo-citadel.svg" alt="قلعة حلب" class="w-full h-full object-contain filter drop-shadow-sm" />
           </span>
-          <span class="font-hayyakum font-bold text-sm text-white group-hover:text-amber-200 transition-colors">عقارات حلب</span>
+          <span class="font-hayyakum font-bold text-sm text-slate-900 dark:text-white group-hover:text-amber-700 dark:group-hover:text-amber-200 transition-colors">عقارات حلب</span>
         </a>
 
         <nav class="flex items-center gap-6">
-        <a
-          routerLink="/"
-          routerLinkActive="text-amber-300 after:opacity-100"
-          [routerLinkActiveOptions]="{exact: true}"
-          class="relative h-[70px] flex items-center text-[13.5px] font-bold text-slate-300 hover:text-amber-200 transition-colors
-                 after:content-[''] after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:rounded-full
-                 after:bg-gradient-to-l after:from-amber-300 after:to-amber-500 after:opacity-0 after:transition-opacity"
-        >الرئيسية</a>
+          <a
+            routerLink="/"
+            routerLinkActive="text-amber-800 dark:text-amber-300 font-extrabold after:opacity-100"
+            [routerLinkActiveOptions]="{exact: true}"
+            class="relative h-[70px] flex items-center text-[13.5px] font-bold text-slate-600 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-200 transition-colors
+                   after:content-[''] after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:rounded-full
+                   after:bg-gradient-to-l after:from-amber-400 after:to-amber-600 dark:after:from-amber-300 dark:after:to-amber-500 after:opacity-0 after:transition-opacity"
+          >الرئيسية</a>
 
-        <a
-          routerLink="/properties"
-          routerLinkActive="text-amber-300 after:opacity-100"
-          class="relative h-[70px] flex items-center text-[13.5px] font-bold text-slate-300 hover:text-amber-200 transition-colors
-                 after:content-[''] after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:rounded-full
-                 after:bg-gradient-to-l after:from-amber-300 after:to-amber-500 after:opacity-0 after:transition-opacity"
-        >العقارات المتاحة</a>
+          <a
+            routerLink="/properties"
+            routerLinkActive="text-amber-800 dark:text-amber-300 font-extrabold after:opacity-100"
+            class="relative h-[70px] flex items-center text-[13.5px] font-bold text-slate-600 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-200 transition-colors
+                   after:content-[''] after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:rounded-full
+                   after:bg-gradient-to-l after:from-amber-400 after:to-amber-600 dark:after:from-amber-300 dark:after:to-amber-500 after:opacity-0 after:transition-opacity"
+          >العقارات المتاحة</a>
 
-        <a
-          routerLink="/agents"
-          routerLinkActive="text-amber-300 after:opacity-100"
-          class="relative h-[70px] flex items-center text-[13.5px] font-bold text-slate-300 hover:text-amber-200 transition-colors
-                 after:content-[''] after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:rounded-full
-                 after:bg-gradient-to-l after:from-amber-300 after:to-amber-500 after:opacity-0 after:transition-opacity"
-        >الوكلاء والمكاتب</a>
+          <a
+            routerLink="/agents"
+            routerLinkActive="text-amber-800 dark:text-amber-300 font-extrabold after:opacity-100"
+            class="relative h-[70px] flex items-center text-[13.5px] font-bold text-slate-600 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-200 transition-colors
+                   after:content-[''] after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:rounded-full
+                   after:bg-gradient-to-l after:from-amber-400 after:to-amber-600 dark:after:from-amber-300 dark:after:to-amber-500 after:opacity-0 after:transition-opacity"
+          >الوكلاء والمكاتب</a>
 
-        <!-- Mortgage Calculator Tool Link -->
-        <button
-          (click)="openMortgageCalculator()"
-          type="button"
-          class="relative h-[70px] flex items-center gap-1.5 text-[13.5px] font-bold text-slate-300 hover:text-amber-200 transition-colors cursor-pointer"
-          title="حاسبة التمويل العقاري والأقساط"
-        >
-          <span>🧮</span>
-          <span>حاسبة التمويل</span>
-        </button>
-
-        <!-- Compare Properties Trigger Button (if any properties in compare) -->
-        @if (comparisonService.hasProperties()) {
+          <!-- Mortgage Calculator Tool Link -->
           <button
-            (click)="comparisonService.openModal()"
+            (click)="openMortgageCalculator()"
             type="button"
-            class="relative h-[70px] flex items-center gap-1.5 text-[13.5px] font-bold text-amber-300 hover:text-amber-200 transition-colors cursor-pointer"
-            title="مقارنة العقارات المحددة"
+            class="relative h-[70px] flex items-center gap-1.5 text-[13.5px] font-bold text-slate-600 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-200 transition-colors cursor-pointer"
+            title="حاسبة التمويل العقاري والأقساط"
           >
-            <span>⚖️</span>
-            <span>المقارنة</span>
-            <span class="bg-amber-400 text-ink-950 text-[10px] font-black px-1.5 py-px rounded-full shadow-gold-sm">
-              {{ comparisonService.count() }}
-            </span>
+            <span>🧮</span>
+            <span>حاسبة التمويل</span>
           </button>
-        }
 
-        @if (authService.isAuthenticated()) {
-          <a
-            routerLink="/messages"
-            routerLinkActive="text-amber-300 after:opacity-100"
-            class="relative h-[70px] flex items-center gap-1.5 text-[13.5px] font-bold text-slate-300 hover:text-amber-200 transition-colors
-                   after:content-[''] after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:rounded-full
-                   after:bg-gradient-to-l after:from-amber-300 after:to-amber-500 after:opacity-0 after:transition-opacity"
-          >
-            <span>المحادثات</span>
-            @if (chatService.unreadChatCount() > 0) {
+          <!-- Compare Properties Trigger Button (if any properties in compare) -->
+          @if (comparisonService.hasProperties()) {
+            <button
+              (click)="comparisonService.openModal()"
+              type="button"
+              class="relative h-[70px] flex items-center gap-1.5 text-[13.5px] font-bold text-amber-800 dark:text-amber-300 hover:text-amber-700 dark:hover:text-amber-200 transition-colors cursor-pointer"
+              title="مقارنة العقارات المحددة"
+            >
+              <span>⚖️</span>
+              <span>المقارنة</span>
               <span class="bg-amber-400 text-ink-950 text-[10px] font-black px-1.5 py-px rounded-full shadow-gold-sm">
-                {{ chatService.unreadChatCount() }}
+                {{ comparisonService.count() }}
               </span>
-            }
-          </a>
+            </button>
+          }
 
-          <a
-            routerLink="/favorites"
-            routerLinkActive="text-amber-300 after:opacity-100"
-            class="relative h-[70px] flex items-center gap-1.5 text-[13.5px] font-bold text-slate-300 hover:text-amber-200 transition-colors
-                   after:content-[''] after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:rounded-full
-                   after:bg-gradient-to-l after:from-amber-300 after:to-amber-500 after:opacity-0 after:transition-opacity"
-          >
-            <span>المفضلة</span>
-            @if (favoriteService.favoritesCount() > 0) {
-              <span class="bg-amber-400 text-ink-950 text-[10px] font-black px-1.5 py-px rounded-full shadow-gold-sm">
-                {{ favoriteService.favoritesCount() }}
-              </span>
-            }
-          </a>
+          @if (authService.isAuthenticated()) {
+            <a
+              routerLink="/messages"
+              routerLinkActive="text-amber-800 dark:text-amber-300 font-extrabold after:opacity-100"
+              class="relative h-[70px] flex items-center gap-1.5 text-[13.5px] font-bold text-slate-600 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-200 transition-colors
+                     after:content-[''] after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:rounded-full
+                     after:bg-gradient-to-l after:from-amber-400 after:to-amber-600 dark:after:from-amber-300 dark:after:to-amber-500 after:opacity-0 after:transition-opacity"
+            >
+              <span>المحادثات</span>
+              @if (chatService.unreadChatCount() > 0) {
+                <span class="bg-amber-400 text-ink-950 text-[10px] font-black px-1.5 py-px rounded-full shadow-gold-sm">
+                  {{ chatService.unreadChatCount() }}
+                </span>
+              }
+            </a>
 
-          <a
-            *appHasPermission="permissions.Property.Create"
-            routerLink="/my-properties"
-            routerLinkActive="text-amber-300 after:opacity-100"
-            class="relative h-[70px] flex items-center gap-1.5 text-[13.5px] font-bold text-slate-300 hover:text-amber-200 transition-colors
-                   after:content-[''] after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:rounded-full
-                   after:bg-gradient-to-l after:from-amber-300 after:to-amber-500 after:opacity-0 after:transition-opacity"
-          >
-            <span>عقاراتي</span>
-          </a>
+            <a
+              routerLink="/favorites"
+              routerLinkActive="text-amber-800 dark:text-amber-300 font-extrabold after:opacity-100"
+              class="relative h-[70px] flex items-center gap-1.5 text-[13.5px] font-bold text-slate-600 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-200 transition-colors
+                     after:content-[''] after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:rounded-full
+                     after:bg-gradient-to-l after:from-amber-400 after:to-amber-600 dark:after:from-amber-300 dark:after:to-amber-500 after:opacity-0 after:transition-opacity"
+            >
+              <span>المفضلة</span>
+              @if (favoriteService.favoritesCount() > 0) {
+                <span class="bg-amber-400 text-ink-950 text-[10px] font-black px-1.5 py-px rounded-full shadow-gold-sm">
+                  {{ favoriteService.favoritesCount() }}
+                </span>
+              }
+            </a>
 
-          <a
-            *appHasPermission="permissions.Inquiry.Respond"
-            routerLink="/my-property-inquiries"
-            routerLinkActive="text-amber-300 after:opacity-100"
-            class="relative h-[70px] flex items-center gap-1.5 text-[13.5px] font-bold text-slate-300 hover:text-amber-200 transition-colors
-                   after:content-[''] after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:rounded-full
-                   after:bg-gradient-to-l after:from-amber-300 after:to-amber-500 after:opacity-0 after:transition-opacity"
-          >
-            <span>الاستفسارات الواردة</span>
-          </a>
-        }
-      </nav>
+            <a
+              *appHasPermission="permissions.Property.Create"
+              routerLink="/my-properties"
+              routerLinkActive="text-amber-800 dark:text-amber-300 font-extrabold after:opacity-100"
+              class="relative h-[70px] flex items-center gap-1.5 text-[13.5px] font-bold text-slate-600 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-200 transition-colors
+                     after:content-[''] after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:rounded-full
+                     after:bg-gradient-to-l after:from-amber-400 after:to-amber-600 dark:after:from-amber-300 dark:after:to-amber-500 after:opacity-0 after:transition-opacity"
+            >
+              <span>عقاراتي</span>
+            </a>
+
+            <a
+              *appHasPermission="permissions.Inquiry.Respond"
+              routerLink="/my-property-inquiries"
+              routerLinkActive="text-amber-800 dark:text-amber-300 font-extrabold after:opacity-100"
+              class="relative h-[70px] flex items-center gap-1.5 text-[13.5px] font-bold text-slate-600 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-200 transition-colors
+                     after:content-[''] after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:rounded-full
+                     after:bg-gradient-to-l after:from-amber-400 after:to-amber-600 dark:after:from-amber-300 dark:after:to-amber-500 after:opacity-0 after:transition-opacity"
+            >
+              <span>الاستفسارات الواردة</span>
+            </a>
+          }
+        </nav>
       </div>
 
-      <!-- Actions (Currency Switcher + Notifications + Profile) -->
+      <!-- Actions (Theme Toggle + Currency Switcher + Notifications + Profile) -->
       <div class="flex items-center gap-2 sm:gap-3">
 
-        <!-- LUXURY THEME SELECTOR & TOGGLE (DARK / LIGHT & PALETTES) -->
+        <!-- LUXURY THEME SELECTOR & TOGGLE (DARK / LIGHT) -->
         <app-theme-selector></app-theme-selector>
 
         <!-- CURRENCY SWITCHER DROPDOWN -->
@@ -131,7 +131,7 @@
           <button
             (click)="toggleCurrencyDropdown(); $event.stopPropagation()"
             type="button"
-            class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-amber-500/30 text-amber-300 text-xs font-bold transition-all"
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 border border-amber-600/25 dark:border-amber-500/30 text-amber-900 dark:text-amber-300 text-xs font-bold transition-all shadow-sm"
             title="تغيير عملة عرض الأسعار"
           >
             <span class="font-latin text-xs">{{ currencyService.activeCurrencyConfig().symbol }}</span>
@@ -141,20 +141,22 @@
 
           @if (isCurrencyDropdownOpen()) {
             <div
-              class="absolute left-0 mt-2 w-44 rounded-2xl bg-slate-900 border border-amber-500/30 shadow-2xl z-50 overflow-hidden text-right py-1 animate-fadeIn"
+              class="absolute left-0 mt-2 w-44 rounded-2xl bg-white dark:bg-[#1c1c1c] border border-amber-600/25 dark:border-amber-500/30 shadow-2xl z-50 overflow-hidden text-right py-1 animate-fadeIn"
               (click)="$event.stopPropagation()"
             >
-              <div class="px-3 py-1.5 text-[10px] font-bold text-slate-400 border-b border-white/10">
+              <div class="px-3 py-1.5 text-[10px] font-bold text-slate-500 dark:text-slate-400 border-b border-slate-200/60 dark:border-white/10">
                 اختر عملة العرض:
               </div>
               @for (curr of currencyService.availableCurrencies(); track curr.code) {
                 <button
                   (click)="selectCurrency(curr.code)"
                   type="button"
-                  class="w-full text-right px-3.5 py-2 text-xs flex items-center justify-between transition-colors hover:bg-white/10"
-                  [class.text-amber-400]="currencyService.currentCurrency() === curr.code"
+                  class="w-full text-right px-3.5 py-2 text-xs flex items-center justify-between transition-colors hover:bg-amber-50/70 dark:hover:bg-white/10"
+                  [class.text-amber-700]="currencyService.currentCurrency() === curr.code"
+                  [class.dark:text-amber-400]="currencyService.currentCurrency() === curr.code"
                   [class.font-black]="currencyService.currentCurrency() === curr.code"
-                  [class.text-slate-300]="currencyService.currentCurrency() !== curr.code"
+                  [class.text-slate-700]="currencyService.currentCurrency() !== curr.code"
+                  [class.dark:text-slate-300]="currencyService.currentCurrency() !== curr.code"
                 >
                   <span class="flex items-center gap-1.5">
                     <span class="font-latin">{{ curr.symbol }}</span>
@@ -174,7 +176,7 @@
           <div class="hidden lg:block relative">
             <button
               (click)="toggleDropdown(); $event.stopPropagation()"
-              class="relative p-2.5 rounded-full text-slate-300 hover:text-amber-200 hover:bg-white/10 border border-transparent hover:border-white/10 transition-all focus:outline-none"
+              class="relative p-2.5 rounded-full text-slate-600 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-200 hover:bg-black/5 dark:hover:bg-white/10 border border-transparent hover:border-amber-500/20 transition-all focus:outline-none"
               title="الإشعارات"
               aria-label="الإشعارات"
             >
@@ -182,7 +184,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
               </svg>
               @if (notificationService.unreadCount() > 0) {
-                <span class="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-amber-400 text-[9.5px] font-black text-ink-950 shadow-gold-sm ring-2 ring-slate-950">
+                <span class="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[9.5px] font-black text-ink-950 shadow-gold-sm ring-2 ring-white dark:ring-slate-950">
                   {{ notificationService.unreadCount() > 99 ? '99+' : notificationService.unreadCount() }}
                 </span>
               }
@@ -191,14 +193,14 @@
             <!-- Notification Dropdown -->
             @if (isDropdownOpen()) {
               <div
-                class="absolute left-0 mt-3 w-80 sm:w-96 rounded-3xl bg-ivory-50 text-slate-900 shadow-lift z-50 overflow-hidden text-right border border-slate-200/80 animate-fadeIn"
+                class="absolute left-0 mt-3 w-80 sm:w-96 rounded-3xl bg-white dark:bg-[#1c1c1c] text-slate-900 dark:text-slate-100 shadow-lift z-50 overflow-hidden text-right border border-amber-600/20 dark:border-white/10 animate-fadeIn"
                 (click)="$event.stopPropagation()"
               >
-                <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-200/70 bg-white">
+                <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-200/70 dark:border-white/10 bg-amber-50/50 dark:bg-[#222222]">
                   <div class="flex items-center gap-2">
-                    <h3 class="text-sm font-bold text-slate-800">الإشعارات</h3>
+                    <h3 class="text-sm font-bold text-slate-800 dark:text-white">الإشعارات</h3>
                     @if (notificationService.unreadCount() > 0) {
-                      <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                      <span class="bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full">
                         {{ notificationService.unreadCount() }} غير مقروء
                       </span>
                     }
@@ -206,7 +208,7 @@
                   @if (notificationService.unreadCount() > 0) {
                     <button
                       (click)="markAllAsRead()"
-                      class="text-[11px] font-bold text-amber-700 hover:text-amber-900 transition-colors cursor-pointer"
+                      class="text-[11px] font-bold text-amber-700 dark:text-amber-400 hover:text-amber-900 transition-colors cursor-pointer"
                     >
                       تعليم الكل كمقروء
                     </button>
@@ -217,16 +219,16 @@
                   <div class="p-4 space-y-3">
                     @for (i of [1, 2]; track i) {
                       <div class="animate-pulse flex items-center gap-3">
-                        <div class="rounded-full bg-slate-200 h-9 w-9"></div>
+                        <div class="rounded-full bg-slate-200 dark:bg-slate-800 h-9 w-9"></div>
                         <div class="flex-1 space-y-2 py-1">
-                          <div class="h-3 bg-slate-200 rounded w-3/4"></div>
-                          <div class="h-2 bg-slate-200 rounded w-1/2"></div>
+                          <div class="h-3 bg-slate-200 dark:bg-slate-800 rounded w-3/4"></div>
+                          <div class="h-2 bg-slate-200 dark:bg-slate-800 rounded w-1/2"></div>
                         </div>
                       </div>
                     }
                   </div>
                 } @else if (notificationService.notifications().length === 0) {
-                  <div class="py-10 px-4 text-center text-xs text-slate-500">
+                  <div class="py-10 px-4 text-center text-xs text-slate-500 dark:text-slate-400">
                     <div class="text-2xl mb-2 opacity-60">
                       <svg viewBox="0 0 24 24" class="w-7 h-7 mx-auto text-amber-500/70" fill="none" stroke="currentColor" stroke-width="1.6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
@@ -235,12 +237,13 @@
                     لا توجد إشعارات حالياً
                   </div>
                 } @else {
-                  <div class="max-h-80 overflow-y-auto divide-y divide-slate-200/70 custom-scrollbar">
+                  <div class="max-h-80 overflow-y-auto divide-y divide-slate-100 dark:divide-white/5 custom-scrollbar">
                     @for (notification of notificationService.notifications(); track notification.id) {
                       <div
                         (click)="onNotificationClick(notification)"
-                        class="flex items-start gap-3 p-4 hover:bg-white transition-colors cursor-pointer text-right group"
-                        [class.bg-amber-50\/70]="!notification.isRead"
+                        class="flex items-start gap-3 p-4 hover:bg-amber-50/50 dark:hover:bg-white/5 transition-colors cursor-pointer text-right group"
+                        [class.bg-amber-50\/40]="!notification.isRead"
+                        [class.dark:bg-amber-950\/20]="!notification.isRead"
                       >
                         <div class="flex-shrink-0 w-9 h-9 rounded-full bg-gradient-to-br from-amber-200 to-amber-400 text-ink-950 flex items-center justify-center">
                           <svg viewBox="0 0 24 24" class="w-[18px] h-[18px]" fill="none" stroke="currentColor" stroke-width="1.9">
@@ -249,14 +252,14 @@
                         </div>
                         <div class="flex-1 min-w-0">
                           <div class="flex items-center justify-between gap-1 mb-1">
-                            <span class="text-xs font-bold text-slate-900 group-hover:text-amber-700 transition-colors truncate">
+                            <span class="text-xs font-bold text-slate-900 dark:text-white group-hover:text-amber-700 transition-colors truncate">
                               {{ notification.title }}
                             </span>
                             <span class="text-[10px] text-slate-400 whitespace-nowrap">
                               {{ formatTime(notification.createdAt) }}
                             </span>
                           </div>
-                          <p class="text-xs text-slate-600 leading-relaxed line-clamp-2">
+                          <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-2">
                             {{ notification.message }}
                           </p>
                         </div>
@@ -269,15 +272,15 @@
           </div>
 
           <!-- User Profile Pill -->
-          <a routerLink="/profile" class="hidden sm:flex items-center gap-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-amber-400/40 pl-2 pr-1.5 py-1.5 shadow-none transition-all cursor-pointer group" title="الملف الشخصي">
+          <a routerLink="/profile" class="hidden sm:flex items-center gap-2.5 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 border border-amber-600/20 dark:border-white/10 hover:border-amber-400/40 pl-2 pr-1.5 py-1.5 shadow-none transition-all cursor-pointer group" title="الملف الشخصي">
             <span class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 text-ink-950 font-black flex items-center justify-center text-sm shadow-gold-sm group-hover:scale-105 transition-transform">
               {{ authService.currentUser()?.firstName?.charAt(0) || '?' }}
             </span>
             <span class="hidden md:block text-right leading-tight pl-1">
-              <span class="block text-xs font-bold text-white">
+              <span class="block text-xs font-bold text-slate-900 dark:text-white">
                 {{ authService.currentUser()?.firstName }} {{ authService.currentUser()?.lastName }}
               </span>
-              <span class="block text-[10px] font-bold text-amber-300/90">
+              <span class="block text-[10px] font-bold text-amber-800 dark:text-amber-300/90">
                 {{ roleLabel }}
               </span>
             </span>
@@ -292,7 +295,7 @@
             <span>تسجيل الخروج</span>
           </button>
         } @else {
-          <a routerLink="/register" class="hidden sm:inline-flex btn-glass btn-sm">
+          <a routerLink="/register" class="hidden sm:inline-flex btn-outline btn-sm">
             إنشاء حساب
           </a>
           <a routerLink="/login" class="btn-primary btn-sm">

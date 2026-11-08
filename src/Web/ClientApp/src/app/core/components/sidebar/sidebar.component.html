@@ -1,10 +1,10 @@
 <!-- Mobile Top Header Bar with Toggle -->
-<div class="lg:hidden bg-slate-950 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-40 border-b border-amber-500/15" dir="rtl">
+<div class="lg:hidden bg-[#fdfbf7] dark:bg-[#141414] text-slate-900 dark:text-white px-4 py-3 flex items-center justify-between sticky top-0 z-40 border-b border-amber-600/15 dark:border-amber-500/15 shadow-sm transition-colors duration-300" dir="rtl">
   <a routerLink="/" class="flex items-center gap-2.5">
     <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-300 via-amber-400 to-amber-500 flex items-center justify-center p-1 shadow-gold-sm overflow-hidden">
       <img src="/assets/syria/aleppo-citadel.svg" alt="شعار قلعة حلب" class="w-full h-full object-contain filter drop-shadow-sm" />
     </span>
-    <span class="font-hayyakum font-bold text-lg tracking-tight text-white">عقارات حلب</span>
+    <span class="font-hayyakum font-bold text-lg tracking-tight text-slate-900 dark:text-white">عقارات حلب</span>
   </a>
 
   <div class="flex items-center gap-2">
@@ -12,14 +12,14 @@
       <!-- Mobile Notifications Bell -->
       <button
         (click)="toggleNotificationDropdown($event)"
-        class="relative p-2 rounded-full text-slate-300 hover:text-amber-200 hover:bg-white/10 border border-transparent hover:border-white/10 transition-colors"
+        class="relative p-2 rounded-full text-slate-600 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-200 hover:bg-black/5 dark:hover:bg-white/10 border border-transparent transition-colors"
         aria-label="الإشعارات"
       >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.7">
           <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
         </svg>
         @if (notificationService.unreadCount() > 0) {
-          <span class="absolute -top-0.5 -right-0.5 bg-amber-400 text-ink-950 text-[10px] font-black min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full shadow-gold-sm">
+          <span class="absolute -top-0.5 -right-0.5 bg-amber-500 text-ink-950 text-[10px] font-black min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full shadow-gold-sm">
             {{ notificationService.unreadCount() }}
           </span>
         }
@@ -29,7 +29,7 @@
     <!-- Hamburger Menu Button -->
     <button
       (click)="toggleMobileMenu()"
-      class="p-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 text-white transition-colors focus:outline-none"
+      class="p-2 rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 border border-amber-600/20 dark:border-white/10 text-slate-800 dark:text-white transition-colors focus:outline-none cursor-pointer"
       aria-label="القائمة الجانبية"
     >
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
@@ -47,43 +47,43 @@
 @if (isMobileOpen()) {
   <div
     (click)="closeMobileMenu()"
-    class="lg:hidden fixed inset-0 bg-ink-950/70 backdrop-blur-sm z-40 transition-opacity"
+    class="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity"
   ></div>
 }
 
 <!-- Right Navigation Sidebar Container -->
 <aside
-  class="fixed lg:sticky top-0 right-0 z-50 lg:z-30 w-72 h-screen bg-slate-950 text-slate-300 flex flex-col border-l border-amber-500/10 shadow-2xl transition-transform duration-300 ease-in-out"
+  class="fixed lg:sticky top-0 right-0 z-50 lg:z-30 w-72 h-screen bg-[#faf8f3] dark:bg-[#141414] text-slate-700 dark:text-slate-300 flex flex-col border-l border-amber-600/15 dark:border-amber-500/10 shadow-xl transition-transform duration-300 ease-in-out"
   [class.translate-x-0]="isMobileOpen()"
   [class.translate-x-full]="!isMobileOpen()"
   [class.lg:translate-x-0]="true"
   dir="rtl"
 >
   <!-- Sidebar Branding with Official Aleppo Citadel Emblem -->
-  <div class="p-5 border-b border-white/5 flex items-center justify-between">
+  <div class="p-5 border-b border-amber-600/15 dark:border-white/5 flex items-center justify-between">
     <a routerLink="/" (click)="closeMobileMenu()" class="flex items-center gap-3 group">
       <span class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-300 via-amber-400 to-amber-500 flex items-center justify-center p-1.5 shadow-gold-sm group-hover:scale-105 transition-transform overflow-hidden">
         <img src="/assets/syria/aleppo-citadel.svg" alt="شعار قلعة حلب" class="w-full h-full object-contain filter drop-shadow-sm" />
       </span>
       <span>
-        <span class="block font-hayyakum text-lg font-bold text-white leading-tight">عقارات حلب</span>
-        <span class="block font-latin text-[9px] font-semibold text-amber-400/80 tracking-[0.3em]">ALEPPO ESTATE</span>
+        <span class="block font-hayyakum text-lg font-bold text-slate-900 dark:text-white leading-tight">عقارات حلب</span>
+        <span class="block font-latin text-[9px] font-semibold text-amber-600 dark:text-amber-400/80 tracking-[0.3em]">ALEPPO ESTATE</span>
       </span>
     </a>
   </div>
 
   <!-- User Account Card -->
   @if (authService.isAuthenticated()) {
-    <div class="p-3 mx-4 mt-4 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-between gap-3">
+    <div class="p-3 mx-4 mt-4 rounded-2xl bg-black/[0.03] dark:bg-white/[0.04] border border-amber-600/15 dark:border-white/10 flex items-center justify-between gap-3">
       <div class="flex items-center gap-3 min-w-0">
         <span class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 text-ink-950 font-black flex flex-shrink-0 items-center justify-center text-base shadow-gold-sm">
           {{ authService.currentUser()?.firstName?.charAt(0) || '?' }}
         </span>
         <div class="min-w-0 text-right">
-          <div class="text-xs font-bold text-white truncate">
+          <div class="text-xs font-bold text-slate-900 dark:text-white truncate">
             {{ authService.currentUser()?.firstName }} {{ authService.currentUser()?.lastName }}
           </div>
-          <span class="inline-block text-[10px] font-bold text-amber-300 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded-md mt-1">
+          <span class="inline-block text-[10px] font-bold text-amber-800 dark:text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-md mt-1">
             {{ roleLabel }}
           </span>
         </div>
@@ -93,53 +93,53 @@
       <div class="relative">
         <button
           (click)="toggleNotificationDropdown($event)"
-          class="relative p-2 rounded-full text-slate-400 hover:text-amber-200 hover:bg-white/10 transition-colors"
+          class="relative p-2 rounded-full text-slate-500 dark:text-slate-400 hover:text-amber-700 dark:hover:text-amber-200 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
           title="الإشعارات"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.7">
             <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
           </svg>
           @if (notificationService.unreadCount() > 0) {
-            <span class="absolute -top-0.5 -right-0.5 bg-amber-400 text-ink-950 text-[10px] font-black min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full shadow-gold-sm">
+            <span class="absolute -top-1 -right-1 bg-amber-500 text-ink-950 text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-gold-sm">
               {{ notificationService.unreadCount() }}
             </span>
           }
         </button>
 
-        <!-- Notification Dropdown Panel -->
         @if (isNotificationDropdownOpen()) {
           <div
-            class="absolute right-0 mt-3 w-80 rounded-3xl bg-ivory-50 text-slate-900 shadow-lift z-50 overflow-hidden text-right border border-slate-200/80 animate-fadeIn"
+            class="absolute left-0 top-full mt-2 w-72 rounded-2xl bg-white dark:bg-[#1c1c1c] border border-amber-600/25 dark:border-white/10 shadow-2xl z-50 overflow-hidden text-right animate-fadeIn"
             (click)="$event.stopPropagation()"
           >
-            <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200/70 bg-white">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200/70 dark:border-white/10 bg-amber-50/50 dark:bg-[#222222]">
               <div class="flex items-center gap-2">
-                <h3 class="text-xs font-bold text-slate-800">الإشعارات</h3>
+                <h3 class="text-xs font-bold text-slate-800 dark:text-white">الإشعارات</h3>
                 @if (notificationService.unreadCount() > 0) {
-                  <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                  <span class="bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full">
                     {{ notificationService.unreadCount() }} غير مقروء
                   </span>
                 }
               </div>
               @if (notificationService.unreadCount() > 0) {
-                <button (click)="markAllAsRead()" class="text-[11px] font-bold text-amber-700 hover:text-amber-900 cursor-pointer">
+                <button (click)="markAllAsRead()" class="text-[11px] font-bold text-amber-700 dark:text-amber-400 hover:text-amber-900 cursor-pointer">
                   تعليم الكل كمقروء
                 </button>
               }
             </div>
 
             @if (notificationService.notifications().length === 0) {
-              <div class="py-8 text-center text-xs text-slate-500">لا توجد إشعارات حالياً</div>
+              <div class="py-8 text-center text-xs text-slate-500 dark:text-slate-400">لا توجد إشعارات حالياً</div>
             } @else {
-              <div class="max-h-64 overflow-y-auto divide-y divide-slate-200/70 custom-scrollbar">
+              <div class="max-h-64 overflow-y-auto divide-y divide-slate-100 dark:divide-white/5 custom-scrollbar">
                 @for (n of notificationService.notifications(); track n.id) {
                   <div
                     (click)="onNotificationClick(n)"
-                    class="p-3.5 hover:bg-white cursor-pointer text-right text-xs transition-colors"
-                    [class.bg-amber-50\/70]="!n.isRead"
+                    class="p-3.5 hover:bg-amber-50/50 dark:hover:bg-white/5 cursor-pointer text-right text-xs transition-colors"
+                    [class.bg-amber-50\/40]="!n.isRead"
+                    [class.dark:bg-amber-950\/20]="!n.isRead"
                   >
-                    <div class="font-bold text-slate-800">{{ n.title }}</div>
-                    <div class="text-slate-600 text-[11px] mt-0.5 line-clamp-2">{{ n.message }}</div>
+                    <div class="font-bold text-slate-800 dark:text-white">{{ n.title }}</div>
+                    <div class="text-slate-600 dark:text-slate-300 text-[11px] mt-0.5 line-clamp-2">{{ n.message }}</div>
                   </div>
                 }
               </div>
@@ -155,14 +155,14 @@
 
     <!-- Group 1: التصفح الرئيسي -->
     <div>
-      <div class="px-3 mb-2.5 text-[10.5px] font-black text-amber-500/90">التصفح الرئيسي</div>
+      <div class="px-3 mb-2.5 text-[10.5px] font-black text-amber-800 dark:text-amber-400/90 font-hayyakum">التصفح الرئيسي</div>
       <div class="space-y-1">
         <a
           routerLink="/"
           (click)="closeMobileMenu()"
-          routerLinkActive="bg-amber-500/15 text-amber-300 border-r-2 border-amber-400"
+          routerLinkActive="bg-amber-500/15 text-amber-900 dark:text-amber-300 font-bold border-r-2 border-amber-500"
           [routerLinkActiveOptions]="{exact: true}"
-          class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+          class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-600 dark:text-slate-400 hover:bg-amber-500/10 hover:text-amber-900 dark:hover:bg-white/5 dark:hover:text-white transition-all"
         >
           <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955a1.126 1.126 0 011.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75"/>
@@ -173,8 +173,8 @@
         <a
           routerLink="/properties"
           (click)="closeMobileMenu()"
-          routerLinkActive="bg-amber-500/15 text-amber-300 border-r-2 border-amber-400"
-          class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+          routerLinkActive="bg-amber-500/15 text-amber-900 dark:text-amber-300 font-bold border-r-2 border-amber-500"
+          class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-600 dark:text-slate-400 hover:bg-amber-500/10 hover:text-amber-900 dark:hover:bg-white/5 dark:hover:text-white transition-all"
         >
           <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
@@ -185,8 +185,8 @@
         <a
           routerLink="/agents"
           (click)="closeMobileMenu()"
-          routerLinkActive="bg-amber-500/15 text-amber-300 border-r-2 border-amber-400"
-          class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+          routerLinkActive="bg-amber-500/15 text-amber-900 dark:text-amber-300 font-bold border-r-2 border-amber-500"
+          class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-600 dark:text-slate-400 hover:bg-amber-500/10 hover:text-amber-900 dark:hover:bg-white/5 dark:hover:text-white transition-all"
         >
           <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/>
@@ -199,13 +199,13 @@
     <!-- Group 2: إدارة حسابي والعقارات -->
     @if (authService.isAuthenticated()) {
       <div>
-        <div class="px-3 mb-2.5 text-[10.5px] font-black text-amber-500/90">إدارة حسابي والعقارات</div>
+        <div class="px-3 mb-2.5 text-[10.5px] font-black text-amber-800 dark:text-amber-400/90 font-hayyakum">إدارة حسابي والعقارات</div>
         <div class="space-y-1">
           <a
             routerLink="/dashboard"
             (click)="closeMobileMenu()"
-            routerLinkActive="bg-amber-500/15 text-amber-300 border-r-2 border-amber-400"
-            class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+            routerLinkActive="bg-amber-500/15 text-amber-900 dark:text-amber-300 font-bold border-r-2 border-amber-500"
+            class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-600 dark:text-slate-400 hover:bg-amber-500/10 hover:text-amber-900 dark:hover:bg-white/5 dark:hover:text-white transition-all"
           >
             <span class="flex items-center gap-3">
               <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
@@ -213,14 +213,14 @@
               </svg>
               <span>لوحة التحكم</span>
             </span>
-            <span class="text-[10px] bg-white/5 text-slate-400 border border-white/10 px-2 py-0.5 rounded-full font-bold">إحصائيات</span>
+            <span class="text-[10px] bg-amber-500/10 text-amber-800 dark:text-slate-300 border border-amber-500/20 px-2 py-0.5 rounded-full font-bold">إحصائيات</span>
           </a>
 
           <a
             routerLink="/messages"
             (click)="closeMobileMenu()"
-            routerLinkActive="bg-amber-500/15 text-amber-300 border-r-2 border-amber-400"
-            class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+            routerLinkActive="bg-amber-500/15 text-amber-900 dark:text-amber-300 font-bold border-r-2 border-amber-500"
+            class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-600 dark:text-slate-400 hover:bg-amber-500/10 hover:text-amber-900 dark:hover:bg-white/5 dark:hover:text-white transition-all"
           >
             <span class="flex items-center gap-3">
               <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
@@ -229,7 +229,7 @@
               <span>المحادثات المباشرة</span>
             </span>
             @if (chatService.unreadChatCount() > 0) {
-              <span class="bg-amber-400 text-ink-950 text-[10px] font-black px-2 py-0.5 rounded-full shadow-gold-sm">
+              <span class="bg-amber-500 text-ink-950 text-[10px] font-black px-2 py-0.5 rounded-full shadow-gold-sm">
                 {{ chatService.unreadChatCount() }}
               </span>
             }
@@ -238,8 +238,8 @@
           <a
             routerLink="/my-properties"
             (click)="closeMobileMenu()"
-            routerLinkActive="bg-amber-500/15 text-amber-300 border-r-2 border-amber-400"
-            class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+            routerLinkActive="bg-amber-500/15 text-amber-900 dark:text-amber-300 font-bold border-r-2 border-amber-500"
+            class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-600 dark:text-slate-400 hover:bg-amber-500/10 hover:text-amber-900 dark:hover:bg-white/5 dark:hover:text-white transition-all"
           >
             <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/>
@@ -250,8 +250,8 @@
           <a
             routerLink="/my-property-inquiries"
             (click)="closeMobileMenu()"
-            routerLinkActive="bg-amber-500/15 text-amber-300 border-r-2 border-amber-400"
-            class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+            routerLinkActive="bg-amber-500/15 text-amber-900 dark:text-amber-300 font-bold border-r-2 border-amber-500"
+            class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-600 dark:text-slate-400 hover:bg-amber-500/10 hover:text-amber-900 dark:hover:bg-white/5 dark:hover:text-white transition-all"
           >
             <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 13.5h3.381c.38 0 .724.239.855.615l.784 4.686a1.125 1.125 0 01-1.109 1.361H6.19M2.25 13.5L5.46 4.92A1.125 1.125 0 016.568 4h10.864a1.125 1.125 0 011.107 1.08L21.75 13.5m-19.5 0v6.75c0 .621.504 1.125 1.125 1.125h14.25c.621 0 1.125-.504 1.125-1.125v-6.75"/>
@@ -262,8 +262,8 @@
           <a
             routerLink="/inquiries"
             (click)="closeMobileMenu()"
-            routerLinkActive="bg-amber-500/15 text-amber-300 border-r-2 border-amber-400"
-            class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+            routerLinkActive="bg-amber-500/15 text-amber-900 dark:text-amber-300 font-bold border-r-2 border-amber-500"
+            class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-600 dark:text-slate-400 hover:bg-amber-500/10 hover:text-amber-900 dark:hover:bg-white/5 dark:hover:text-white transition-all"
           >
             <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
@@ -274,8 +274,8 @@
           <a
             routerLink="/favorites"
             (click)="closeMobileMenu()"
-            routerLinkActive="bg-amber-500/15 text-amber-300 border-r-2 border-amber-400"
-            class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+            routerLinkActive="bg-amber-500/15 text-amber-900 dark:text-amber-300 font-bold border-r-2 border-amber-500"
+            class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-600 dark:text-slate-400 hover:bg-amber-500/10 hover:text-amber-900 dark:hover:bg-white/5 dark:hover:text-white transition-all"
           >
             <span class="flex items-center gap-3">
               <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
@@ -284,7 +284,7 @@
               <span>العقارات المفضلة</span>
             </span>
             @if (favoriteService.favoritesCount() > 0) {
-              <span class="bg-amber-400 text-ink-950 text-[10px] font-black px-2 py-0.5 rounded-full shadow-gold-sm">
+              <span class="bg-amber-500 text-ink-950 text-[10px] font-black px-2 py-0.5 rounded-full shadow-gold-sm">
                 {{ favoriteService.favoritesCount() }}
               </span>
             }
@@ -293,8 +293,8 @@
           <a
             routerLink="/profile"
             (click)="closeMobileMenu()"
-            routerLinkActive="bg-amber-500/15 text-amber-300 border-r-2 border-amber-400"
-            class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+            routerLinkActive="bg-amber-500/15 text-amber-900 dark:text-amber-300 font-bold border-r-2 border-amber-500"
+            class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] font-bold text-slate-600 dark:text-slate-400 hover:bg-amber-500/10 hover:text-amber-900 dark:hover:bg-white/5 dark:hover:text-white transition-all"
           >
             <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
@@ -322,11 +322,11 @@
   </nav>
 
   <!-- Sidebar Footer / Auth Actions -->
-  <div class="p-4 border-t border-white/5">
+  <div class="p-4 border-t border-amber-600/15 dark:border-white/5">
     @if (authService.isAuthenticated()) {
       <button
         (click)="logout()"
-        class="w-full btn-danger btn-sm py-2.5"
+        class="w-full btn-danger btn-sm py-2.5 cursor-pointer"
       >
         <span>تسجيل الخروج</span>
       </button>
@@ -342,7 +342,7 @@
         <a
           routerLink="/register"
           (click)="closeMobileMenu()"
-          class="w-full btn-glass btn-sm py-2.5"
+          class="w-full btn-outline btn-sm py-2.5"
         >
           <span>إنشاء حساب جديد</span>
         </a>

@@ -1,4 +1,4 @@
-<article class="group bg-white rounded-3xl overflow-hidden shadow-soft hover:shadow-lift transition-all duration-500 border border-slate-200/70 hover:border-amber-300/80 flex flex-col h-full hover:-translate-y-1 relative">
+<article class="group bg-white dark:bg-[#1a1a1a] rounded-3xl overflow-hidden shadow-soft hover:shadow-lift transition-all duration-500 border border-slate-200/70 dark:border-white/10 hover:border-amber-300/80 dark:hover:border-amber-400/50 flex flex-col h-full hover:-translate-y-1 relative">
 
   <!-- Property Image -->
   <div class="relative h-56 sm:h-60 bg-slate-100 overflow-hidden">
@@ -15,10 +15,11 @@
       <button
         (click)="onToggleCompare($event)"
         type="button"
-        class="w-9 h-9 rounded-full bg-white/90 hover:bg-white backdrop-blur-md flex items-center justify-center shadow-soft transition-all duration-300 transform active:scale-90"
+        class="w-9 h-9 rounded-full bg-white/90 dark:bg-[#222]/90 dark:text-white hover:bg-white dark:hover:bg-[#333] backdrop-blur-md flex items-center justify-center shadow-soft transition-all duration-300 transform active:scale-90"
         [class.ring-2]="isCompared"
         [class.ring-amber-500]="isCompared"
         [class.bg-amber-50]="isCompared"
+        [class.dark:bg-amber-950/50]="isCompared"
         [title]="isCompared ? 'إزالة من المقارنة' : 'مقارنة العقار'"
       >
         <span class="text-sm" [class.scale-110]="isCompared">⚖️</span>
@@ -29,7 +30,7 @@
         (click)="onToggleFavorite($event)"
         [disabled]="isTogglingFavorite()"
         type="button"
-        class="w-9 h-9 rounded-full bg-white/90 hover:bg-white backdrop-blur-md flex items-center justify-center shadow-soft transition-all duration-300 transform active:scale-90"
+        class="w-9 h-9 rounded-full bg-white/90 dark:bg-[#222]/90 dark:text-white hover:bg-white dark:hover:bg-[#333] backdrop-blur-md flex items-center justify-center shadow-soft transition-all duration-300 transform active:scale-90"
         [title]="isFavorite ? 'إزالة من المفضلة' : 'إضافة للمفضلة'"
       >
         @if (isFavorite) {
@@ -120,27 +121,27 @@
   <div class="p-5 sm:p-6 flex-1 flex flex-col justify-between">
     <div>
       <!-- Location -->
-      <div class="flex items-center text-[12px] font-bold text-teal-700 mb-2.5 gap-1.5">
-        <svg class="w-4 h-4 text-teal-600 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+      <div class="flex items-center text-[12px] font-bold text-teal-700 dark:text-teal-400 mb-2.5 gap-1.5">
+        <svg class="w-4 h-4 text-teal-600 dark:text-teal-400 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
           <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
         </svg>
         <span class="truncate">حلب — {{ property().cityArea }}</span>
         @if (property().address) {
-          <span class="text-slate-400 font-medium truncate">({{ property().address }})</span>
+          <span class="text-slate-400 dark:text-slate-500 font-medium truncate">({{ property().address }})</span>
         }
       </div>
 
       <!-- Title -->
-      <h3 class="text-[17px] font-bold text-slate-900 mb-3 line-clamp-2 leading-snug group-hover:text-amber-700 transition-colors">
+      <h3 class="text-[17px] font-bold text-slate-900 dark:text-white mb-3 line-clamp-2 leading-snug group-hover:text-amber-700 dark:group-hover:text-amber-300 transition-colors">
         <a [routerLink]="['/properties', property().id]">{{ property().title }}</a>
       </h3>
 
       <!-- Specifications -->
-      <div class="flex items-center gap-4 text-[12.5px] font-medium text-slate-600 py-3.5 border-y border-slate-100 my-3">
+      <div class="flex items-center gap-4 text-[12.5px] font-medium text-slate-600 dark:text-slate-300 py-3.5 border-y border-slate-100 dark:border-white/10 my-3">
         @if (property().bedrooms > 0) {
           <div class="flex items-center gap-1.5" title="عدد الغرف">
-            <svg class="w-[17px] h-[17px] text-amber-600" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+            <svg class="w-[17px] h-[17px] text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 18v-6a2 2 0 012-2h14a2 2 0 012 2v6"/>
               <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 18h16.5M7 10V7.5A2.5 2.5 0 019.5 5h5A2.5 2.5 0 0117 7.5V10"/>
             </svg>
@@ -149,14 +150,14 @@
         }
         @if (property().bathrooms > 0) {
           <div class="flex items-center gap-1.5" title="عدد الحمامات">
-            <svg class="w-[17px] h-[17px] text-amber-600" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+            <svg class="w-[17px] h-[17px] text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0L12 2.69z"/>
             </svg>
             <span>{{ property().bathrooms }} حمام</span>
           </div>
         }
         <div class="flex items-center gap-1.5" title="المساحة الإجمالية">
-          <svg class="w-[17px] h-[17px] text-amber-600" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+          <svg class="w-[17px] h-[17px] text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 9V5a1 1 0 011-1h4M15 4h4a1 1 0 011 1v4M20 15v4a1 1 0 01-1 1h-4M9 20H5a1 1 0 01-1-1v-4"/>
           </svg>
           <span class="font-latin">{{ property().areaSquareMeters }}</span>
@@ -168,8 +169,8 @@
     <!-- Price + Actions -->
     <div class="flex items-end justify-between gap-3 mt-2">
       <div>
-        <span class="text-[11px] text-slate-400 block font-bold mb-0.5">السعر</span>
-        <span class="font-latin text-[20px] sm:text-[22px] font-black text-amber-700 leading-none">
+        <span class="text-[11px] text-slate-400 dark:text-slate-500 block font-bold mb-0.5">السعر</span>
+        <span class="font-latin text-[20px] sm:text-[22px] font-black text-amber-700 dark:text-amber-400 leading-none">
           {{ formattedPrice }}
         </span>
       </div>
