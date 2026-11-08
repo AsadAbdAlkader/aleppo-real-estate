@@ -71,6 +71,8 @@ CREATE TABLE IF NOT EXISTS "Properties" (
     "ImageUrls" text,
     "Status" character varying(50) NOT NULL DEFAULT 'Available',
     "IsFeatured" boolean NOT NULL DEFAULT false,
+    "Latitude" double precision,
+    "Longitude" double precision,
     "CreatedAt" timestamp with time zone NOT NULL,
     "UpdatedAt" timestamp with time zone,
     CONSTRAINT "FK_Properties_Users_OwnerGuid" FOREIGN KEY ("OwnerGuid") REFERENCES "Users" ("Id") ON DELETE RESTRICT
