@@ -15,6 +15,9 @@ public class AgentProfile : BaseEntity
     public Guid? AgencyId { get; set; }
     public Agency? Agency { get; set; }
 
+    public string? PublicTitle { get; set; }
     public string? Bio { get; set; }
     public string? PublicPhone { get; set; }
+    public string? ProfileImageUrl { get; set; }
+    public bool IsPublic { get; set; } = true;
 }
