@@ -154,28 +154,28 @@ export const THEMES_REGISTRY: Record<ThemeId, ThemeDefinition> = {
     accentColor: '#f7efde'
   },
 
-  // 6. Syrian Identity Heritage (الهوية السورية الخالدة)
+  // 6. Syrian Visual Identity — جامعة الشمل (https://sytocode.github.io/syrian-visual-identity/)
   'syrian-identity-light': {
     id: 'syrian-identity-light',
     family: 'syrian-identity',
     mode: 'light',
-    nameAr: 'الهوية السورية (نهاري)',
-    nameEn: 'Syrian Identity (Light)',
-    descriptionAr: 'ألوان سورية الأصيلة: الأخضر الغض، الأحمر القرمزي والذهب',
-    primaryColor: '#1f6b4a',
-    surfaceColor: '#faf9f5',
-    accentColor: '#b82832'
+    nameAr: 'الهوية السورية (جامعة الشمل)',
+    nameEn: 'Syrian Visual Identity (Light)',
+    descriptionAr: 'الأخضر الغابي الرسمي (#054239)، القمح الذهبي (#B9A779)، والعنبري',
+    primaryColor: '#054239',
+    surfaceColor: '#fdfbf7',
+    accentColor: '#b9a779'
   },
   'syrian-identity-dark': {
     id: 'syrian-identity-dark',
     family: 'syrian-identity',
     mode: 'dark',
-    nameAr: 'الهوية السورية (ليلي فاخر)',
-    nameEn: 'Syrian Identity (Dark)',
-    descriptionAr: 'طيف الهوية السورية في لوحة داكنة سينمائية متناسقة',
-    primaryColor: '#4abd89',
-    surfaceColor: '#0f1914',
-    accentColor: '#e8626d'
+    nameAr: 'الهوية السورية (ليلي معتمد)',
+    nameEn: 'Syrian Visual Identity (Dark)',
+    descriptionAr: 'الفحم المعماري (#141414)، وهج الغابات (#428177)، والقمح السوري',
+    primaryColor: '#428177',
+    surfaceColor: '#141414',
+    accentColor: '#b9a779'
   }
 };
 

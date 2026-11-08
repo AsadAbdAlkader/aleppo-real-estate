@@ -87,10 +87,33 @@ module.exports = {
           900: '#1F1D18',
           950: '#191712',
         },
+        // ── Official Syrian Visual Identity Palette (جامعة الشمل) ──
+        syria: {
+          forest: '#054239',
+          'forest-light': '#428177',
+          'forest-dark': '#002623',
+          gold: '#b9a779',
+          'gold-muted': '#988561',
+          cream: '#edebe0',
+          umber: '#6b1f2a',
+          'umber-deep': '#4a151e',
+          'umber-dark': '#260f14',
+          charcoal: '#161616',
+          canvas: '#fdfbf7',
+          card: '#ffffff',
+          border: '#e5e0d8',
+          flag: {
+            green: '#007a3d',
+            white: '#ffffff',
+            black: '#000000',
+            red: '#ce1126',
+          }
+        },
       },
       fontFamily: {
         sans: ['Tajawal', 'system-ui', '-apple-system', 'sans-serif'],
-        display: ['"Reem Kufi"', 'Tajawal', 'system-ui', 'sans-serif'],
+        display: ['HayyakumAllah', '"Reem Kufi"', 'Tajawal', 'system-ui', 'sans-serif'],
+        hayyakum: ['HayyakumAllah', '"Reem Kufi"', 'Tajawal', 'system-ui', 'sans-serif'],
         latin: ['"Playfair Display"', 'Georgia', 'serif'],
       },
       boxShadow: {

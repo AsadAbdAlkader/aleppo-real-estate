@@ -1,32 +1,66 @@
 /**
  * ══════════════════════════════════════════════════════════════
- * SYRIAN HERITAGE DESIGN SYSTEM — Single Source of Truth (SSOT)
- * Authentic Aleppo & Levantine Natural Palette
+ * SYRIAN VISUAL IDENTITY (الهوية البصرية السورية — جامعة الشمل)
+ * Official Design System & Presets from:
+ * https://sytocode.github.io/syrian-visual-identity/
  * ══════════════════════════════════════════════════════════════
  */
 :root {
-  /* 1. Aleppo Forest & Deep Pine */
-  --raw-forest-teal: #428177;
-  --raw-forest-deep: #002623;
-  --raw-pine-mid: #3e6b5b;
-  --raw-pine-dark: #121f1b;
+  /* 1. Official Primary Brand Palette: Forest Green (الأخضر الغابي) */
+  --syria-forest-main: #054239;
+  --syria-forest-light: #428177;
+  --syria-forest-dark: #002623;
 
-  /* 2. Golden Wheat & Aleppo Limestone */
-  --raw-wheat-light: #f7efde;
-  --raw-wheat-mid: #b9a779;
-  --raw-wheat-dark: #988561;
+  /* 2. Official Secondary Brand Palette: Golden Wheat (القمح الذهبي) */
+  --syria-wheat-main: #b9a779;
+  --syria-wheat-muted: #988561;
+  --syria-wheat-cream: #edebe0;
+
+  /* 3. Official Accent Palette: Deep Umber (العنبري الدمشقي) */
+  --syria-umber-base: #6b1f2a;
+  --syria-umber-deep: #4a151e;
+  --syria-umber-dark: #260f14;
+
+  /* 4. Constitutional Flag Palette (علم الجمهورية العربية السورية) */
+  --syria-flag-green: #007a3d;
+  --syria-flag-white: #ffffff;
+  --syria-flag-black: #000000;
+  --syria-flag-red-star: #ce1126;
+
+  /* 5. Neutral Canvas & Surfaces */
+  --syria-surface-canvas: #fdfbf7;
+  --syria-surface-card: #ffffff;
+  --syria-text-primary: #161616;
+  --syria-text-secondary: #3d3a3b;
+  --syria-border: #e5e0d8;
+
+  /* 6. Typography */
+  --font-syria-arabic: 'HayyakumAllah', 'Reem Kufi', 'Tajawal', system-ui, sans-serif;
+
+  /* Legacy raw aliases mapped to official specs */
+  --raw-forest-teal: var(--syria-forest-light);
+  --raw-forest-deep: var(--syria-forest-dark);
+  --raw-pine-mid: var(--syria-forest-main);
+  --raw-wheat-light: var(--syria-wheat-cream);
+  --raw-wheat-mid: var(--syria-wheat-main);
+  --raw-wheat-dark: var(--syria-wheat-muted);
   --raw-champagne-gold: #c79c4a;
   --raw-gold-bright: #e4cc96;
   --raw-gold-deep: #5a411f;
-
-  /* 3. Ancient Aleppo Citadel Umber & Cedar Wood */
-  --raw-umber-mid: #6b1f2a;
-  --raw-umber-dark: #4a151e;
-  --raw-stone-warm: #403d37;
-
-  /* 4. Syrian Charcoal & Pure Ivory */
-  --raw-charcoal-deep: #161616;
-  --raw-charcoal-obsidian: #0f0e0c;
-  --raw-ivory-warm: #faf8f3;
+  --raw-umber-mid: var(--syria-umber-base);
+  --raw-umber-dark: var(--syria-umber-deep);
+  --raw-charcoal-deep: var(--syria-text-primary);
+  --raw-charcoal-obsidian: #141414;
+  --raw-ivory-warm: var(--syria-surface-canvas);
   --raw-charcoal-white: #ffffff;
+}
+
+/* Official Dark Mode Overrides */
+html.dark,
+[data-theme$="-dark"] {
+  --syria-surface-canvas: #141414;
+  --syria-surface-card: #1c1c1c;
+  --syria-text-primary: #fdfbf7;
+  --syria-text-secondary: #edebe0;
+  --syria-border: #2e2e2e;
 }

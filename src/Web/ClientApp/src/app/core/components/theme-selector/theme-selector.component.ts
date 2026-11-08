@@ -14,12 +14,12 @@ export class ThemeSelectorComponent {
   readonly isMenuOpen = signal<boolean>(false);
 
   readonly families: Array<{ id: ThemeFamilyId; nameAr: string; color: string }> = [
-    { id: 'emerald-luxury', nameAr: 'الزمرد الحلبي', color: '#c79c4a' },
-    { id: 'royal-heritage', nameAr: 'التراث الملكي', color: '#d97787' },
-    { id: 'forest-glass', nameAr: 'غابات الأرز', color: '#52b399' },
-    { id: 'executive-premium', nameAr: 'التنفيذي الحديث', color: '#81a1de' },
-    { id: 'heritage-luxury', nameAr: 'حجر حلب الذهبي', color: '#ebc37f' },
-    { id: 'syrian-identity', nameAr: 'الهوية السورية', color: '#4abd89' },
+    { id: 'syrian-identity', nameAr: 'الهوية السورية (جامعة الشمل)', color: '#054239' },
+    { id: 'emerald-luxury', nameAr: 'الزمرد الحلبي الفاخر', color: '#c79c4a' },
+    { id: 'royal-heritage', nameAr: 'التراث الملكي الدمشقي', color: '#6b1f2a' },
+    { id: 'forest-glass', nameAr: 'غابات الأرز والزجاج', color: '#428177' },
+    { id: 'executive-premium', nameAr: 'المكتب التنفيذي الحديث', color: '#1c2b4b' },
+    { id: 'heritage-luxury', nameAr: 'حجر حلب والقمح الذهبي', color: '#b9a779' },
   ];
 
   toggleMode(): void {

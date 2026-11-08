@@ -174,27 +174,45 @@ html.dark,
   --color-text-primary: #faf8f2;
 }
 
-/* ── Theme 6: Syrian Identity (Syrian Green, Red Citadel & Gold) ── */
+/* ── Theme 6: Syrian Visual Identity (جامعة الشمل — الهوية البصرية الرسمية) ── */
 [data-theme="syrian-identity-light"] {
-  --color-primary-rgb: 31, 107, 74;
+  --color-primary-rgb: 5, 66, 57;               /* Official Syria Forest Green #054239 */
   --color-primary: rgb(var(--color-primary-rgb));
-  --color-secondary-rgb: 184, 40, 50;
-  --color-surface: #faf9f5;
+  --color-primary-hover: #428177;
+  --color-secondary-rgb: 185, 167, 121;         /* Golden Wheat #B9A779 */
+  --color-secondary: rgb(var(--color-secondary-rgb));
+  --color-accent-rgb: 107, 31, 42;              /* Damascene Umber #6B1F2A */
+  --color-accent: rgb(var(--color-accent-rgb));
+  --color-surface-dim: #edebe0;
+  --color-surface: #fdfbf7;                     /* Official Parchment Canvas #FDFBF7 */
   --color-surface-bright: #ffffff;
-  --color-text-primary: #15241b;
-  --color-border-subtle: rgba(31, 107, 74, 0.15);
+  --color-surface-container: #ffffff;
+  --color-surface-container-high: #f7f4ed;
+  --color-surface-container-highest: #edebe0;
+  --color-border-subtle: rgba(5, 66, 57, 0.16);
+  --color-border-strong: rgba(185, 167, 121, 0.45);
+  --color-text-primary: #161616;
+  --color-text-secondary: #3d3a3b;
+  --color-text-muted: #988561;
 }
 
 [data-theme="syrian-identity-dark"] {
-  --color-primary-rgb: 74, 189, 137;
+  --color-primary-rgb: 66, 129, 119;            /* Syria Forest Light #428177 */
   --color-primary: rgb(var(--color-primary-rgb));
-  --color-secondary-rgb: 232, 98, 109;
-  --color-surface-dim: #090f0c;
-  --color-surface: #0f1914;
-  --color-surface-bright: #17241d;
-  --color-surface-container: #1f3028;
-  --color-surface-container-high: #273d33;
-  --color-surface-container-highest: #314b3f;
-  --color-border-subtle: rgba(74, 189, 137, 0.14);
-  --color-text-primary: #f2fbf6;
+  --color-primary-hover: #72ab9f;
+  --color-secondary-rgb: 216, 181, 107;         /* Radiant Wheat */
+  --color-secondary: rgb(var(--color-secondary-rgb));
+  --color-accent-rgb: 217, 119, 135;            /* Umber Highlight */
+  --color-accent: rgb(var(--color-accent-rgb));
+  --color-surface-dim: #0c0c0c;
+  --color-surface: #141414;                     /* Official Dark Canvas #141414 */
+  --color-surface-bright: #1c1c1c;              /* Official Dark Card #1C1C1C */
+  --color-surface-container: #242424;
+  --color-surface-container-high: #2e2e2e;
+  --color-surface-container-highest: #383838;
+  --color-border-subtle: rgba(66, 129, 119, 0.18);
+  --color-border-strong: rgba(185, 167, 121, 0.35);
+  --color-text-primary: #fdfbf7;
+  --color-text-secondary: #edebe0;
+  --color-text-muted: #988561;
 }

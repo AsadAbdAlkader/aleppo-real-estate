@@ -7,6 +7,34 @@
 @tailwind utilities;
 
 /* ══════════════════════════════════════════════════════════════
+   OFFICIAL SYRIAN VISUAL IDENTITY FONTS (حيّاكم الله)
+   https://sytocode.github.io/syrian-visual-identity/
+   ══════════════════════════════════════════════════════════════ */
+@font-face {
+  font-family: 'HayyakumAllah';
+  src: url('/fonts/HayyakumAllah-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'HayyakumAllah';
+  src: url('/fonts/HayyakumAllah-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'HayyakumAllah';
+  src: url('/fonts/HayyakumAllah-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ══════════════════════════════════════════════════════════════
    ALEPPO REAL ESTATE — "Modern Heritage" Design System
    Ivory surfaces · Champagne gold · Deep pine · Warm ink
    ══════════════════════════════════════════════════════════════ */
@@ -27,7 +55,7 @@
 
   /* Display typography: elegant Kufi headings across the app */
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Reem Kufi', 'Tajawal', system-ui, sans-serif;
+    font-family: 'HayyakumAllah', 'Reem Kufi', 'Tajawal', system-ui, sans-serif;
     font-weight: 700;
   }
 

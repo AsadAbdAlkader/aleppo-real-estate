@@ -1,14 +1,10 @@
 <!-- Mobile Top Header Bar with Toggle -->
 <div class="lg:hidden bg-slate-950 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-40 border-b border-amber-500/15" dir="rtl">
   <a routerLink="/" class="flex items-center gap-2.5">
-    <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-ink-950 shadow-gold-sm">
-      <svg viewBox="0 0 32 32" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M6 27V15a10 10 0 0 1 20 0v12" />
-        <path d="M11.5 27v-8a4.5 4.5 0 0 1 9 0v8" />
-        <path d="M3.5 27h25" />
-      </svg>
+    <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-300 via-amber-400 to-amber-500 flex items-center justify-center p-1 shadow-gold-sm overflow-hidden">
+      <img src="/assets/syria/aleppo-citadel.svg" alt="شعار قلعة حلب" class="w-full h-full object-contain filter drop-shadow-sm" />
     </span>
-    <span class="font-bold text-lg tracking-tight text-white">عقارات حلب</span>
+    <span class="font-hayyakum font-bold text-lg tracking-tight text-white">عقارات حلب</span>
   </a>
 
   <div class="flex items-center gap-2">
@@ -63,18 +59,14 @@
   [class.lg:translate-x-0]="true"
   dir="rtl"
 >
-  <!-- Sidebar Branding -->
+  <!-- Sidebar Branding with Official Aleppo Citadel Emblem -->
   <div class="p-5 border-b border-white/5 flex items-center justify-between">
     <a routerLink="/" (click)="closeMobileMenu()" class="flex items-center gap-3 group">
-      <span class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-ink-950 shadow-gold-sm group-hover:scale-105 transition-transform">
-        <svg viewBox="0 0 32 32" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M6 27V15a10 10 0 0 1 20 0v12" />
-          <path d="M11.5 27v-8a4.5 4.5 0 0 1 9 0v8" />
-          <path d="M3.5 27h25" />
-        </svg>
+      <span class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-300 via-amber-400 to-amber-500 flex items-center justify-center p-1.5 shadow-gold-sm group-hover:scale-105 transition-transform overflow-hidden">
+        <img src="/assets/syria/aleppo-citadel.svg" alt="شعار قلعة حلب" class="w-full h-full object-contain filter drop-shadow-sm" />
       </span>
       <span>
-        <span class="block text-lg font-bold text-white leading-tight">عقارات حلب</span>
+        <span class="block font-hayyakum text-lg font-bold text-white leading-tight">عقارات حلب</span>
         <span class="block font-latin text-[9px] font-semibold text-amber-400/80 tracking-[0.3em]">ALEPPO ESTATE</span>
       </span>
     </a>
