@@ -2,6 +2,7 @@ using Application.Auth.Dtos;
 using Application.Common.Interfaces;
 using Application.Common.Security;
 using Domain.Entities;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,7 +45,18 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, A
             throw new InvalidOperationException($"Email '{request.Email}' is already registered.");
         }
 
-        var role = string.IsNullOrWhiteSpace(request.Role) ? "Buyer" : request.Role.Trim();
+        var requestedRole = request.Role?.Trim();
+        if (string.Equals(requestedRole, Domain.Constants.Roles.Admin, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new ValidationException(new[]
+            {
+                new FluentValidation.Results.ValidationFailure("Role", "لا يمكن إنشاء حساب مدير نظام من خلال صفحة التسجيل العامة.")
+            });
+        }
+
+        var role = string.Equals(requestedRole, Domain.Constants.Roles.Agent, StringComparison.OrdinalIgnoreCase)
+            ? Domain.Constants.Roles.Agent
+            : Domain.Constants.Roles.Buyer;
 
         var user = new User
         {

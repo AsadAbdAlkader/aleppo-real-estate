@@ -62,6 +62,9 @@ export class RegisterComponent {
     this.errorMessage.set(null);
 
     const formData = this.registerForm.getRawValue();
+    if (formData.role !== 'Agent' && formData.role !== 'Buyer') {
+      formData.role = 'Buyer';
+    }
 
     this.authService.register(formData).subscribe({
       next: () => {

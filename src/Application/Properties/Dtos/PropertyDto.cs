@@ -3,6 +3,10 @@ namespace Application.Properties.Dtos;
 public class PropertyDto
 {
     public Guid Id { get; set; }
+    public Guid? AgencyId { get; set; }
+    public string? AgencyName { get; set; }
+    public string? AgencySlug { get; set; }
+    public Guid? CreatedByUserId { get; set; }
     public string? OwnerId { get; set; }
     public string? OwnerName { get; set; }
     public string Title { get; set; } = string.Empty;

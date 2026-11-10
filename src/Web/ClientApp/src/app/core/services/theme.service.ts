@@ -130,10 +130,6 @@ export class ThemeService {
         return stored;
       }
 
-      // Check system color scheme preference
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return 'dark';
-      }
     }
     return 'light';
   }

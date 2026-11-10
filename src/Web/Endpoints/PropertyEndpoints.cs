@@ -1,4 +1,4 @@
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Application.Properties.Commands.CreateProperty;
 using Application.Properties.Commands.DeleteProperty;
 using Application.Properties.Commands.DeletePropertyImage;
@@ -58,6 +58,8 @@ public static class PropertyEndpoints
             [FromQuery] int? bathrooms,
             [FromQuery] string? status,
             [FromQuery] string? sortBy,
+            [FromQuery] Guid? agencyId,
+            [FromQuery] string? agencySlug,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
             [FromServices] IMediator mediator = default!) =>
@@ -77,6 +79,8 @@ public static class PropertyEndpoints
                 Bathrooms = bathrooms,
                 Status = status,
                 SortBy = sortBy,
+                AgencyId = agencyId,
+                AgencySlug = agencySlug,
                 PageNumber = pageNumber,
                 PageSize = pageSize
             };

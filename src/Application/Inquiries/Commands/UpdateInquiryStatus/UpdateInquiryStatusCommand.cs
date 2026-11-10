@@ -34,13 +34,11 @@ public record UpdateInquiryStatusCommand : IRequest<UpdateInquiryStatusResult>
 
 public class UpdateInquiryStatusCommandValidator : AbstractValidator<UpdateInquiryStatusCommand>
 {
-    private static readonly string[] AllowedStatuses = new[] { "New", "Contacted", "Closed" };
-
     public UpdateInquiryStatusCommandValidator()
     {
         RuleFor(v => v.Status)
             .NotEmpty()
-            .Must(s => AllowedStatuses.Contains(s, StringComparer.OrdinalIgnoreCase))
+            .Must(s => Domain.Constants.InquiryStatuses.AllowedUpdateStatuses.Contains(s, StringComparer.OrdinalIgnoreCase))
             .WithMessage("حالة الاستفسار غير صالحة. الحالات المتاحة: New, Contacted, Closed");
 
         RuleFor(v => v.AgentNotes)

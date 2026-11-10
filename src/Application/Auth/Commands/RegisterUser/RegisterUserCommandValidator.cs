@@ -1,3 +1,4 @@
+using Domain.Constants;
 using FluentValidation;
 
 namespace Application.Auth.Commands.RegisterUser;
@@ -22,7 +23,7 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
 
         RuleFor(v => v.Role)
             .NotEmpty()
-            .Must(role => role is "Buyer" or "Agent" or "Admin")
-            .WithMessage("Role must be Buyer, Agent, or Admin.");
+            .Must(role => Roles.PublicRegistrationRoles.Contains(role))
+            .WithMessage("Role must be Buyer or Agent. Creating an Administrator account via public registration is not allowed.");
     }
 }

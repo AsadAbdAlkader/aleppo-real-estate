@@ -63,14 +63,27 @@ public class ApplicationDbContextInitialiser
 
     private async Task TrySeedUsersAsync()
     {
-        if (await _context.Users.AnyAsync())
+        var admin = await _context.Users.FirstOrDefaultAsync(u => u.Email == "admin@aleppo.com");
+        if (admin == null)
         {
-            return;
+            _context.Users.Add(new User
+            {
+                Id = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66b000"),
+                Email = "admin@aleppo.com",
+                PasswordHash = _passwordHasher.HashPassword("Password123!"),
+                FirstName = "مدير",
+                LastName = "النظام",
+                Role = "Admin",
+                PlatformRole = "SuperAdmin",
+                CreatedAt = DateTime.UtcNow.AddDays(-30)
+            });
+            await _context.SaveChangesAsync();
         }
 
-        var users = new List<User>
+        var buyer = await _context.Users.FirstOrDefaultAsync(u => u.Email == "buyer@aleppo.com");
+        if (buyer == null)
         {
-            new User
+            _context.Users.Add(new User
             {
                 Id = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66b111"),
                 Email = "buyer@aleppo.com",
@@ -79,8 +92,14 @@ public class ApplicationDbContextInitialiser
                 LastName = "الحلبي",
                 Role = "Buyer",
                 CreatedAt = DateTime.UtcNow.AddDays(-30)
-            },
-            new User
+            });
+            await _context.SaveChangesAsync();
+        }
+
+        var agent = await _context.Users.FirstOrDefaultAsync(u => u.Email == "agent@aleppo.com");
+        if (agent == null)
+        {
+            _context.Users.Add(new User
             {
                 Id = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66b222"),
                 Email = "agent@aleppo.com",
@@ -89,11 +108,9 @@ public class ApplicationDbContextInitialiser
                 LastName = "العقاري",
                 Role = "Agent",
                 CreatedAt = DateTime.UtcNow.AddDays(-30)
-            }
-        };
-
-        _context.Users.AddRange(users);
-        await _context.SaveChangesAsync();
+            });
+            await _context.SaveChangesAsync();
+        }
     }
 
     private async Task TrySeedAgenciesAndAgentsAsync()
@@ -149,6 +166,46 @@ public class ApplicationDbContextInitialiser
                 };
 
                 _context.AgentProfiles.Add(agentProfile);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        if (!await _context.AgencyMembers.AnyAsync())
+        {
+            var agency1 = await _context.Agencies.FirstOrDefaultAsync(a => a.Name == "مكتب تجريبي 01");
+            var adminUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == "admin@aleppo.com");
+            var agentUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == "agent@aleppo.com");
+
+            if (agency1 != null)
+            {
+                if (adminUser != null)
+                {
+                    _context.AgencyMembers.Add(new AgencyMember
+                    {
+                        Id = Guid.NewGuid(),
+                        AgencyId = agency1.Id,
+                        UserId = adminUser.Id,
+                        Role = "Admin",
+                        MembershipStatus = "Active",
+                        JoinedAt = DateTime.UtcNow.AddDays(-30),
+                        CreatedAt = DateTime.UtcNow.AddDays(-30),
+                        UpdatedAt = DateTime.UtcNow
+                    });
+                }
+                if (agentUser != null)
+                {
+                    _context.AgencyMembers.Add(new AgencyMember
+                    {
+                        Id = Guid.NewGuid(),
+                        AgencyId = agency1.Id,
+                        UserId = agentUser.Id,
+                        Role = "Agent",
+                        MembershipStatus = "Active",
+                        JoinedAt = DateTime.UtcNow.AddDays(-30),
+                        CreatedAt = DateTime.UtcNow.AddDays(-30),
+                        UpdatedAt = DateTime.UtcNow
+                    });
+                }
                 await _context.SaveChangesAsync();
             }
         }

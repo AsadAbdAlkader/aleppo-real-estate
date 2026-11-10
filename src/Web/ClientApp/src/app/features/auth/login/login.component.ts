@@ -39,15 +39,20 @@ export class LoginComponent {
     this.showPassword.update(v => !v);
   }
 
-  fillDemo(role: 'buyer' | 'agent'): void {
+  fillDemo(role: 'buyer' | 'agent' | 'admin'): void {
     if (role === 'buyer') {
       this.loginForm.patchValue({
         email: 'buyer@aleppo.com',
         password: 'Password123!'
       });
-    } else {
+    } else if (role === 'agent') {
       this.loginForm.patchValue({
         email: 'agent@aleppo.com',
+        password: 'Password123!'
+      });
+    } else {
+      this.loginForm.patchValue({
+        email: 'admin@aleppo.com',
         password: 'Password123!'
       });
     }

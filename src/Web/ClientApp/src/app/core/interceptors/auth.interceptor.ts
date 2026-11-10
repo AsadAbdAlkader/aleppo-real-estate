@@ -7,23 +7,26 @@ import { throwError } from 'rxjs';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const token = authService.getToken();
+  const currentUser = authService.currentUser();
 
-  const authReq = token
-    ? req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-    : req;
+  let headers = req.headers;
+  if (token) {
+    headers = headers.set('Authorization', `Bearer ${token}`);
+  }
+  if (currentUser?.agencyId) {
+    headers = headers.set('X-Agency-Id', currentUser.agencyId);
+  }
+
+  const authReq = req.clone({ headers });
 
   return next(authReq).pipe(
     catchError((error: unknown) => {
-      // Clear invalid/stale/expired tokens on 401 Unauthorized to stop infinite retry loops
+      // Clear token only when auth token verification explicitly fails on /api/auth/me
       if (
         error instanceof HttpErrorResponse &&
         error.status === 401 &&
         token &&
-        !req.url.includes('/api/auth/login')
+        req.url.includes('/api/auth/me')
       ) {
         authService.logout();
       }

@@ -16,9 +16,15 @@ public class PropertyInquiry : BaseEntity
     public Guid? AssignedToUserId { get; set; }
     public User? AssignedToUser { get; set; }
 
+    [System.ComponentModel.DataAnnotations.Schema.NotMapped]
     public string CustomerName { get; set; } = string.Empty;
+
+    [System.ComponentModel.DataAnnotations.Schema.NotMapped]
     public string? CustomerEmail { get; set; }
+
     public string PhoneNumber { get; set; } = string.Empty;
+
+    [System.ComponentModel.DataAnnotations.Schema.NotMapped]
     public string CustomerPhone
     {
         get => PhoneNumber;

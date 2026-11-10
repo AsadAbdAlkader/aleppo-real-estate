@@ -47,6 +47,17 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, AuthRes
         {
             agencyId = agentProfile.AgencyId;
         }
+        else
+        {
+            var primaryMembership = await _context.AgencyMembers
+                .Where(m => m.UserId == user.Id && m.MembershipStatus == "Active")
+                .OrderBy(m => m.CreatedAt)
+                .FirstOrDefaultAsync(cancellationToken);
+            if (primaryMembership != null)
+            {
+                agencyId = primaryMembership.AgencyId;
+            }
+        }
 
         var permissions = DefaultRolePermissions.GetPermissionsForRole(user.Role).ToList();
         var token = _jwtTokenGenerator.GenerateToken(user, agencyId, permissions);

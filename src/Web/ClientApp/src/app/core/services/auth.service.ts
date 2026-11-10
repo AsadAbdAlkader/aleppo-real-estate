@@ -69,6 +69,9 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.apiUrl}/api/auth/login`, credentials).pipe(
       tap((response) => this.handleAuthSuccess(response)),
       catchError((error) => {
+        if (error?.status === 401) {
+          return throwError(() => error);
+        }
         console.warn('API login call failed. Triggering dev-mode authentication fallback.', error);
         const role = credentials.email.includes('agent')
           ? 'Agent'
@@ -118,12 +121,29 @@ export class AuthService {
   getCurrentUser(): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/api/auth/me`).pipe(
       tap((user) => {
-        this.saveUser(user);
-        this.currentUser.set(user);
+        const permissions = user.permissions && user.permissions.length > 0
+          ? user.permissions
+          : this.authz.getDefaultPermissionsForRole(user.role);
+        this.authz.setPermissions(permissions);
+
+        const currentAgencyId = user.agencyId || this.currentUser()?.agencyId || null;
+
+        const fullUser: User = {
+          ...user,
+          agencyId: currentAgencyId,
+          permissions
+        };
+        this.saveUser(fullUser);
+        this.currentUser.set(fullUser);
       }),
       catchError((error) => {
         const storedUser = this.getInitialUser();
         if (storedUser) {
+          const perms = storedUser.permissions && storedUser.permissions.length > 0
+            ? storedUser.permissions
+            : this.authz.getDefaultPermissionsForRole(storedUser.role);
+          this.authz.setPermissions(perms);
+          this.currentUser.set(storedUser);
           return of(storedUser);
         }
         return throwError(() => error);

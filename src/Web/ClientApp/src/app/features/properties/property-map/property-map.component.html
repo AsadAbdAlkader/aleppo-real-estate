@@ -1,0 +1,150 @@
+<div
+  #outerMapWrap
+  class="relative w-full h-full min-h-[580px] rounded-3xl overflow-hidden border border-slate-200/80 dark:border-white/10 shadow-md bg-stone-100 dark:bg-[#121212]"
+>
+  
+  <!-- Habitect Top Floating Filter Pills Bar -->
+  <div class="absolute top-3.5 inset-x-3.5 z-[1000] flex items-center justify-between gap-2 pointer-events-auto">
+    <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none flex-nowrap w-full">
+      <!-- Price Range Pill -->
+      <button
+        type="button"
+        (click)="onQuickPriceClick()"
+        class="px-3 py-1.5 rounded-full text-xs font-bold bg-white/95 dark:bg-[#1f1e1c]/95 text-slate-800 dark:text-slate-100 backdrop-blur-md shadow-xs border border-slate-200/80 dark:border-white/10 hover:border-amber-400 whitespace-nowrap transition-all cursor-pointer"
+      >
+        <span>السعر: $50k–$500k</span>
+      </button>
+
+      <!-- Type Pill -->
+      <button
+        type="button"
+        (click)="onQuickCategoryClick('Apartment')"
+        class="px-3 py-1.5 rounded-full text-xs font-bold bg-white/95 dark:bg-[#1f1e1c]/95 text-slate-800 dark:text-slate-100 backdrop-blur-md shadow-xs border border-slate-200/80 dark:border-white/10 hover:border-amber-400 whitespace-nowrap transition-all cursor-pointer"
+      >
+        <span>شقق</span>
+      </button>
+
+      <!-- Rooms Pill -->
+      <button
+        type="button"
+        (click)="onQuickRoomsClick(3)"
+        class="px-3 py-1.5 rounded-full text-xs font-bold bg-white/95 dark:bg-[#1f1e1c]/95 text-slate-800 dark:text-slate-100 backdrop-blur-md shadow-xs border border-slate-200/80 dark:border-white/10 hover:border-amber-400 whitespace-nowrap transition-all cursor-pointer"
+      >
+        <span>+3 غرف</span>
+      </button>
+
+      <!-- Beds Pill -->
+      <button
+        type="button"
+        (click)="onQuickBedsClick(2)"
+        class="px-3 py-1.5 rounded-full text-xs font-bold bg-white/95 dark:bg-[#1f1e1c]/95 text-slate-800 dark:text-slate-100 backdrop-blur-md shadow-xs border border-slate-200/80 dark:border-white/10 hover:border-amber-400 whitespace-nowrap transition-all cursor-pointer"
+      >
+        <span>+2 حمام</span>
+      </button>
+
+      <!-- All Filters Pill (Dark Button matching Habitect) -->
+      <button
+        type="button"
+        (click)="openAdvancedFilters.emit()"
+        class="px-3.5 py-1.5 rounded-full text-xs font-black bg-slate-900 dark:bg-amber-400 text-white dark:text-ink-950 shadow-md border border-slate-800 dark:border-amber-300 hover:bg-slate-800 dark:hover:bg-amber-300 whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer ml-auto"
+      >
+        <span>كل الفلاتر</span>
+        <span class="text-[13px]">🎛️</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Quick Neighborhoods Sub-bar (Aleppo areas) -->
+  <div class="absolute top-14 inset-x-3.5 z-[1000] flex items-center gap-1 overflow-x-auto pb-1 scrollbar-none pointer-events-auto">
+    <div class="bg-white/90 dark:bg-[#1c1c1c]/90 backdrop-blur-md px-2.5 py-1 rounded-2xl shadow-xs border border-slate-200/60 dark:border-white/10 flex items-center gap-1 flex-nowrap">
+      @for (neighborhood of neighborhoods; track neighborhood.name) {
+        <button
+          type="button"
+          (click)="flyToNeighborhood(neighborhood)"
+          class="px-2 py-0.5 rounded-xl text-[11px] font-bold transition-all whitespace-nowrap cursor-pointer"
+          [class.bg-slate-950]="selectedNeighborhood === neighborhood.name"
+          [class.text-amber-300]="selectedNeighborhood === neighborhood.name"
+          [class.bg-slate-100]="selectedNeighborhood !== neighborhood.name"
+          [class.dark:bg-white/10]="selectedNeighborhood !== neighborhood.name"
+          [class.text-slate-600]="selectedNeighborhood !== neighborhood.name"
+          [class.dark:text-slate-300]="selectedNeighborhood !== neighborhood.name"
+        >
+          {{ neighborhood.name }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Map Container (High Clarity, Watermark-Free) -->
+  <div #mapContainer class="w-full h-full"></div>
+
+  <!-- Map Bottom Controls (Habitect Bottom Bar) -->
+  <!-- Bottom-Start: Layer Switcher & Fullscreen Button -->
+  <div class="absolute bottom-4 right-4 z-[1000] flex items-center gap-2 pointer-events-auto">
+    <!-- Map Basemap Toggle: Streets vs Satellite -->
+    <div class="flex items-center bg-white/95 dark:bg-[#1c1c1c]/95 backdrop-blur-md rounded-xl p-0.5 border border-slate-200/80 dark:border-white/10 shadow-md">
+      <button
+        type="button"
+        (click)="setMapType('streets')"
+        class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer"
+        [class.bg-slate-950]="mapType() === 'streets'"
+        [class.text-amber-300]="mapType() === 'streets'"
+        [class.shadow-xs]="mapType() === 'streets'"
+        [class.text-slate-600]="mapType() !== 'streets'"
+        [class.dark:text-slate-300]="mapType() !== 'streets'"
+      >
+        <span>🗺️ شوارع حلب</span>
+      </button>
+      <button
+        type="button"
+        (click)="setMapType('satellite')"
+        class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer"
+        [class.bg-slate-950]="mapType() === 'satellite'"
+        [class.text-amber-300]="mapType() === 'satellite'"
+        [class.shadow-xs]="mapType() === 'satellite'"
+        [class.text-slate-600]="mapType() !== 'satellite'"
+        [class.dark:text-slate-300]="mapType() !== 'satellite'"
+      >
+        <span>🛰️ قمر صناعي</span>
+      </button>
+    </div>
+
+    <!-- Fullscreen Button -->
+    <button
+      type="button"
+      (click)="toggleFullscreen()"
+      class="w-9 h-9 rounded-xl bg-white/95 dark:bg-[#1c1c1c]/95 backdrop-blur-md border border-slate-200/80 dark:border-white/10 shadow-md flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-amber-600 transition-all active:scale-95 cursor-pointer"
+      title="ملء الشاشة"
+    >
+      <span class="text-sm font-bold">⛶</span>
+    </button>
+  </div>
+
+  <!-- Bottom-End: Zoom and Locate Controls -->
+  <div class="absolute bottom-4 left-4 z-[1000] flex flex-col items-center gap-1.5 pointer-events-auto">
+    <div class="flex flex-col rounded-xl overflow-hidden bg-white/95 dark:bg-[#1c1c1c]/95 backdrop-blur-md border border-slate-200/80 dark:border-white/10 shadow-md">
+      <button
+        type="button"
+        (click)="zoomIn()"
+        class="w-9 h-9 flex items-center justify-center text-base font-bold text-slate-800 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors border-b border-slate-200 dark:border-white/10 cursor-pointer"
+        title="تكبير"
+      >+</button>
+      <button
+        type="button"
+        (click)="zoomOut()"
+        class="w-9 h-9 flex items-center justify-center text-base font-bold text-slate-800 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
+        title="تصغير"
+      >−</button>
+    </div>
+
+    <button
+      type="button"
+      (click)="resetView()"
+      class="w-9 h-9 rounded-xl bg-white/95 dark:bg-[#1c1c1c]/95 backdrop-blur-md border border-slate-200/80 dark:border-white/10 shadow-md flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-amber-600 transition-all active:scale-95 cursor-pointer"
+      title="إظهار كافة عقارات حلب"
+    >
+      <span class="text-sm">🧭</span>
+    </button>
+  </div>
+
+</div>

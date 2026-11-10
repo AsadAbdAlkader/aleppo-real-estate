@@ -72,7 +72,7 @@ public static class AuthEndpoints
 
         group.MapGet("/me", async (ClaimsPrincipal user, [FromServices] IMediator mediator) =>
         {
-            var userIdStr = user.FindFirstValue(ClaimTypes.NameIdentifier) 
+            var userIdStr = user.FindFirstValue(ClaimTypes.NameIdentifier)
                 ?? user.FindFirstValue("sub");
 
             if (string.IsNullOrEmpty(userIdStr) || !Guid.TryParse(userIdStr, out var userId))

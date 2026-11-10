@@ -20,6 +20,8 @@ public record GetPropertiesQuery : IRequest<PaginatedList<PropertyDto>>
     public int? Bathrooms { get; init; }
     public string? Status { get; init; }
     public string? SortBy { get; init; }
+    public Guid? AgencyId { get; init; }
+    public string? AgencySlug { get; init; }
     public int PageNumber { get; init; } = 1;
     public int PageSize { get; init; } = 10;
 }
@@ -35,14 +37,55 @@ public class GetPropertiesQueryHandler : IRequestHandler<GetPropertiesQuery, Pag
 
     public async Task<PaginatedList<PropertyDto>> Handle(GetPropertiesQuery request, CancellationToken cancellationToken)
     {
-        var query = _context.Properties.AsNoTracking();
+        var query = _context.Properties
+            .Include(p => p.Agency)
+            .Include(p => p.Owner)
+            .AsNoTracking();
 
+        // 1. Multi-Tenant Public Marketplace Enforcement:
+        // Only "Published" and "Available" properties may be viewed publicly.
+        // Never expose "Draft", "PendingReview", "Reserved", or "Archived" to public marketplace queries.
+        var publicAllowedStatuses = Domain.Constants.PropertyStatuses.PubliclyVisible
+            .Select(s => s.ToLower())
+            .ToArray();
+
+        if (!string.IsNullOrWhiteSpace(request.Status))
+        {
+            var requestedStatus = request.Status.Trim().ToLower();
+            if (publicAllowedStatuses.Contains(requestedStatus))
+            {
+                query = query.Where(p => p.Status.ToLower() == requestedStatus);
+            }
+            else
+            {
+                // Fail closed: User requested a non-public status
+                query = query.Where(p => false);
+            }
+        }
+        else
+        {
+            query = query.Where(p => p.Status.ToLower() == "published" || p.Status.ToLower() == "available");
+        }
+
+        // 2. Agency filtering
+        if (request.AgencyId.HasValue)
+        {
+            query = query.Where(p => p.AgencyId == request.AgencyId.Value);
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.AgencySlug))
+        {
+            var slug = request.AgencySlug.Trim().ToLower();
+            query = query.Where(p => p.Agency != null && p.Agency.Slug != null && p.Agency.Slug.ToLower() == slug);
+        }
+
+        // 3. Search and property filters
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
         {
             var term = request.SearchTerm.Trim();
-            query = query.Where(p => 
-                p.Title.Contains(term) || 
-                p.Description.Contains(term) || 
+            query = query.Where(p =>
+                p.Title.Contains(term) ||
+                p.Description.Contains(term) ||
                 p.Address.Contains(term) ||
                 p.CityArea.Contains(term));
         }
@@ -101,16 +144,6 @@ public class GetPropertiesQueryHandler : IRequestHandler<GetPropertiesQuery, Pag
             query = query.Where(p => p.Bathrooms >= request.Bathrooms.Value);
         }
 
-        if (!string.IsNullOrWhiteSpace(request.Status))
-        {
-            var status = request.Status.Trim();
-            query = query.Where(p => p.Status.ToLower() == status.ToLower());
-        }
-        else
-        {
-            query = query.Where(p => p.Status != "Archived");
-        }
-
         query = request.SortBy?.Trim().ToLower() switch
         {
             "date_asc" => query.OrderBy(p => p.CreatedAt),
@@ -127,6 +160,10 @@ public class GetPropertiesQueryHandler : IRequestHandler<GetPropertiesQuery, Pag
         var dtoQuery = query.Select(p => new PropertyDto
         {
             Id = p.Id,
+            AgencyId = p.AgencyId,
+            AgencyName = p.Agency != null ? p.Agency.Name : null,
+            AgencySlug = p.Agency != null ? p.Agency.Slug : null,
+            CreatedByUserId = p.CreatedByUserId,
             OwnerId = p.OwnerId,
             OwnerName = p.Owner != null ? (p.Owner.FirstName + " " + p.Owner.LastName).Trim() : null,
             Title = p.Title,

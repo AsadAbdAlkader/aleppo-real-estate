@@ -45,10 +45,12 @@ public class UpdateAgentProfileResult
 public class UpdateAgentProfileCommandHandler : IRequestHandler<UpdateAgentProfileCommand, UpdateAgentProfileResult>
 {
     private readonly IApplicationDbContext _context;
+    private readonly ITenantContext? _tenantContext;
 
-    public UpdateAgentProfileCommandHandler(IApplicationDbContext context)
+    public UpdateAgentProfileCommandHandler(IApplicationDbContext context, ITenantContext? tenantContext = null)
     {
         _context = context;
+        _tenantContext = tenantContext;
     }
 
     public async Task<UpdateAgentProfileResult> Handle(UpdateAgentProfileCommand request, CancellationToken cancellationToken)
@@ -69,13 +71,32 @@ public class UpdateAgentProfileCommandHandler : IRequestHandler<UpdateAgentProfi
             return UpdateAgentProfileResult.NotFound($"User with ID {request.CurrentUserId} was not found.");
         }
 
-        if (request.AgencyId.HasValue)
+        // Multi-tenant Security Enforcement:
+        // A user cannot arbitrarily assign themselves to an agency unless they hold an Active AgencyMember record
+        Guid? effectiveAgencyId = request.AgencyId;
+
+        if (effectiveAgencyId.HasValue)
         {
-            var agencyExists = await _context.Agencies.AnyAsync(a => a.Id == request.AgencyId.Value, cancellationToken);
+            var agencyExists = await _context.Agencies.AnyAsync(a => a.Id == effectiveAgencyId.Value, cancellationToken);
             if (!agencyExists)
             {
-                return UpdateAgentProfileResult.BadRequest($"Agency with ID {request.AgencyId.Value} was not found.");
+                return UpdateAgentProfileResult.BadRequest($"Agency with ID {effectiveAgencyId.Value} was not found.");
             }
+
+            var isMember = await _context.AgencyMembers.AnyAsync(
+                m => m.AgencyId == effectiveAgencyId.Value &&
+                     m.UserId == user.Id &&
+                     m.MembershipStatus == "Active", cancellationToken);
+
+            if (!isMember && !isAdmin)
+            {
+                return UpdateAgentProfileResult.Forbidden(
+                    "SEC-FORBIDDEN-MEMBERSHIP: You are not an active member of this agency. Agency assignment requires approved membership or invitation.");
+            }
+        }
+        else if (_tenantContext?.AgencyId.HasValue == true)
+        {
+            effectiveAgencyId = _tenantContext.AgencyId.Value;
         }
 
         var profile = await _context.AgentProfiles
@@ -94,7 +115,7 @@ public class UpdateAgentProfileCommandHandler : IRequestHandler<UpdateAgentProfi
 
         profile.Bio = request.Bio;
         profile.PublicPhone = request.PublicPhone;
-        profile.AgencyId = request.AgencyId;
+        profile.AgencyId = effectiveAgencyId;
         profile.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);

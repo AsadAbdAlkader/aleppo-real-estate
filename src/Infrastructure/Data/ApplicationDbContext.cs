@@ -405,11 +405,9 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
                 .HasMaxLength(50)
                 .IsRequired();
 
-            entity.Property(i => i.CustomerName)
-                .HasMaxLength(150);
-
-            entity.Property(i => i.CustomerEmail)
-                .HasMaxLength(256);
+            entity.Ignore(i => i.CustomerName);
+            entity.Ignore(i => i.CustomerEmail);
+            entity.Ignore(i => i.CustomerPhone);
 
             entity.Property(i => i.Status)
                 .HasMaxLength(50)

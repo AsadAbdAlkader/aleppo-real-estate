@@ -17,10 +17,12 @@ public record GetReceivedInquiriesQuery : IRequest<PaginatedList<ReceivedInquiry
 public class GetReceivedInquiriesQueryHandler : IRequestHandler<GetReceivedInquiriesQuery, PaginatedList<ReceivedInquiryDto>>
 {
     private readonly IApplicationDbContext _context;
+    private readonly ITenantContext? _tenantContext;
 
-    public GetReceivedInquiriesQueryHandler(IApplicationDbContext context)
+    public GetReceivedInquiriesQueryHandler(IApplicationDbContext context, ITenantContext? tenantContext = null)
     {
         _context = context;
+        _tenantContext = tenantContext;
     }
 
     public async Task<PaginatedList<ReceivedInquiryDto>> Handle(GetReceivedInquiriesQuery request, CancellationToken cancellationToken)
@@ -28,9 +30,24 @@ public class GetReceivedInquiriesQueryHandler : IRequestHandler<GetReceivedInqui
         var pageNumber = request.PageNumber <= 0 ? 1 : request.PageNumber;
         var pageSize = request.PageSize <= 0 ? 10 : request.PageSize;
 
+        if (_tenantContext != null)
+        {
+            await _tenantContext.EnsureValidAgencyContextAsync(cancellationToken);
+        }
+
         var query = _context.PropertyInquiries
             .AsNoTracking()
-            .Where(i => i.Property != null && i.Property.OwnerId == request.OwnerUserId);
+            .Where(i => i.Property != null);
+
+        if (_tenantContext?.AgencyId.HasValue == true)
+        {
+            var agencyId = _tenantContext.AgencyId.Value;
+            query = query.Where(i => i.AgencyId == agencyId || i.Property!.AgencyId == agencyId || i.Property!.OwnerId == request.OwnerUserId);
+        }
+        else
+        {
+            query = query.Where(i => i.Property!.OwnerId == request.OwnerUserId);
+        }
 
         if (!string.IsNullOrWhiteSpace(request.Status) && !string.Equals(request.Status, "all", StringComparison.OrdinalIgnoreCase))
         {

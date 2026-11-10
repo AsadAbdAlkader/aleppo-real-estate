@@ -8,31 +8,33 @@ namespace Web.Services;
 public class CurrentUserService : ICurrentUserService
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly ITenantContext _tenantContext;
 
-    public CurrentUserService(IHttpContextAccessor httpContextAccessor)
+    public CurrentUserService(IHttpContextAccessor httpContextAccessor, ITenantContext tenantContext)
     {
         _httpContextAccessor = httpContextAccessor;
+        _tenantContext = tenantContext;
     }
 
     private ClaimsPrincipal? User => _httpContextAccessor.HttpContext?.User;
 
-    public string? UserId => User?.FindFirstValue(ClaimTypes.NameIdentifier) 
+    public string? UserId => User?.FindFirstValue(ClaimTypes.NameIdentifier)
         ?? User?.FindFirstValue("sub");
 
-    public string? Role => User?.FindFirstValue(ClaimTypes.Role) 
+    public string? Role => _tenantContext.AgencyRole
+        ?? User?.FindFirstValue(ClaimTypes.Role)
         ?? User?.FindFirstValue("role");
 
-    public Guid? AgencyId
+    public Guid? AgencyId => _tenantContext.AgencyId ?? ParseClaimAgencyId();
+
+    private Guid? ParseClaimAgencyId()
     {
-        get
+        var agencyClaim = User?.FindFirstValue("agency_id");
+        if (!string.IsNullOrEmpty(agencyClaim) && Guid.TryParse(agencyClaim, out var id))
         {
-            var agencyClaim = User?.FindFirstValue("agency_id");
-            if (!string.IsNullOrEmpty(agencyClaim) && Guid.TryParse(agencyClaim, out var id))
-            {
-                return id;
-            }
-            return null;
+            return id;
         }
+        return null;
     }
 
     public IReadOnlyCollection<string> Permissions
@@ -43,8 +45,8 @@ public class CurrentUserService : ICurrentUserService
 
             var explicitClaims = User.FindAll(Application.Common.Security.Permissions.ClaimType).Select(c => c.Value);
             var role = Role;
-            var rolePerms = !string.IsNullOrEmpty(role) 
-                ? DefaultRolePermissions.GetPermissionsForRole(role) 
+            var rolePerms = !string.IsNullOrEmpty(role)
+                ? DefaultRolePermissions.GetPermissionsForRole(role)
                 : Array.Empty<string>();
 
             return explicitClaims.Concat(rolePerms).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
@@ -60,7 +62,7 @@ public class CurrentUserService : ICurrentUserService
     public bool IsInRole(string role)
     {
         if (string.IsNullOrWhiteSpace(role) || User == null) return false;
-        return User.IsInRole(role) || string.Equals(Role, role, StringComparison.OrdinalIgnoreCase);
+        return string.Equals(Role, role, StringComparison.OrdinalIgnoreCase) || User.IsInRole(role);
     }
 
     public bool IsAuthenticated => User?.Identity?.IsAuthenticated ?? false;

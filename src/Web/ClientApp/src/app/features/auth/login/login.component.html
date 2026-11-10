@@ -201,29 +201,38 @@
         </div>
 
         <!-- Demo Logins -->
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-3 gap-2">
           <button
             type="button"
             (click)="fillDemo('buyer')"
-            class="flex items-center justify-center gap-2 py-3 px-3 bg-ivory-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-300 rounded-full text-xs font-bold text-slate-700 hover:text-amber-800 transition-all cursor-pointer"
+            class="flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 px-2 bg-ivory-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-300 rounded-2xl text-xs font-bold text-slate-700 hover:text-amber-800 transition-all cursor-pointer text-center"
           >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
             </svg>
-            <span>حساب مشتري</span>
+            <span>مشتري</span>
           </button>
           <button
             type="button"
             (click)="fillDemo('agent')"
-            class="flex items-center justify-center gap-2 py-3 px-3 bg-ivory-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-300 rounded-full text-xs font-bold text-slate-700 hover:text-amber-800 transition-all cursor-pointer"
+            class="flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 px-2 bg-ivory-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-300 rounded-2xl text-xs font-bold text-slate-700 hover:text-amber-800 transition-all cursor-pointer text-center"
           >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/>
             </svg>
-            <span>حساب وكيل</span>
+            <span>وكيل</span>
+          </button>
+          <button
+            type="button"
+            (click)="fillDemo('admin')"
+            class="flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 px-2 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-300/80 hover:border-amber-500 rounded-2xl text-xs font-bold text-amber-900 transition-all cursor-pointer text-center"
+          >
+            <svg class="w-4 h-4 shrink-0 text-amber-600" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+            </svg>
+            <span>مدير النظام</span>
           </button>
         </div>
-
       </div>
 
       <!-- Bottom Link -->

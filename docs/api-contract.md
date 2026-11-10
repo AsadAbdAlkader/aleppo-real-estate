@@ -148,29 +148,117 @@ Deletes or archives a property listing (Enforces ownership verification).
 ## 3. Authentication & User Management
 
 ### POST `/api/auth/register`
-Registers a new user account.
+Registers a new user account (Public self-registration). System Administrator (`Admin`) registration is strictly prohibited.
 
 - **HTTP Method:** `POST`
 - **Route:** `/api/auth/register`
 - **Authentication:** Anonymous
 
+#### Request Body
+```json
+{
+  "email": "user@example.com",
+  "password": "Password123!",
+  "firstName": "أحمد",
+  "lastName": "الحلبي",
+  "role": "Buyer"
+}
+```
+*Note: `role` must be either `"Buyer"` or `"Agent"`. Supplying `"Admin"` returns HTTP `400 Bad Request` with a validation problem.*
+
+#### Response (`200 OK`)
+```json
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66b111",
+  "email": "user@example.com",
+  "firstName": "أحمد",
+  "lastName": "الحلبي",
+  "role": "Buyer",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "expiresAt": "2026-11-17T12:00:00Z",
+  "permissions": [
+    "Property.View",
+    "Inquiry.Create",
+    "Chat.Access",
+    "Chat.Send"
+  ],
+  "agencyId": null
+}
+```
+
 ---
 
 ### POST `/api/auth/login`
-Authenticates a user with email and password, returning a JWT token.
+Authenticates a user with email and password, returning a JWT token along with tenant context (`agencyId`) and functional `permissions`.
 
 - **HTTP Method:** `POST`
 - **Route:** `/api/auth/login`
 - **Authentication:** Anonymous
 
+#### Request Body
+```json
+{
+  "email": "admin@aleppo.com",
+  "password": "Password123!"
+}
+```
+
+#### Response (`200 OK`)
+```json
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66b111",
+  "email": "admin@aleppo.com",
+  "firstName": "مدير",
+  "lastName": "النظام",
+  "role": "Admin",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "expiresAt": "2026-11-17T12:00:00Z",
+  "permissions": [
+    "Property.View",
+    "Property.Create",
+    "Property.Edit",
+    "Property.Delete",
+    "Property.Approve",
+    "Property.Feature",
+    "Property.GlobalAccess"
+  ],
+  "agencyId": "3fa85f64-5717-4562-b3fc-2c963f66b333"
+}
+```
+
 ---
 
 ### GET `/api/auth/me`
-Retrieves current authenticated user's profile info.
+Retrieves the current authenticated user's profile info, active agency context, and complete functional permissions set.
 
 - **HTTP Method:** `GET`
 - **Route:** `/api/auth/me`
 - **Authentication:** Required (`Bearer <token>`)
+
+#### Response (`200 OK`)
+```json
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66b111",
+  "email": "admin@aleppo.com",
+  "firstName": "مدير",
+  "lastName": "النظام",
+  "role": "Admin",
+  "agencyId": "3fa85f64-5717-4562-b3fc-2c963f66b333",
+  "permissions": [
+    "Property.View",
+    "Property.Create",
+    "Property.Edit",
+    "Property.Delete",
+    "Property.Approve",
+    "Property.Feature",
+    "Property.GlobalAccess"
+  ]
+}
+```
+
+#### Multi-Tenant Security & Scope Headers
+- **`X-Agency-Id` (Optional Header):** Allows users belonging to multiple agencies to switch active agency context.
+- **Fail-Closed Enforcement:** If an `X-Agency-Id` is supplied where the user holds no `Active` record in `AgencyMembers`, the request fails closed immediately with HTTP `403 Forbidden` (`{"error": "...", "code": "SEC-SCOPE-VIOLATION"}`).
 
 ---
 

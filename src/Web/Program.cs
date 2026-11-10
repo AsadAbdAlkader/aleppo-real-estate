@@ -18,6 +18,7 @@ builder.Services.AddOpenApi();
 
 // Add Clean Architecture layer services
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<Application.Common.Interfaces.ITenantContext, Web.Services.TenantContext>();
 builder.Services.AddScoped<Application.Common.Interfaces.ICurrentUserService, Web.Services.CurrentUserService>();
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration, builder.Environment);
@@ -80,6 +81,8 @@ if (app.Environment.IsDevelopment())
     TryStartAngularDevServer(app.Logger, app.Services.GetRequiredService<IHostApplicationLifetime>());
 }
 
+app.UseMiddleware<Web.Middlewares.GlobalExceptionHandlerMiddleware>();
+
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
@@ -87,7 +90,10 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 
 app.UseCors("AllowClientApp");
 app.UseStaticFiles();
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -121,7 +127,7 @@ static void TryStartAngularDevServer(ILogger logger, IHostApplicationLifetime li
     catch
     {
         logger.LogInformation("Starting Angular frontend dev server (npm start) on http://localhost:4200...");
-        
+
         var clientAppPath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp");
         if (!Directory.Exists(clientAppPath))
         {
@@ -138,7 +144,7 @@ static void TryStartAngularDevServer(ILogger logger, IHostApplicationLifetime li
                 UseShellExecute = true,
                 CreateNoWindow = false
             };
-            
+
             try
             {
                 var process = Process.Start(psi);

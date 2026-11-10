@@ -41,10 +41,12 @@ public class CreateInquiryCommandHandler : IRequestHandler<CreateInquiryCommand,
         var inquiry = new PropertyInquiry
         {
             Id = Guid.NewGuid(),
+            AgencyId = property.AgencyId,
             PropertyId = request.PropertyId,
             UserId = request.UserId,
             Message = request.Message,
             PhoneNumber = request.PhoneNumber,
+            Status = Domain.Constants.InquiryStatuses.New,
             CreatedAt = DateTime.UtcNow
         };
 
